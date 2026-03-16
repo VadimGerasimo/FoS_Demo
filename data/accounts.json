@@ -6,7 +6,7 @@
     "segmentId": "mid-market-benelux",
     "volume": 320,
     "price": 4.20,
-    "floor": 4.05,
+    "floor": 4.57,
     "target": 4.85,
     "region": "Benelux"
   },
@@ -28,7 +28,7 @@
     "segmentId": "mid-market-benelux",
     "volume": 480,
     "price": 4.75,
-    "floor": 4.05,
+    "floor": 4.57,
     "target": 4.85,
     "region": "France"
   },
@@ -39,7 +39,7 @@
     "segmentId": "mid-market-benelux",
     "volume": 210,
     "price": 4.90,
-    "floor": 4.05,
+    "floor": 4.57,
     "target": 4.85,
     "region": "Netherlands"
   },
@@ -72,7 +72,7 @@
     "segmentId": "mid-market-benelux",
     "volume": 390,
     "price": 5.10,
-    "floor": 4.05,
+    "floor": 4.57,
     "target": 4.85,
     "region": "Belgium"
   },
