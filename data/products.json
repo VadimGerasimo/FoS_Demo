@@ -1,0 +1,68 @@
+[
+  {
+    "id": "milk-couverture",
+    "name": "Milk Couverture",
+    "family": "Couverture",
+    "listPrice": 5.80,
+    "escalationThresholds": {
+      "rep": 5,
+      "manager": 10,
+      "director": 15
+    }
+  },
+  {
+    "id": "white-couverture",
+    "name": "White Couverture",
+    "family": "Couverture",
+    "listPrice": 6.20,
+    "escalationThresholds": {
+      "rep": 5,
+      "manager": 10,
+      "director": 15
+    }
+  },
+  {
+    "id": "cocoa-powder",
+    "name": "Cocoa Powder",
+    "family": "Ingredient",
+    "listPrice": 3.20,
+    "escalationThresholds": {
+      "rep": 8,
+      "manager": 12,
+      "director": 18
+    }
+  },
+  {
+    "id": "dark-compound",
+    "name": "Dark Compound",
+    "family": "Compound",
+    "listPrice": 4.60,
+    "escalationThresholds": {
+      "rep": 6,
+      "manager": 11,
+      "director": 16
+    }
+  },
+  {
+    "id": "hazelnut-praline",
+    "name": "Hazelnut Praline",
+    "family": "Filling",
+    "listPrice": 7.40,
+    "escalationThresholds": {
+      "rep": 4,
+      "manager": 8,
+      "director": 12
+    }
+  },
+  {
+    "id": "dark-couverture",
+    "name": "Dark Couverture",
+    "family": "Couverture",
+    "listPrice": 5.40,
+    "escalationThresholds": {
+      "rep": 5,
+      "manager": 10,
+      "director": 15
+    }
+  }
+]

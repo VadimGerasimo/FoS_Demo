@@ -1,0 +1,112 @@
+[
+  {
+    "id": "baker-klaas",
+    "name": "Baker Klaas",
+    "segment": "Mid-Market Benelux",
+    "segmentId": "mid-market-benelux",
+    "volume": 320,
+    "price": 4.20,
+    "floor": 4.05,
+    "target": 4.85,
+    "region": "Benelux"
+  },
+  {
+    "id": "schoko-retail",
+    "name": "Schoko Retail Group",
+    "segment": "Enterprise Key Accounts",
+    "segmentId": "enterprise-key-accounts",
+    "volume": 38000,
+    "price": 3.55,
+    "floor": 3.40,
+    "target": 4.10,
+    "region": "DACH"
+  },
+  {
+    "id": "patisserie-moreau",
+    "name": "Pâtisserie Moreau",
+    "segment": "Mid-Market Benelux",
+    "segmentId": "mid-market-benelux",
+    "volume": 480,
+    "price": 4.75,
+    "floor": 4.05,
+    "target": 4.85,
+    "region": "France"
+  },
+  {
+    "id": "choco-artisan",
+    "name": "Choco Artisan BV",
+    "segment": "Mid-Market Benelux",
+    "segmentId": "mid-market-benelux",
+    "volume": 210,
+    "price": 4.90,
+    "floor": 4.05,
+    "target": 4.85,
+    "region": "Netherlands"
+  },
+  {
+    "id": "nordic-bakes",
+    "name": "Nordic Bakes AS",
+    "segment": "Mid-Market Nordics",
+    "segmentId": "mid-market-nordics",
+    "volume": 650,
+    "price": 4.60,
+    "floor": 4.20,
+    "target": 5.00,
+    "region": "Scandinavia"
+  },
+  {
+    "id": "dolce-italia",
+    "name": "Dolce Italia SpA",
+    "segment": "Mid-Market Southern Europe",
+    "segmentId": "mid-market-south-eu",
+    "volume": 920,
+    "price": 4.40,
+    "floor": 4.10,
+    "target": 4.80,
+    "region": "Italy"
+  },
+  {
+    "id": "confiserie-lambert",
+    "name": "Confiserie Lambert",
+    "segment": "Mid-Market Benelux",
+    "segmentId": "mid-market-benelux",
+    "volume": 390,
+    "price": 5.10,
+    "floor": 4.05,
+    "target": 4.85,
+    "region": "Belgium"
+  },
+  {
+    "id": "munchen-bakerei",
+    "name": "Münchener Bäckerei",
+    "segment": "Mid-Market DACH",
+    "segmentId": "mid-market-dach",
+    "volume": 710,
+    "price": 4.30,
+    "floor": 4.00,
+    "target": 4.70,
+    "region": "Germany"
+  },
+  {
+    "id": "royal-confections",
+    "name": "Royal Confections Ltd",
+    "segment": "Enterprise Key Accounts",
+    "segmentId": "enterprise-key-accounts",
+    "volume": 22000,
+    "price": 3.80,
+    "floor": 3.40,
+    "target": 4.10,
+    "region": "UK"
+  },
+  {
+    "id": "artisan-cacao",
+    "name": "Artisan Cacao SL",
+    "segment": "Mid-Market Southern Europe",
+    "segmentId": "mid-market-south-eu",
+    "volume": 280,
+    "price": 4.55,
+    "floor": 4.10,
+    "target": 4.80,
+    "region": "Spain"
+  }
+]

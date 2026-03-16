@@ -1,0 +1,70 @@
+[
+  {
+    "accountId": "baker-klaas",
+    "productId": "milk-couverture",
+    "currentPrice": 4.20,
+    "volume": 320,
+    "tierDiscount": 5.0,
+    "dealDiscount": 0,
+    "grossMarginPct": 18.3,
+    "segmentMedianPrice": 4.85,
+    "scenarios": {
+      "grantDiscount": {
+        "discountPct": -5,
+        "netPrice": 3.99,
+        "grossMarginPct": 14.1,
+        "zone": "red",
+        "verdict": "Below floor — margin critical, escalation required"
+      },
+      "holdFlat": {
+        "discountPct": 0,
+        "netPrice": 4.20,
+        "grossMarginPct": 18.3,
+        "zone": "amber",
+        "verdict": "Holds position but leaves pricing gap vs segment"
+      },
+      "proposeUplift": {
+        "discountPct": 4,
+        "netPrice": 4.37,
+        "grossMarginPct": 19.8,
+        "zone": "amber",
+        "verdict": "Recommended — defensible step toward fair pricing",
+        "isRecommended": true
+      }
+    }
+  },
+  {
+    "accountId": "schoko-retail",
+    "productId": "dark-compound",
+    "currentPrice": 3.70,
+    "volume": 45000,
+    "tierDiscount": 15.0,
+    "dealDiscount": 5.0,
+    "grossMarginPct": 19.6,
+    "segmentMedianPrice": 3.90,
+    "scenarios": {
+      "grantDiscount": {
+        "discountPct": -3,
+        "netPrice": 3.59,
+        "grossMarginPct": 16.3,
+        "zone": "red",
+        "verdict": "Below floor — loss-making at this volume"
+      },
+      "holdFlat": {
+        "discountPct": 0,
+        "netPrice": 3.70,
+        "grossMarginPct": 19.6,
+        "zone": "amber",
+        "verdict": "Current position — marginally below target"
+      },
+      "proposeUplift": {
+        "discountPct": 5,
+        "netPrice": 3.89,
+        "grossMarginPct": 22.1,
+        "zone": "amber",
+        "verdict": "Recommended — below median, defensible for volume",
+        "isRecommended": true
+      }
+    }
+  }
+]

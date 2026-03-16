@@ -1,0 +1,60 @@
+[
+  {
+    "productId": "milk-couverture",
+    "curve": [
+      { "price": 3.80, "winRate": 92 },
+      { "price": 4.00, "winRate": 88 },
+      { "price": 4.20, "winRate": 82 },
+      { "price": 4.40, "winRate": 74 },
+      { "price": 4.60, "winRate": 65 },
+      { "price": 4.80, "winRate": 54 },
+      { "price": 4.90, "winRate": 47 },
+      { "price": 5.00, "winRate": 38 },
+      { "price": 5.10, "winRate": 28 },
+      { "price": 5.20, "winRate": 18 },
+      { "price": 5.40, "winRate": 9 },
+      { "price": 5.60, "winRate": 4 }
+    ],
+    "cliffMin": 4.85,
+    "cliffMax": 5.10,
+    "optimalPrice": 4.60,
+    "historicalQuotes": [
+      { "price": 4.20, "won": true },
+      { "price": 4.35, "won": true },
+      { "price": 4.50, "won": true },
+      { "price": 4.60, "won": true },
+      { "price": 4.70, "won": false },
+      { "price": 4.80, "won": true },
+      { "price": 4.90, "won": false },
+      { "price": 4.95, "won": false },
+      { "price": 5.00, "won": false },
+      { "price": 5.10, "won": false },
+      { "price": 4.40, "won": true },
+      { "price": 4.55, "won": true }
+    ]
+  },
+  {
+    "productId": "dark-compound",
+    "curve": [
+      { "price": 3.20, "winRate": 90 },
+      { "price": 3.40, "winRate": 85 },
+      { "price": 3.60, "winRate": 76 },
+      { "price": 3.80, "winRate": 64 },
+      { "price": 4.00, "winRate": 50 },
+      { "price": 4.20, "winRate": 35 },
+      { "price": 4.40, "winRate": 20 },
+      { "price": 4.60, "winRate": 9 }
+    ],
+    "cliffMin": 3.90,
+    "cliffMax": 4.20,
+    "optimalPrice": 3.70,
+    "historicalQuotes": [
+      { "price": 3.50, "won": true },
+      { "price": 3.70, "won": true },
+      { "price": 3.80, "won": true },
+      { "price": 4.00, "won": false },
+      { "price": 4.10, "won": false },
+      { "price": 3.60, "won": true }
+    ]
+  }
+]

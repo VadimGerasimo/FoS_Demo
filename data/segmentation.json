@@ -1,0 +1,122 @@
+[
+  {
+    "id": "seg-bk-mc",
+    "accountId": "baker-klaas",
+    "accountName": "Baker Klaas",
+    "productId": "milk-couverture",
+    "volume": 320,
+    "price": 4.20,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-sr-mc",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "milk-couverture",
+    "volume": 38000,
+    "price": 3.55,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-pm-mc",
+    "accountId": "patisserie-moreau",
+    "accountName": "Pâtisserie Moreau",
+    "productId": "milk-couverture",
+    "volume": 480,
+    "price": 4.75,
+    "segment": "Mid-Market Benelux",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ca-mc",
+    "accountId": "choco-artisan",
+    "accountName": "Choco Artisan BV",
+    "productId": "milk-couverture",
+    "volume": 210,
+    "price": 4.90,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-nb-mc",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "milk-couverture",
+    "volume": 650,
+    "price": 4.60,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-di-mc",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "milk-couverture",
+    "volume": 920,
+    "price": 4.40,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-cl-mc",
+    "accountId": "confiserie-lambert",
+    "accountName": "Confiserie Lambert",
+    "productId": "milk-couverture",
+    "volume": 390,
+    "price": 5.10,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-mc",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "milk-couverture",
+    "volume": 710,
+    "price": 4.30,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-rc-mc",
+    "accountId": "royal-confections",
+    "accountName": "Royal Confections Ltd",
+    "productId": "milk-couverture",
+    "volume": 22000,
+    "price": 3.70,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ac-mc",
+    "accountId": "artisan-cacao",
+    "accountName": "Artisan Cacao SL",
+    "productId": "milk-couverture",
+    "volume": 280,
+    "price": 4.65,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-bk-dc",
+    "accountId": "baker-klaas",
+    "accountName": "Baker Klaas",
+    "productId": "dark-compound",
+    "volume": 120,
+    "price": 3.85,
+    "segment": "Mid-Market Benelux",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sr-dc",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "dark-compound",
+    "volume": 45000,
+    "price": 3.70,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  }
+]

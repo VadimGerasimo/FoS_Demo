@@ -1,0 +1,52 @@
+[
+  {
+    "accountId": "schoko-retail",
+    "priorRevenue": 1892000,
+    "volumeEffect": 42000,
+    "priceEffect": -22000,
+    "mixEffect": -19000,
+    "currentRevenue": 1893000,
+    "products": [
+      {
+        "productId": "dark-compound",
+        "productName": "Dark Compound",
+        "priorRevenue": 1254000,
+        "volumeEffect": 88200,
+        "priceEffect": -31500,
+        "mixEffect": -12600,
+        "currentRevenue": 1298100,
+        "delta": 3.5
+      },
+      {
+        "productId": "milk-couverture",
+        "productName": "Milk Couverture",
+        "priorRevenue": 638000,
+        "volumeEffect": -46200,
+        "priceEffect": 9500,
+        "mixEffect": -6400,
+        "currentRevenue": 594900,
+        "delta": -6.8
+      }
+    ]
+  },
+  {
+    "accountId": "baker-klaas",
+    "priorRevenue": 15120,
+    "volumeEffect": 3360,
+    "priceEffect": -840,
+    "mixEffect": -504,
+    "currentRevenue": 17136,
+    "products": [
+      {
+        "productId": "milk-couverture",
+        "productName": "Milk Couverture",
+        "priorRevenue": 15120,
+        "volumeEffect": 3360,
+        "priceEffect": -840,
+        "mixEffect": -504,
+        "currentRevenue": 17136,
+        "delta": 13.3
+      }
+    ]
+  }
+]

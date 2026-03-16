@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-page-bg text-text-primary;
+  }
+}
+
+@layer components {
+  /* Zone badge utilities */
+  .zone-badge-red {
+    @apply bg-zone-red-bg text-zone-red border border-zone-red/20 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .zone-badge-amber {
+    @apply bg-zone-amber-bg text-zone-amber border border-zone-amber/20 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+  .zone-badge-green {
+    @apply bg-zone-green-bg text-zone-green border border-zone-green/20 rounded-full px-2.5 py-0.5 text-xs font-semibold;
+  }
+
+  /* Card */
+  .card {
+    @apply bg-card-bg border border-border-default rounded-xl shadow-sm;
+  }
+
+  /* Page layout */
+  .page-container {
+    @apply flex flex-col gap-6 p-6 h-full;
+  }
+
+  .page-title {
+    @apply text-xl font-semibold text-text-primary;
+  }
+}

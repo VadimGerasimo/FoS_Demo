@@ -1,0 +1,41 @@
+[
+  {
+    "accountId": "baker-klaas",
+    "compositeScore": 6.2,
+    "dimensions": [
+      { "name": "Purchasing Power", "score": 5.5, "driverNote": "Mid-market, limited leverage" },
+      { "name": "Formulation Cooperation", "score": 7.8, "driverNote": "Active NPD collaboration" },
+      { "name": "OTIF Track Record", "score": 6.9, "driverNote": "94% OTIF last 12 months" },
+      { "name": "Communication Sentiment", "score": 7.2, "driverNote": "Positive engagement, responsive" },
+      { "name": "Relationship Stability", "score": 5.0, "driverNote": "3 year relationship, some churn risk" },
+      { "name": "Volume Consistency", "score": 6.5, "driverNote": "±12% seasonal variation" },
+      { "name": "RM Cost Impact", "score": 4.5, "driverNote": "Cocoa spot exposure, price-sensitive" }
+    ]
+  },
+  {
+    "accountId": "schoko-retail",
+    "compositeScore": 7.4,
+    "dimensions": [
+      { "name": "Purchasing Power", "score": 9.2, "driverNote": "Top-tier enterprise, strong balance sheet" },
+      { "name": "Formulation Cooperation", "score": 6.0, "driverNote": "Standard recipes, low NPD activity" },
+      { "name": "OTIF Track Record", "score": 8.1, "driverNote": "98.2% OTIF last 12 months" },
+      { "name": "Communication Sentiment", "score": 5.8, "driverNote": "Transactional relationship" },
+      { "name": "Relationship Stability", "score": 8.5, "driverNote": "7 year preferred supplier agreement" },
+      { "name": "Volume Consistency", "score": 9.0, "driverNote": "Steady 38k kg/month baseline" },
+      { "name": "RM Cost Impact", "score": 5.5, "driverNote": "Hedged until Q3, then exposed" }
+    ]
+  },
+  {
+    "accountId": "confiserie-lambert",
+    "compositeScore": 8.1,
+    "dimensions": [
+      { "name": "Purchasing Power", "score": 7.5, "driverNote": "Premium artisan, strong margins" },
+      { "name": "Formulation Cooperation", "score": 9.2, "driverNote": "Co-develops exclusive recipes" },
+      { "name": "OTIF Track Record", "score": 8.8, "driverNote": "99% OTIF" },
+      { "name": "Communication Sentiment", "score": 8.5, "driverNote": "High engagement, NPS promoter" },
+      { "name": "Relationship Stability", "score": 8.0, "driverNote": "5 year relationship, no churn signals" },
+      { "name": "Volume Consistency", "score": 7.5, "driverNote": "Consistent seasonal peaks" },
+      { "name": "RM Cost Impact", "score": 7.0, "driverNote": "Fixed-price contracts on key inputs" }
+    ]
+  }
+]

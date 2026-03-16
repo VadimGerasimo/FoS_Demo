@@ -1,0 +1,38 @@
+[
+  {
+    "accountId": "baker-klaas",
+    "productId": "milk-couverture",
+    "layers": [
+      { "name": "List Price", "value": 5.80, "cumulative": 5.80 },
+      { "name": "Invoice Discount", "value": -0.58, "cumulative": 5.22 },
+      { "name": "Net Invoice Price", "value": 0, "cumulative": 5.22 },
+      { "name": "Rebate", "value": -0.77, "cumulative": 4.45, "isHighlighted": true },
+      { "name": "Payment Terms Adj.", "value": -0.25, "cumulative": 4.20 },
+      { "name": "Net-Net Price", "value": 0, "cumulative": 4.20 }
+    ]
+  },
+  {
+    "accountId": "schoko-retail",
+    "productId": "milk-couverture",
+    "layers": [
+      { "name": "List Price", "value": 5.80, "cumulative": 5.80 },
+      { "name": "Invoice Discount", "value": -1.16, "cumulative": 4.64 },
+      { "name": "Net Invoice Price", "value": 0, "cumulative": 4.64 },
+      { "name": "Rebate", "value": -0.88, "cumulative": 3.76 },
+      { "name": "Payment Terms Adj.", "value": -0.21, "cumulative": 3.55 },
+      { "name": "Net-Net Price", "value": 0, "cumulative": 3.55 }
+    ]
+  },
+  {
+    "accountId": "schoko-retail",
+    "productId": "dark-compound",
+    "layers": [
+      { "name": "List Price", "value": 4.60, "cumulative": 4.60 },
+      { "name": "Invoice Discount", "value": -0.55, "cumulative": 4.05 },
+      { "name": "Net Invoice Price", "value": 0, "cumulative": 4.05 },
+      { "name": "Rebate", "value": -0.23, "cumulative": 3.82 },
+      { "name": "Payment Terms Adj.", "value": -0.12, "cumulative": 3.70 },
+      { "name": "Net-Net Price", "value": 0, "cumulative": 3.70 }
+    ]
+  }
+]

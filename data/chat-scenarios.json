@@ -1,0 +1,87 @@
+[
+  {
+    "id": "baker-klaas-segment-comparison",
+    "matchPhrases": [
+      "how does baker klaas compare",
+      "baker klaas similar bakers",
+      "cross-sell opportunities baker klaas",
+      "baker klaas segment peers",
+      "baker klaas benchmark"
+    ],
+    "accountId": "baker-klaas",
+    "productId": "milk-couverture",
+    "response": "Baker Klaas is in the bottom 15% of the Mid-Market Benelux segment at €4.20/kg vs a segment median of €4.85/kg. They do not currently purchase White Couverture or Cocoa Powder — both have a 73% co-purchase rate among similar bakers in the segment and carry above-average margins.",
+    "visualType": "table",
+    "dataKey": "baker-klaas-peer-comparison",
+    "suggestedAction": "Propose a trial bundle of White Couverture + Cocoa Powder at an introductory rate alongside the renewal",
+    "tableData": [
+      { "account": "Baker Klaas", "price": "€4.20/kg", "segment": "Mid-Market Benelux", "percentile": "Bottom 15%", "whiteCouverture": "No", "cocoaPowder": "No" },
+      { "account": "Segment Median", "price": "€4.85/kg", "segment": "Mid-Market Benelux", "percentile": "50th", "whiteCouverture": "73%", "cocoaPowder": "73%" },
+      { "account": "Pâtisserie Moreau", "price": "€4.75/kg", "segment": "Mid-Market Benelux", "percentile": "42nd", "whiteCouverture": "Yes", "cocoaPowder": "Yes" },
+      { "account": "Confiserie Lambert", "price": "€5.10/kg", "segment": "Mid-Market Benelux", "percentile": "91st", "whiteCouverture": "Yes", "cocoaPowder": "Yes" },
+      { "account": "Choco Artisan BV", "price": "€4.90/kg", "segment": "Mid-Market Benelux", "percentile": "68th", "whiteCouverture": "Yes", "cocoaPowder": "No" }
+    ]
+  },
+  {
+    "id": "baker-klaas-waterfall",
+    "matchPhrases": [
+      "baker klaas rebate",
+      "baker klaas margin leakage",
+      "baker klaas price waterfall",
+      "where is baker klaas margin going",
+      "baker klaas discount breakdown"
+    ],
+    "accountId": "baker-klaas",
+    "productId": "milk-couverture",
+    "response": "Baker Klaas has a 9.2% flat rebate — €38,400 total annual leakage — which is 5.1 percentage points above the Mid-Market Benelux norm. Combined with the invoice discount, net-net realisation is €4.20/kg vs a list price of €5.80/kg. The rebate structure is the primary driver of margin erosion.",
+    "visualType": "waterfall",
+    "dataKey": "baker-klaas-milk-couverture",
+    "suggestedAction": "Review rebate structure in next contract cycle — propose performance-linked rebate to cap total leakage",
+    "tableData": null
+  },
+  {
+    "id": "schoko-pvm-analysis",
+    "matchPhrases": [
+      "schoko revenue growth",
+      "is schoko growing",
+      "schoko pvm",
+      "schoko price volume mix",
+      "schoko revenue quality"
+    ],
+    "accountId": "schoko-retail",
+    "productId": null,
+    "response": "Schoko Retail Group shows a net revenue increase of just €1k on a base of €1.89M — masking significant headwinds. Volume added €42k but price drag cost €22k and mix shift cost €19k. Growth looks flat but the quality is deteriorating: the mix is shifting toward lower-margin Dark Compound and away from Milk Couverture.",
+    "visualType": "pvm",
+    "dataKey": "schoko-retail",
+    "suggestedAction": "Present the mix shift data to commercial director — initiate Milk Couverture re-engagement campaign",
+    "tableData": null
+  },
+  {
+    "id": "why-does-schoko-pay-less",
+    "matchPhrases": [
+      "why does schoko pay less",
+      "schoko vs baker klaas price",
+      "why different prices same product",
+      "explain schoko pricing",
+      "price difference schoko baker klaas"
+    ],
+    "accountId": null,
+    "productId": "milk-couverture",
+    "response": "Schoko Retail Group pays €3.55/kg vs Baker Klaas at €4.20/kg — a €0.65/kg difference on Milk Couverture. This is driven by three factors: (1) Volume tier: Schoko buys 38,000 kg/month vs Baker Klaas at 320 kg/month, triggering an Enterprise volume discount; (2) Contract structure: Schoko has a 3-year preferred supplier agreement with committed volume guarantees; (3) Segment floor: Enterprise Key Accounts have a lower floor (€3.40/kg) reflecting genuine cost-to-serve advantages at scale.",
+    "visualType": "scatter",
+    "dataKey": "milk-couverture",
+    "suggestedAction": null,
+    "tableData": null
+  },
+  {
+    "id": "generic-fallback",
+    "matchPhrases": [],
+    "accountId": null,
+    "productId": null,
+    "response": "I can help you explore pricing data for your accounts and products. Try asking about a specific account's segment position, margin waterfall, or cross-sell opportunities — for example: 'How does Baker Klaas compare to similar bakers?' or 'Show me Schoko's revenue breakdown.'",
+    "visualType": null,
+    "dataKey": null,
+    "suggestedAction": null,
+    "tableData": null
+  }
+]
