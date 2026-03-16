@@ -1,806 +1,708 @@
-# Product Requirements Document: Link-in-Bio Page Builder
+# Equazion — Product Requirements Document
+
+**Version:** 1.1
+**Date:** 2026-03-16
+**Owner:** PwC
+**Status:** Approved for Implementation
+
+---
 
 ## 1. Executive Summary
 
-Link-in-Bio Page Builder is a self-hosted, multi-user Linktree alternative that enables users to create a personal landing page with their name, bio, avatar, and a curated list of links. Users select from layout-varying visual themes, receive a shareable public URL based on their chosen slug (e.g., `/cole`), and access a dedicated analytics dashboard tracking clicks per link over time.
+Equazion is a commercial pricing intelligence demo tool built by PwC for ChocoMaker, a fictional chocolate manufacturing company. The application showcases seven integrated pricing capabilities — from conversational data exploration to real-time quoting to revenue bridge analysis — in a single, cohesive product experience. All data is illustrative and all scenarios are choreographed to tell a specific commercial story to a live audience.
 
-The application is built as a full-stack Next.js app deployed on Vercel, backed by Neon serverless Postgres with Neon Auth for authentication. The editor features a live preview with side-by-side layout on desktop and a toggle mode on mobile, with full drag-and-drop link reordering. Public pages are server-rendered for optimal SEO and social sharing.
+The tool is designed to be presented by a PwC consultant to an audience of commercial directors, pricing managers, and sales representatives. The UI must feel like a production-grade pricing system — credible, polished, and data-rich — while remaining fully controlled through pre-scripted scenario flows under the hood. The demo experience lives in the presenter's narration; the UI must never betray the scripted nature of the content.
 
-**MVP Goal:** Deliver a fully functional, production-ready link-in-bio platform across 4 sequential phases — from profile editing through theming, public URLs with SEO, and click analytics — with comprehensive E2E testing validating every user journey.
+**Primary Demo Scenario:** Scenario 1 — Baker Klaas Asks for More Discount. This is the core story the MVP must tell end-to-end without hesitation. Sarah, a sales rep, uses Equazion live on a call with Baker Klaas to hold the price, propose a smart uplift, and open a cross-sell conversation — all in under two minutes, with no spreadsheet and no manager.
+
+**MVP Goal:** Deliver a fully navigable Next.js web application where Scenario 1 runs flawlessly across Segmentation, CPQ, and Chat. All remaining screens are fully populated and navigable as supporting context. The tool is deployable to Vercel and ready for live client demonstrations.
 
 ---
 
 ## 2. Mission
 
-**Mission Statement:** Provide creators and professionals with a beautiful, self-hosted link-in-bio page they fully control — no vendor lock-in, no premium paywalls for basic features, and complete ownership of their data and analytics.
+**Mission Statement:** Equazion demonstrates that pricing decisions don't have to be gut-feel — they can be grounded in data, guided by AI, and governed by clear commercial logic, all from a single interface.
 
-**Core Principles:**
+### Core Principles
 
-1. **Simplicity first** — The editor should be intuitive enough that a user can create and publish their page in under 2 minutes.
-2. **Visual quality** — Public pages should look polished and professional out of the box, rivaling paid alternatives.
-3. **Performance** — Server-rendered public pages load fast, score well on Lighthouse, and render correctly for social media crawlers.
-4. **Self-service** — No admin intervention needed. Users sign up, build, publish, and track analytics independently.
-5. **Test-driven confidence** — Every user journey is validated with E2E tests using agent-browser. No feature ships without comprehensive test coverage.
+1. **Story over feature** — Every design decision serves the demo narrative. Scenario 1 is the north star; every screen should feel like it belongs to the same story.
+2. **Credibility through data density** — Tables, charts, and metrics must feel populated and real. Sparse screens break immersion.
+3. **Invisible choreography** — Scenario flows are invisible to the UI. No step counters, no scenario labels, no "demo mode" affordances.
+4. **Context continuity** — The active account and product are always visible and always in sync. Changing them in any filter pane updates every visual on the screen instantly.
+5. **AI as co-pilot, not gimmick** — The "Explain what I see" and Chat features surface genuine insight language, not generic filler text.
 
 ---
 
 ## 3. Target Users
 
-### Primary Persona: Content Creators & Professionals
+### Primary Personas
 
-- **Who:** Social media creators, freelancers, small business owners, developers, designers — anyone who needs a single link to share across platforms.
-- **Technical comfort:** Low to medium. They can fill out forms and pick themes but shouldn't need to write code or manage infrastructure.
-- **Key needs:**
-  - A single URL to put in their Instagram/TikTok/Twitter bio
-  - A page that looks professional without design skills
-  - Knowing which links get clicked and when
-  - Ability to quickly update links as their content/projects change
+| Persona | Role | Demo Context |
+|---|---|---|
+| Sarah (Sales Rep) | Account manager negotiating a deal live on a call | Primary actor in Scenario 1 — uses Segmentation, CPQ, Chat |
+| Pricing Manager | Reviews account profitability and rebate structures | Supporting viewer — interested in Waterfall and Segmentation |
+| Commercial Director | Evaluates portfolio performance and growth quality | Supporting viewer — interested in PVM and Chat queries |
+| New Sales Rep | Onboarding, learning why pricing differs by account | Asks "why" questions in Chat |
 
-### Secondary Persona: Self-Hosters / Developers
+### Audience (Demo)
+- **Live presenter:** PwC consultant playing the role of Sarah, narrating the scenario
+- **Observers:** Mix of commercial directors, pricing managers, and sales reps at the client
+- **Technical comfort:** Medium — comfortable with dashboards and CRM tools; not developers
 
-- **Who:** Developers who want to run their own Linktree alternative rather than depend on a SaaS.
-- **Technical comfort:** High. They'll deploy to Vercel, configure Neon, and potentially customize themes.
-- **Key needs:**
-  - Full data ownership
-  - Open-source codebase they can fork and extend
-  - Clean, well-structured code they can understand and modify
+### Key Needs
+- Understand whether an account is priced correctly relative to segment
+- Know whether granting a discount is safe or margin-eroding
+- Model alternative pricing options (give discount / hold flat / uplift) side by side
+- Quickly surface cross-sell opportunities attached to an account
+- Understand if revenue growth is real or volume-driven
 
 ---
 
 ## 4. MVP Scope
 
-### In Scope
+### Core Functionality
+- ✅ Chat with Your Data — conversational interface with dynamic right-panel visuals
+- ✅ Segmentation screen — scatter plot with floor/target curves, filter pane, comparison mode, prospect input
+- ✅ CPQ screen — live quoting with tier discount, escalation workflow, margin bridge, three-scenario modelling
+- ✅ Win/Loss Price Intelligence — win probability curve, standalone screen
+- ✅ Ease of Realization — composite score with dimension breakdown, standalone screen
+- ✅ Price Waterfall — full price decomposition waterfall
+- ✅ PVM Bridge — price/volume/mix revenue bridge with per-product table
+- ✅ Global "Explain what I see" — AI slide-over on every screen
+- ✅ Global filter pane — account + product selectors on every screen, visuals update reactively
+- ✅ Cross-screen context (active account/product carried via AppContext, synced to filter pane)
+- ✅ Sidebar navigation — dark, PwC-branded, no scenario labels
+- ✅ 8–10 mock accounts, 5–6 mock SKUs in all data tables
+- ✅ Animated prospect dot on Segmentation curve
+- ✅ Segmentation comparison mode (split panel toggle)
+- ✅ CPQ escalation simulation ("request sent to manager" state)
+- ✅ Saveable conversations (localStorage)
+- ✅ Pin to shared library (visual affordance)
 
-**Core Functionality:**
-- ✅ User registration with username/slug selection
-- ✅ Email/password authentication
-- ✅ Google OAuth authentication
-- ✅ Profile editor (name, bio, avatar URL)
-- ✅ Link management (add, remove, reorder via drag-and-drop)
-- ✅ Header and divider items between links
-- ✅ Live preview alongside editor
-- ✅ 4 layout-varying themes with instant preview
-- ✅ Slug-based public pages (`/<username>`)
-- ✅ OG meta tags for social sharing
-- ✅ Click tracking per link with timestamps
-- ✅ Analytics dashboard with click counts and time-series charts
-- ✅ Marketing landing page at `/`
-
-**Technical:**
-- ✅ Server-side rendering for public pages
-- ✅ Responsive design (mobile-first)
-- ✅ TypeScript strict mode throughout
-- ✅ Biome for linting and formatting
-- ✅ Vitest for unit testing
-- ✅ agent-browser for E2E testing of all user journeys
-- ✅ Basic rate limiting on API routes
-- ✅ Explicit save button (no auto-save)
-
-**Deployment:**
-- ✅ Vercel deployment
-- ✅ Neon serverless Postgres
-- ✅ Neon Auth integration
-- ✅ Environment-based configuration
+### Technical
+- ✅ Next.js 14+ (App Router)
+- ✅ Recharts for all data visualisations
+- ✅ OpenAI gpt-4o API integration (semantic question matching)
+- ✅ Static JSON data files (easily editable for demo tweaks)
+- ✅ PwC/Equazion brand identity (palette, logos)
+- ✅ `.env.local` template for API key
+- ✅ Vercel deployment configuration
 
 ### Out of Scope
-
-- ❌ Admin panel / moderation tools
-- ❌ File upload for avatars (URL-only for MVP)
-- ❌ Custom domains per user
-- ❌ Embed support (YouTube, Spotify, etc.)
-- ❌ Monetization features (tipping, paid links)
-- ❌ Email notifications / transactional emails
-- ❌ Auto-save / draft vs published states
-- ❌ Link scheduling (show/hide by date)
-- ❌ Geographic analytics (IP-based location data)
-- ❌ Referrer tracking
-- ❌ Custom CSS / theme editor per user
-- ❌ Team/organization accounts
-- ❌ API access for third-party integrations
-- ❌ Mobile app
-- ❌ Bot protection beyond basic rate limiting
+- ❌ Authentication / login screen
+- ❌ Real database or backend persistence
+- ❌ Multi-user / multi-session state
+- ❌ Mobile or tablet responsive layout
+- ❌ Dark mode
+- ❌ Export to PDF / Excel
+- ❌ Real-time data feeds or integrations
+- ❌ User management / roles
+- ❌ Multi-language support
+- ❌ Accessibility compliance (WCAG)
 
 ---
 
-## 5. User Stories
+## 5. Primary Demo Scenario
 
-### Registration & Authentication
+### Scenario 1 — Baker Klaas Asks for More Discount
+*Addresses: Q1 (speed) · Q4 (reduce unnecessary discounting)*
 
-**US-1:** As a new user, I want to sign up with my email and choose a unique username, so that I get a personal URL like `/cole` for my link page.
-> *Example: User visits `/`, clicks "Get Started", enters name, email, password, and desired slug `cole`. System checks slug availability in real-time. On success, user lands on the editor.*
+Sarah is on the phone with Baker Klaas — a mid-market bakery renewing their annual contract on Milk Couverture. The buyer wants an extra 5% off. Sarah has Equazion open on her screen.
 
-**US-2:** As a returning user, I want to log in with my email/password or Google account, so that I can quickly access my editor.
-> *Example: User clicks "Sign In", chooses "Continue with Google", authenticates via OAuth, and is redirected to their editor dashboard.*
+**Step 1 — Segmentation: See where Baker Klaas stands**
+Sarah selects Baker Klaas + Milk Couverture in the filter pane. His dot appears visibly below the segment floor on the scatter plot. The AI tells her instantly: Baker Klaas is already 8% below the Mid-Market Benelux floor on this SKU. Granting more discount would widen the gap further — a 12% uplift would be needed just to return to fair pricing. The recommendation: staged correction over two to three renewal cycles.
 
-### Profile Editing
+**Step 2 — CPQ: Model three scenarios side by side**
+Sarah opens CPQ with Baker Klaas + Milk Couverture pre-loaded from context. She models three options:
+- Give the 5% discount → red zone, margin 14.1%, escalation fires
+- Hold flat (0%) → amber zone, margin 18.3%, still below segment target
+- Propose +4% uplift → still amber but moves toward in-band, margin 19.8%
 
-**US-3:** As a logged-in user, I want to edit my name, bio, and avatar URL with a live preview, so that I can see exactly how my page will look before saving.
-> *Example: User types in the bio field "Designer & coffee enthusiast" and the preview panel on the right instantly updates to show the new bio text.*
+The tool shows that even at +4%, Baker Klaas is still well below the segment median of €4.85/kg. The uplift is defensible. It is the sweet spot.
 
-**US-4:** As a logged-in user, I want to add, remove, and reorder links using drag-and-drop, so that I can organize my page the way I want.
-> *Example: User has 5 links. They grab the drag handle on "My Portfolio" and drag it from position 4 to position 1. The preview updates immediately. They click "Save" to persist the change.*
+**Step 3 — Chat: Get competitive context and cross-sell intelligence**
+Sarah asks the AI agent: *"How does Baker Klaas compare to similar bakers, and are there any cross-sell opportunities?"*
 
-**US-5:** As a logged-in user, I want to add section headers and dividers between my links, so that I can visually group related links.
-> *Example: User adds a header "Social Media" above their Twitter and Instagram links, and a divider before their "Projects" section.*
+Within seconds she learns:
+- Baker Klaas is in the bottom 15% of the Mid-Market Benelux segment at €4.20/kg vs a median of €4.85/kg
+- Baker Klaas does not currently buy White Couverture or Cocoa Powder
+- 73% of similar bakers in the segment co-purchase these two SKUs
+- Both are high-attach, high-margin products
 
-### Themes
+**The outcome:**
+Sarah goes back to the buyer with confidence:
 
-**US-6:** As a logged-in user, I want to pick from 4 visual themes and see the result instantly in the preview, so that I can choose the look that best represents me.
-> *Example: User clicks the "Colorful" theme thumbnail. The preview immediately switches to a vibrant gradient background with rounded, colorful link buttons. They try "Professional" next — the preview shifts to a clean, muted layout with serif typography.*
+> *"You've actually been on a very favourable rate — well below similar bakeries in your segment. I've kept the adjustment to just 4%, which still keeps you competitive. And I'd love to set you up with a trial on White Couverture and Cocoa Powder at an introductory rate — most bakers your size are bundling these and seeing real value."*
 
-### Public Pages
-
-**US-7:** As a visitor, I want to view someone's link page at their public URL and click their links, so that I can find their content.
-> *Example: Visitor opens `example.com/cole` in their browser. They see Cole's avatar, bio, and list of links rendered with the "Dark" theme. They click "My YouTube Channel" and are redirected to YouTube.*
-
-### Analytics
-
-**US-8:** As a logged-in user, I want to see how many times each of my links has been clicked and view click trends over time, so that I can understand what content resonates with my audience.
-> *Example: User navigates to their analytics dashboard. They see a bar chart showing "YouTube: 342 clicks, Portfolio: 128 clicks, Twitter: 89 clicks" and a line chart showing daily clicks over the past 30 days.*
+**The result:** A 9 percentage point swing from where the deal was heading. A cross-sell conversation opened on two new SKUs. Baker Klaas stays — because the uplift was justified, gradual, and came with added value. No spreadsheet, no waiting for a manager to call back. Just the right data, at the right moment, in the hands of the rep who needs it.
 
 ---
 
-## 6. Core Architecture & Patterns
+### Secondary Scenarios (Supporting Data — Not Primary Demo Focus)
 
-### High-Level Architecture
+| # | Title | Primary Screens | Key Data Moment |
+|---|---|---|---|
+| 2 | Silent margin erosion on Baker Klaas | Waterfall → Chat | 9.2% flat rebate; €38,400 total leakage |
+| 3 | Schoko volume deal negotiation | Segmentation → CPQ → Chat | 45k kg at €3.70; €166,500 GM |
+| 4 | Growing or getting squeezed? (Schoko PVM) | PVM → Chat | +€7k net, -€22k price, -€19k mix |
+| 5 | Why does Schoko pay less? | Segmentation (comparison) → Chat | Baker Klaas 18.3% vs Schoko 26.8% net-net |
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                        Vercel                           │
-│  ┌───────────────────────────────────────────────────┐  │
-│  │                   Next.js App                     │  │
-│  │                                                   │  │
-│  │  ┌─────────────┐  ┌──────────┐  ┌─────────────┐  │  │
-│  │  │  SSR Public  │  │   API    │  │  SPA Editor  │  │  │
-│  │  │   Pages      │  │  Routes  │  │  + Dashboard │  │  │
-│  │  │  /<slug>     │  │ /api/*   │  │  /editor     │  │  │
-│  │  └─────────────┘  └──────────┘  └─────────────┘  │  │
-│  │                        │                          │  │
-│  └────────────────────────┼──────────────────────────┘  │
-│                           │                             │
-└───────────────────────────┼─────────────────────────────┘
-                            │
-                  ┌─────────┴─────────┐
-                  │   Neon Postgres   │
-                  │  + Neon Auth      │
-                  │  (Serverless)     │
-                  └───────────────────┘
-```
+All secondary scenario data is present in the JSON files and all screens are fully navigable. They are available if the presenter chooses to extend the demo, but Scenario 1 is the rehearsed primary flow.
+
+---
+
+## 6. User Stories
+
+### Primary Story — Sarah holds price and opens cross-sell (Scenario 1)
+> **As Sarah, a sales rep on a live call,** I want to instantly see where Baker Klaas sits relative to the segment floor, model three pricing options, and get AI-surfaced cross-sell intelligence, **so that** I can respond to a discount request with data, propose a defensible uplift, and expand the deal — all without putting the customer on hold.
+
+*Concrete flow:* Filter pane set to Baker Klaas + Milk Couverture → Segmentation shows red dot 8% below floor → CPQ shows three scenario comparison → Chat answers "How does Baker Klaas compare?" → Sarah quotes +4% with confidence.
+
+---
+
+### Supporting Stories
+
+**Story 2 — Rep assesses deal attractiveness holistically**
+> **As a sales rep preparing a quote,** I want to see both the win probability and ease of realization score alongside the price, **so that** I understand commercial attractiveness and operational risk before submitting.
+
+**Story 3 — Manager spots margin leakage**
+> **As a pricing manager,** I want to see a full price waterfall decomposition for any account, **so that** I can identify which discount layer is eroding margin beyond the segment norm.
+
+**Story 4 — Director diagnoses revenue quality**
+> **As a commercial director,** I want to decompose revenue growth into volume, price, and mix effects, **so that** I can tell whether growth is genuine margin expansion or volume masking erosion.
+
+**Story 5 — New rep understands pricing logic**
+> **As a new sales rep,** I want to understand why two customers pay different prices for the same product, **so that** I can explain it credibly in customer conversations.
+
+**Story 6 — Presenter explores data conversationally**
+> **As a demo presenter,** I want to pose natural language questions about accounts and pricing, **so that** the audience sees AI-driven insight rather than a scripted walkthrough.
+
+---
+
+## 7. Core Architecture & Patterns
+
+### Architecture Overview
+- **Rendering:** Next.js App Router with React Server Components where possible; client components for all interactive/chart elements
+- **Data layer:** Static JSON files in `/data/` — no ORM, no database. All screens import JSON directly or via a thin data-access utility.
+- **State management:** React Context (`AppContext`) for cross-screen active account/product/volume state. localStorage for saved conversations. No Redux or Zustand needed.
+- **Filter pane pattern:** Every screen mounts the same `<FilterBar>` component at the top. It reads and writes to `AppContext`. Changing account or product in any `FilterBar` triggers a re-render of all charts on that screen using the new context values.
+- **AI layer:** Two Next.js API routes (`/api/chat`, `/api/explain`) that call OpenAI gpt-4o. Responses are structured JSON that the frontend routes to the correct visual component.
 
 ### Directory Structure
-
 ```
-link-in-bio-page-builder/
+FoS_Demo/
+├── brand_assets/                  # Logos, palette.css (source of truth)
+├── public/
+│   ├── equazion-logo.png
+│   ├── pwc-logo-icon.png
+│   └── pwc-logo-white.svg
+├── data/
+│   ├── accounts.json
+│   ├── products.json
+│   ├── quotes.json
+│   ├── segmentation.json
+│   ├── waterfall.json
+│   ├── pvm.json
+│   ├── win-loss.json
+│   ├── ease-of-realization.json
+│   └── chat-scenarios.json
 ├── src/
-│   ├── app/                          # Next.js App Router
-│   │   ├── (marketing)/              # Marketing/landing route group
-│   │   │   └── page.tsx              # Landing page at /
-│   │   ├── (auth)/                   # Auth route group
-│   │   │   ├── login/page.tsx
-│   │   │   └── signup/page.tsx
-│   │   ├── (dashboard)/              # Authenticated route group
-│   │   │   ├── editor/page.tsx       # Profile editor + live preview
-│   │   │   ├── analytics/page.tsx    # Analytics dashboard
-│   │   │   └── settings/page.tsx     # Account settings (slug change, etc.)
-│   │   ├── [slug]/page.tsx           # Public profile pages (SSR)
-│   │   ├── api/
-│   │   │   ├── auth/[...all]/route.ts  # Neon Auth handlers
-│   │   │   ├── profile/route.ts      # Profile CRUD
-│   │   │   ├── links/route.ts        # Link management
-│   │   │   ├── links/reorder/route.ts
-│   │   │   ├── click/route.ts        # Click tracking endpoint
-│   │   │   └── analytics/route.ts    # Analytics data
-│   │   ├── layout.tsx                # Root layout
-│   │   └── globals.css
+│   ├── app/
+│   │   ├── layout.tsx             # Root layout: sidebar + topbar shell
+│   │   ├── page.tsx               # Redirect → /chat
+│   │   ├── chat/page.tsx
+│   │   ├── segmentation/page.tsx
+│   │   ├── cpq/page.tsx
+│   │   ├── win-loss/page.tsx
+│   │   ├── ease-of-realization/page.tsx
+│   │   ├── waterfall/page.tsx
+│   │   ├── pvm/page.tsx
+│   │   └── api/
+│   │       ├── chat/route.ts
+│   │       └── explain/route.ts
 │   ├── components/
-│   │   ├── ui/                       # shadcn/ui components
-│   │   ├── editor/                   # Editor-specific components
-│   │   │   ├── profile-form.tsx
-│   │   │   ├── link-list.tsx
-│   │   │   ├── link-item.tsx
-│   │   │   ├── add-link-dialog.tsx
-│   │   │   └── theme-picker.tsx
-│   │   ├── preview/                  # Live preview components
-│   │   │   └── preview-panel.tsx
-│   │   ├── themes/                   # Theme layout components
-│   │   │   ├── minimal.tsx
-│   │   │   ├── dark.tsx
-│   │   │   ├── colorful.tsx
-│   │   │   └── professional.tsx
-│   │   ├── analytics/                # Analytics components
-│   │   │   ├── click-chart.tsx
-│   │   │   ├── top-links.tsx
-│   │   │   └── time-series.tsx
-│   │   └── marketing/                # Landing page components
-│   │       ├── hero.tsx
-│   │       └── features.tsx
+│   │   ├── layout/
+│   │   │   ├── Sidebar.tsx
+│   │   │   └── TopBar.tsx
+│   │   ├── shared/
+│   │   │   ├── FilterBar.tsx      # Account + product selectors — used on every screen
+│   │   │   ├── ExplainButton.tsx
+│   │   │   └── ExplainPanel.tsx
+│   │   ├── charts/
+│   │   │   ├── SegmentationScatter.tsx
+│   │   │   ├── WaterfallChart.tsx
+│   │   │   ├── PVMBridge.tsx
+│   │   │   ├── WinProbabilityCurve.tsx
+│   │   │   └── EoRDimensions.tsx
+│   │   ├── cpq/
+│   │   │   ├── PriceBand.tsx
+│   │   │   ├── MarginBridge.tsx
+│   │   │   ├── EscalationBanner.tsx
+│   │   │   ├── ScenarioComparison.tsx  # Three-scenario modelling panel
+│   │   │   ├── WinProbSignal.tsx
+│   │   │   └── EoRSignal.tsx
+│   │   ├── chat/
+│   │   │   ├── ConversationThread.tsx
+│   │   │   ├── MessageInput.tsx
+│   │   │   ├── DynamicRightPanel.tsx
+│   │   │   └── SavedConversations.tsx
+│   ├── context/
+│   │   └── AppContext.tsx
 │   ├── lib/
-│   │   ├── auth.ts                   # Neon Auth server instance
-│   │   ├── db/
-│   │   │   ├── index.ts              # Drizzle client
-│   │   │   ├── schema.ts             # Drizzle schema definitions
-│   │   │   └── migrations/           # Drizzle migrations
-│   │   ├── rate-limit.ts             # Rate limiting utility
-│   │   └── utils.ts                  # Shared utilities
-│   ├── hooks/                        # Custom React hooks
-│   │   ├── use-profile.ts
-│   │   └── use-analytics.ts
-│   └── types/                        # Shared TypeScript types
-│       └── index.ts
-├── tests/
-│   ├── unit/                         # Vitest unit tests
-│   │   ├── lib/
-│   │   └── components/
-│   └── e2e/                          # agent-browser E2E tests
-│       ├── auth.test.ts
-│       ├── editor.test.ts
-│       ├── public-page.test.ts
-│       └── analytics.test.ts
-├── public/                           # Static assets
-├── drizzle.config.ts                 # Drizzle configuration
-├── biome.json                        # Biome linter/formatter config
-├── next.config.ts                    # Next.js configuration
+│   │   └── data.ts                # JSON import helpers + filter utilities
+│   └── styles/
+│       └── globals.css            # PwC palette vars + Tailwind base
+├── .env.local                     # OPENAI_API_KEY placeholder
+├── next.config.ts
 ├── tailwind.config.ts
-├── tsconfig.json
-├── vitest.config.ts
 └── package.json
 ```
 
 ### Key Design Patterns
 
-1. **Route Groups** — Use Next.js route groups `(marketing)`, `(auth)`, `(dashboard)` to organize layouts without affecting URL structure.
-2. **Server Components by default** — All pages and layouts are React Server Components unless they need interactivity. Client Components are used only in the editor, theme picker, and analytics charts.
-3. **Server Actions for mutations** — Use Next.js Server Actions for profile saves, link CRUD, and settings changes. API routes for click tracking (called from public pages) and analytics data fetching.
-4. **Optimistic UI** — The editor preview updates instantly on the client; the save button persists to the database.
-5. **SSR for public pages** — The `[slug]` dynamic route fetches profile data server-side and renders the full HTML with OG meta tags.
+**Filter Pane / AppContext sync:**
+Every screen's data-driven components receive `accountId` and `productId` as props derived from `AppContext`. When `FilterBar` updates context, all child components re-render with filtered data. No page reload, no routing — instant visual update.
 
----
-
-## 7. Features
-
-### 7.1 Marketing Landing Page
-
-**Route:** `/`
-
-A public homepage that explains the product and drives signups.
-
-- Hero section with tagline, description, and CTA buttons ("Get Started" / "Sign In")
-- Brief feature highlights (themes, analytics, custom URL)
-- Example preview showing what a link page looks like
-- Footer with minimal links
-
-### 7.2 Authentication
-
-**Routes:** `/login`, `/signup`
-
-Powered by Neon Auth (built on Better Auth).
-
-- **Signup flow:**
-  1. User enters display name, email, password, and desired username/slug
-  2. Real-time slug availability check (debounced API call)
-  3. Slug validation: lowercase alphanumeric + hyphens, 3-30 characters, no reserved words
-  4. On success → redirect to `/editor`
-- **Login flow:**
-  1. Email/password form OR "Continue with Google" button
-  2. On success → redirect to `/editor`
-- **Reserved slugs:** `login`, `signup`, `editor`, `analytics`, `settings`, `api`, `admin`, `about`, `help`, etc.
-
-### 7.3 Profile Editor + Live Preview
-
-**Route:** `/editor`
-
-The core editing experience for building a link page.
-
-**Editor Panel (left side on desktop):**
-- **Profile section:**
-  - Display name (text input, max 50 chars)
-  - Bio (textarea, max 160 chars, with character counter)
-  - Avatar URL (text input with URL validation, small preview thumbnail)
-- **Links section:**
-  - List of current links with drag handles (dnd-kit)
-  - Each link item shows: drag handle, title, URL, delete button
-  - "Add Link" button opens inline form (title + URL fields)
-  - "Add Header" button adds a text header item
-  - "Add Divider" button adds a visual divider item
-  - Items are sortable via drag-and-drop
-- **Save button** at the bottom — disabled when no changes, shows loading state during save, success/error feedback via toast notification
-
-**Preview Panel (right side on desktop):**
-- Renders the public page exactly as it will appear
-- Updates in real-time as the user types/reorders (client-side state, not DB)
-- Displayed inside a phone-frame mockup for context
-- Shows the currently selected theme
-
-**Layout Modes:**
-- **Desktop (≥1024px):** Side-by-side with resizable panels. Toggle buttons in toolbar to: show both panels, show editor only, show preview only.
-- **Mobile (<1024px):** Tab toggle between "Edit" and "Preview" views.
-
-### 7.4 Theme System
-
-**Accessible from:** Theme picker in the editor (above or within the editor panel)
-
-4 themes that vary in both visual style and layout structure:
-
-| Theme | Vibe | Layout Notes |
-|---|---|---|
-| **Minimal** | Clean, white/light gray, sans-serif, lots of whitespace | Centered single-column, simple rectangular link buttons, small avatar |
-| **Dark** | Dark backgrounds, light text, neon/accent colors, modern feel | Centered column, rounded pill-shaped link buttons, larger avatar with glow effect |
-| **Colorful** | Vibrant gradients, playful, rounded shapes, bold typography | Wider card-based links, avatar with colored border ring, gradient background |
-| **Professional** | Muted tones, serif headings, structured, business-card feel | Two-column layout on desktop (avatar/bio left, links right), subtle shadows, traditional buttons |
-
-**Theme Picker UI:**
-- Horizontal row of theme thumbnail cards
-- Clicking a theme instantly updates the preview panel
-- Selected theme is visually highlighted
-- Theme selection is saved with the profile
-
-### 7.5 Public Pages + SEO
-
-**Route:** `/[slug]` (dynamic, server-rendered)
-
-- Fetches user profile, links, and theme from the database at request time
-- Renders the full page server-side with the selected theme component
-- Injects OG meta tags into `<head>`:
-  - `og:title` → User's display name
-  - `og:description` → User's bio
-  - `og:image` → User's avatar URL (or a generated fallback)
-  - `og:url` → Full canonical URL
-  - `twitter:card` → `summary`
-- Each link is a clickable `<a>` tag that:
-  1. Fires a click-tracking request to `/api/click` (via `navigator.sendBeacon` or fetch)
-  2. Then navigates to the target URL
-- Returns 404 for non-existent slugs with a friendly "Page not found" message
-
-### 7.6 Click Analytics
-
-**Tracking endpoint:** `POST /api/click`
-
-- Accepts: `{ linkId: string }`
-- Records: link ID, timestamp, (IP hash for rate limiting — not stored for analytics)
-- Rate limited: max 1 click per link per IP per 10 seconds (prevent spam)
-
-**Dashboard route:** `/analytics`
-
-- **Summary cards:** Total clicks (all time), clicks this week, number of active links
-- **Top links table:** Ranked list of links by total clicks, showing title, URL, click count
-- **Time-series chart:** Line chart showing total clicks per day over the last 30 days
-  - Toggle between 7-day / 30-day / 90-day views
-  - Uses a lightweight chart library (e.g., Recharts, which works well with shadcn)
-- **Per-link breakdown:** Expandable rows in the top links table showing that link's daily clicks
-
----
-
-## 8. Technology Stack
-
-### Core Framework
-| Technology | Version | Purpose |
-|---|---|---|
-| **Next.js** | 15.x | Full-stack React framework (App Router, SSR, API Routes) |
-| **React** | 19.x | UI library |
-| **TypeScript** | 5.x | Type safety (strict mode) |
-
-### Styling & UI
-| Technology | Purpose |
-|---|---|
-| **Tailwind CSS** 4.x | Utility-first CSS framework |
-| **shadcn/ui** | Accessible, customizable component library |
-| **CSS Transitions** | Animations (no extra motion libraries) |
-
-### Database & Auth
-| Technology | Purpose |
-|---|---|
-| **Neon** | Serverless Postgres (database hosting) |
-| **Neon Auth** | Managed authentication (Better Auth-based) |
-| **@neondatabase/auth** | Neon Auth SDK for Next.js |
-| **Drizzle ORM** | Type-safe database queries and migrations |
-| **drizzle-kit** | Schema migration tooling |
-
-### Key Libraries
-| Library | Purpose |
-|---|---|
-| **@dnd-kit/core** + **@dnd-kit/sortable** | Drag-and-drop link reordering |
-| **Recharts** | Charts for analytics dashboard |
-| **zod** | Runtime schema validation (forms, API inputs) |
-
-### Dev Tooling
-| Tool | Purpose |
-|---|---|
-| **Biome** | Linting + formatting (replaces ESLint + Prettier) |
-| **Vitest** | Unit testing |
-| **agent-browser** | E2E testing (Playwright-based CLI) |
-
-### Deployment
-| Service | Purpose |
-|---|---|
-| **Vercel** | Hosting, CI/CD, edge functions |
-| **Neon** | Managed Postgres (serverless, auto-scaling) |
-
----
-
-## 9. Security & Configuration
-
-### Authentication & Authorization
-
-- **Neon Auth** handles all authentication flows:
-  - Email/password registration and login
-  - Google OAuth (using Neon Auth's built-in Google credentials for dev, custom credentials for production)
-  - Session management via signed cookies (cached for 5 minutes by default)
-- **Authorization:** Middleware protects `/editor`, `/analytics`, `/settings` routes — redirects to `/login` if unauthenticated
-- **Data isolation:** All queries filter by the authenticated user's ID. Users can only read/write their own profile and links.
-
-### Rate Limiting
-
-- **API routes:** Simple in-memory rate limiting (or Vercel KV if needed)
-  - `/api/click`: 60 requests/minute per IP
-  - `/api/profile`, `/api/links`: 30 requests/minute per user
-  - `/api/auth/*`: 10 requests/minute per IP (login/signup)
-- **Click deduplication:** Ignore duplicate clicks on the same link from the same IP within 10 seconds
-
-### Configuration (Environment Variables)
-
-```env
-# Neon Database
-DATABASE_URL=                    # Neon Postgres connection string
-
-# Neon Auth
-NEON_AUTH_BASE_URL=              # Neon Auth endpoint URL
-NEON_AUTH_COOKIE_SECRET=         # Secret for signing session cookies
-
-# Google OAuth (production)
-GOOGLE_CLIENT_ID=                # Google OAuth client ID
-GOOGLE_CLIENT_SECRET=            # Google OAuth client secret
-
-# App
-NEXT_PUBLIC_APP_URL=             # Public app URL (e.g., https://yourdomain.com)
+```ts
+// AppContext shape
+{
+  activeAccountId: string | null,
+  activeProductId: string | null,
+  activeVolume: number | null,
+  setAccount: (id: string) => void,
+  setProduct: (id: string) => void,
+  setVolume: (kg: number) => void,
+}
 ```
+
+**Scenario data isolation:** Each JSON file contains data for all accounts/products. The frontend filters by `accountId` / `productId` from AppContext. No scenario-specific code paths — the data tells the story.
+
+**Visual routing in Chat:** The `/api/chat` response includes a `visualType` enum (`scatter | waterfall | pvm | winLoss | eor | table`) and a `dataKey` pointing to a pre-computed data slice in `chat-scenarios.json`. `DynamicRightPanel` switches on `visualType` to render the correct chart.
+
+**Escalation state machine:** CPQ tracks discount level as a derived value. Thresholds are defined in `products.json` per SKU. State: `none → rep → manager → director`.
+
+---
+
+## 8. Feature Specifications
+
+### 8.0 Global Filter Bar (shared component — all screens)
+Every screen renders `<FilterBar>` directly below the page title.
+
+- **Account selector:** Dropdown populated from `accounts.json`. Shows account name + segment badge. Selecting updates `AppContext.activeAccountId`. All charts on the page immediately re-render filtered to the new account.
+- **Product selector:** Dropdown populated from `products.json`, optionally filtered to products with data for the selected account. Selecting updates `AppContext.activeProductId`.
+- **Active context pill:** Shows the currently selected account + product as a chip (e.g., "Baker Klaas · Milk Couverture"). Chip has an × to clear.
+- **Sync with Chat:** When Chat sets context (via an AI response that identifies an account), the `FilterBar` on all other screens reflects the new selection immediately.
+- **Placement:** Consistent top-of-page position on every screen. Same component, same visual treatment.
+
+---
+
+### 8.1 Chat with Your Data
+- **Left panel (40%):** Conversation thread with user bubbles and AI response bubbles. Each AI bubble leads with an insight sentence, shows 2–3 supporting data points, and closes with a recommended action. Save conversation button (localStorage). Pinned visuals gallery (visual affordance only).
+- **Right panel (60%):** Renders one of: SegmentationScatter, WaterfallChart, PVMBridge, WinProbabilityCurve, EoRDimensions, or a DataTable. Updates on each new AI response with a smooth transition.
+- **Input:** Full-width text input at bottom of left panel. Submit on Enter or button click.
+- **Context chip:** Shows active account name if set (e.g., "Baker Klaas") above the input, derived from AppContext. Clicking clears context.
+- **Saved conversations:** Slide-out drawer listing saved conversation titles (localStorage). Clicking loads the thread.
+- **Scenario 1 key questions pre-scripted:**
+  - *"How does Baker Klaas compare to similar bakers, and are there any cross-sell opportunities?"* → Responds with segment percentile, segment median price, and two high-attach SKUs (White Couverture + Cocoa Powder at 73% co-purchase rate). Visual: DataTable of similar accounts.
+
+---
+
+### 8.2 Segmentation
+- **Filter bar:** `<FilterBar>` at top. Changing account highlights that account's dot and re-centres the chart. Changing product re-renders the entire scatter for the new product dimension.
+- **Main view:** Recharts ScatterChart. X-axis: volume (kg/month, log scale). Y-axis: price (€/kg). Two reference lines: floor curve (red dashed) and target curve (green dashed). Dots coloured by zone: green (above target), amber (in-band), red (below floor).
+- **Baker Klaas state (Scenario 1):** Red dot, prominently labelled, visually isolated below the floor line. Tooltip shows: "8% below floor · €4.20/kg vs floor €4.05/kg".
+- **Comparison mode:** Toggle button switches to two-panel layout. Each panel has its own account/segment selector. Used for Scenario 5 (Baker Klaas vs Schoko side-by-side).
+- **New prospect input:** Volume input field at top. On submit, an amber ghost dot animates onto the chart at the correct floor-curve position, with a label showing the implied floor price.
+- **Account detail tooltip:** Hover over any dot shows account name, price/kg, volume, segment, % vs floor.
+
+---
+
+### 8.3 CPQ
+- **Filter bar:** `<FilterBar>` at top. Changing account or product resets the price calculation stack to the new combination's data.
+- **Customer + product selectors:** Also mirrored inline in the quote header (redundant with filter bar for visual clarity in this screen).
+- **Price calculation stack:**
+  - List price (read-only, from products.json)
+  - Tier discount (auto-applied based on volume, read-only with tooltip explanation)
+  - Volume/deal discount (rep-editable slider 0–20% + numeric input)
+  - Net price (live computed)
+- **Three-scenario comparison panel (Scenario 1 feature):**
+  A panel below the main price stack showing three columns, each computing the outcome of a different discount choice:
+  - Column A: Grant 5% discount → red zone, GM% shown, escalation indicator
+  - Column B: Hold flat (0% deal discount) → current zone + GM%
+  - Column C: Propose +4% uplift → zone, GM%, label "Recommended"
+  Each column shows: net price, GM%, zone colour, and a one-line verdict. Columns update live as the rep adjusts the main discount slider.
+- **Price band visual:** Horizontal bar showing zones (red: below floor, amber: in-band, green: above target). Current price shown as a live indicator.
+- **Margin bridge:** Mini waterfall showing list → tier → deal → net-net with GM% at each stage. Updates live.
+- **Escalation system:**
+  - 0–5% deal discount: no escalation (green state)
+  - 5–10%: Rep escalation amber — banner: "Approval required: this discount requires manager sign-off"
+  - 10–15%: Manager escalation orange — simulates "Request sent to manager" state after 2s
+  - 15%+: Director escalation red
+  - Deal justification textarea activates at first escalation threshold
+- **Win Probability signal:** Compact card showing % with mini sparkline. "See full analysis →" navigates to Win/Loss screen with context.
+- **EoR signal:** Compact score badge with top driver callout. "See detail →" navigates to EoR screen.
+
+---
+
+### 8.4 Win/Loss Price Intelligence
+- **Filter bar:** `<FilterBar>` at top. Changing account or product reloads the win probability curve for that combination.
+- **Win probability curve:** Recharts LineChart. X-axis: price (€/kg). Y-axis: win rate (%). Shaded cliff zone. Current quote price as vertical reference line.
+- **Historical quote scatter:** Won quotes (green) and lost quotes (red) overlaid.
+- **Insight panel:** Right sidebar with: optimal price point, cliff zone range, competitor sensitivity note, historical win rate at current price.
+
+---
+
+### 8.5 Ease of Realization
+- **Filter bar:** `<FilterBar>` at top. Changing account reloads dimension scores for that account.
+- **Composite score:** Large prominent display (e.g., "6.2 / 10") with colour coding and label (Low / Medium / High ease).
+- **7 dimension bars:** Purchasing Power, Formulation Cooperation, OTIF Track Record, Communication Sentiment, Relationship Stability, Volume Consistency, RM Cost Impact. Each with score + driver note.
+- **Account comparison table:** All accounts listed with composite score and top risk flag. Sortable.
+
+---
+
+### 8.6 Price Waterfall
+- **Filter bar:** `<FilterBar>` at top. Changing account rerenders the waterfall for that account's price layers.
+- **Full waterfall:** List Price → Invoice Discount → Net Invoice Price → Rebate → Payment Terms Adjustment → Net-Net Price.
+- **Segment average overlay:** Horizontal tick on each bar showing segment norm.
+- **Baker Klaas highlight:** Rebate bar emphasised — orange border, tooltip noting "+5.1pts vs norm".
+- **Summary stats:** Net-Net Margin %, Segment Target %, variance.
+
+---
+
+### 8.7 PVM Bridge
+- **Filter bar:** `<FilterBar>` at top. Changing account rerenders the bridge for that account.
+- **Revenue bridge:** Signed bar chart. Sequence: Prior Period → Volume Effect → Price Effect → Mix Effect → Current Period. Positive green, negative red.
+- **Period selector:** Dropdown for comparison period.
+- **Per-product table:** Product, Prior Revenue, Volume Effect, Price Effect, Mix Effect, Current Revenue, Δ%.
+- **AI warning banner:** Fires when price effect and mix effect are both negative simultaneously.
+
+---
+
+### 8.8 Global "Explain what I see"
+- **Trigger:** Floating button bottom-right of every screen. Sparkle/AI icon + "Explain" label.
+- **Behaviour:** Sends current screen ID + serialised key metrics (including active account/product from AppContext) to `/api/explain`. Loading spinner during call.
+- **Output:** Slide-over panel from the right. Three sections: "What I'm seeing", "Why it matters", "Recommended actions". Panel dismissible; chart stays visible behind it.
+
+---
+
+## 9. Technology Stack
+
+### Core
+| Layer | Technology | Version |
+|---|---|---|
+| Framework | Next.js | 14+ (App Router) |
+| Language | TypeScript | 5+ |
+| Styling | Tailwind CSS | 3+ |
+| Charts | Recharts | 2+ |
+| AI | OpenAI SDK | 4+ |
+| Deployment | Vercel | Latest |
+
+### Dependencies
+```json
+{
+  "next": "^14",
+  "react": "^18",
+  "react-dom": "^18",
+  "recharts": "^2",
+  "openai": "^4",
+  "tailwindcss": "^3",
+  "typescript": "^5",
+  "clsx": "^2",
+  "lucide-react": "latest"
+}
+```
+
+### Data
+- All mock data in `/data/*.json` — no database, no ORM
+- Data accessed via import helpers in `src/lib/data.ts`
+- Accounts and products defined in JSON — adding/editing an account requires only a JSON edit
+
+### Environment Variables
+```bash
+# .env.local
+OPENAI_API_KEY=your_key_here
+```
+
+---
+
+## 10. Security & Configuration
+
+### Configuration
+- API key stored in `.env.local`, never committed to git
+- `.gitignore` must include `.env.local`
+- All OpenAI calls are server-side only (API routes) — key never exposed to client
 
 ### Security Scope
+- ✅ Server-side API key handling
+- ✅ Input sanitisation on chat input before passing to OpenAI
+- ❌ Authentication (out of scope for demo)
+- ❌ Rate limiting (out of scope for demo)
+- ❌ CSRF protection (out of scope for demo)
 
-**In scope:**
-- ✅ Input sanitization (XSS prevention on bio, link titles/URLs)
-- ✅ URL validation for links (must be valid HTTP/HTTPS URLs)
-- ✅ Slug validation (alphanumeric + hyphens only)
-- ✅ CSRF protection (built into Neon Auth / Next.js)
-- ✅ Rate limiting on all API endpoints
-
-**Out of scope for MVP:**
-- ❌ Content moderation / link scanning
-- ❌ Two-factor authentication
-- ❌ IP allowlisting
-- ❌ Advanced bot protection (CAPTCHA, etc.)
-
----
-
-## 10. Database Schema
-
-### Tables
-
-```sql
--- Users table is managed by Neon Auth (neon_auth schema)
--- It provides: id, email, name, image, created_at, updated_at
-
--- Profiles (extends Neon Auth user)
-CREATE TABLE profiles (
-  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id       TEXT NOT NULL UNIQUE REFERENCES neon_auth.users(id) ON DELETE CASCADE,
-  slug          TEXT NOT NULL UNIQUE,
-  display_name  TEXT NOT NULL DEFAULT '',
-  bio           TEXT NOT NULL DEFAULT '',
-  avatar_url    TEXT NOT NULL DEFAULT '',
-  theme         TEXT NOT NULL DEFAULT 'minimal',
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE UNIQUE INDEX idx_profiles_slug ON profiles(slug);
-CREATE INDEX idx_profiles_user_id ON profiles(user_id);
-
--- Link items (links, headers, dividers)
-CREATE TABLE link_items (
-  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  profile_id    UUID NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  type          TEXT NOT NULL DEFAULT 'link',  -- 'link' | 'header' | 'divider'
-  title         TEXT NOT NULL DEFAULT '',
-  url           TEXT NOT NULL DEFAULT '',       -- empty for headers/dividers
-  sort_order    INTEGER NOT NULL DEFAULT 0,
-  created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-  updated_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX idx_link_items_profile_id ON link_items(profile_id);
-
--- Click events
-CREATE TABLE click_events (
-  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  link_item_id  UUID NOT NULL REFERENCES link_items(id) ON DELETE CASCADE,
-  clicked_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
-);
-
-CREATE INDEX idx_click_events_link_item_id ON click_events(link_item_id);
-CREATE INDEX idx_click_events_clicked_at ON click_events(clicked_at);
-```
-
-### Drizzle Schema (TypeScript)
-
-The above SQL will be represented as Drizzle schema definitions in `src/lib/db/schema.ts`, using `pgTable`, with proper TypeScript types inferred via `InferSelectModel` and `InferInsertModel`.
+### Deployment
+- Vercel project with `OPENAI_API_KEY` set as environment variable in Vercel dashboard
+- Static JSON data bundled with build
 
 ---
 
 ## 11. API Specification
 
-### Profile
+### POST `/api/chat`
+Matches a free-text question to a pre-scripted scenario response using gpt-4o.
 
-**GET `/api/profile`** — Get current user's profile
-- Auth: Required
-- Response: `{ profile: Profile, links: LinkItem[] }`
-
-**PUT `/api/profile`** — Update current user's profile
-- Auth: Required
-- Body: `{ displayName: string, bio: string, avatarUrl: string, theme: string }`
-- Validation: Zod schema
-- Response: `{ profile: Profile }`
-
-### Links
-
-**POST `/api/links`** — Add a new link item
-- Auth: Required
-- Body: `{ type: 'link' | 'header' | 'divider', title?: string, url?: string }`
-- Response: `{ link: LinkItem }`
-
-**DELETE `/api/links/[id]`** — Remove a link item
-- Auth: Required
-- Response: `{ success: true }`
-
-**PUT `/api/links/reorder`** — Reorder all link items
-- Auth: Required
-- Body: `{ items: { id: string, sortOrder: number }[] }`
-- Response: `{ success: true }`
-
-### Click Tracking
-
-**POST `/api/click`** — Record a link click (called from public pages)
-- Auth: None (public)
-- Body: `{ linkId: string }`
-- Rate limited: 60/min per IP, 10-second dedup per link per IP
-- Response: `{ success: true }`
-
-### Analytics
-
-**GET `/api/analytics`** — Get analytics for current user's links
-- Auth: Required
-- Query params: `?period=7d|30d|90d`
-- Response:
+**Request:**
 ```json
 {
-  "summary": {
-    "totalClicks": 1234,
-    "clicksThisWeek": 89,
-    "activeLinks": 8
-  },
-  "topLinks": [
-    { "id": "...", "title": "YouTube", "url": "...", "clicks": 342 }
-  ],
-  "timeSeries": [
-    { "date": "2026-02-19", "clicks": 45 },
-    { "date": "2026-02-20", "clicks": 52 }
-  ]
+  "question": "How does Baker Klaas compare to similar bakers, and are there any cross-sell opportunities?",
+  "activeAccountId": "baker-klaas",
+  "activeProductId": "milk-couverture"
 }
 ```
 
-### Slug Availability
+**Response:**
+```json
+{
+  "scenarioId": "baker-klaas-segment-comparison",
+  "response": "Baker Klaas is in the bottom 15% of the Mid-Market Benelux segment at €4.20/kg vs a segment median of €4.85/kg. They do not currently purchase White Couverture or Cocoa Powder — both have a 73% co-purchase rate among similar bakers in the segment and carry above-average margins.",
+  "visualType": "table",
+  "dataKey": "baker-klaas-peer-comparison",
+  "suggestedAction": "Propose a trial bundle of White Couverture + Cocoa Powder at an introductory rate alongside the renewal"
+}
+```
 
-**GET `/api/slug/check?slug=cole`** — Check if slug is available
-- Auth: None (used during signup)
-- Response: `{ available: boolean }`
+**System prompt pattern:**
+- Embeds full list of scenario IDs with descriptions
+- Instructs gpt-4o to return the best matching `scenarioId`
+- Falls back to a graceful generic response if no match (confidence < threshold)
+
+---
+
+### POST `/api/explain`
+Generates an AI explanation of the current screen state.
+
+**Request:**
+```json
+{
+  "screen": "segmentation",
+  "accountId": "baker-klaas",
+  "productId": "milk-couverture",
+  "keyMetrics": {
+    "currentPrice": 4.20,
+    "floorPrice": 4.05,
+    "targetPrice": 4.85,
+    "segmentMedian": 4.85,
+    "percentVsFloor": -8,
+    "upliftToTarget": 12
+  }
+}
+```
+
+**Response:**
+```json
+{
+  "whatISee": "Baker Klaas is priced 8% below the Mid-Market Benelux floor on Milk Couverture at €4.20/kg. The segment floor is €4.05/kg and the target is €4.85/kg — Baker Klaas sits 15% below the segment median.",
+  "whyItMatters": "Any further discount deepens an already non-compliant position. Granting 5% would move Baker Klaas to €3.99/kg — below floor — and set a precedent for next cycle.",
+  "recommendedActions": [
+    "Propose a +4% staged uplift: €4.37/kg — still below median, defensible as gradual correction",
+    "Frame uplift as a return toward fair pricing, not a price increase",
+    "Open cross-sell on White Couverture and Cocoa Powder to add value to the conversation"
+  ]
+}
+```
 
 ---
 
 ## 12. Success Criteria
 
-### MVP Success Definition
-
-The MVP is complete when a user can sign up, build a link page with a chosen theme, share their public URL, and view click analytics — all validated by passing E2E tests covering every user journey.
+### MVP Definition of Done
+Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk Couverture in the filter pane, the Segmentation screen shows his red dot below floor, CPQ shows the three-scenario comparison with escalation on the discount option, and Chat answers the peer comparison question with cross-sell intelligence. All other screens are fully populated and navigable. Accounts and products are defined in JSON files and can be switched on the fly via the filter pane.
 
 ### Functional Requirements
-
-- ✅ User can sign up with email/password and choose a unique slug
-- ✅ User can sign in with Google OAuth
-- ✅ User can edit display name, bio, and avatar URL
-- ✅ User can add, remove, and reorder links via drag-and-drop
-- ✅ User can add section headers and dividers
-- ✅ User can select from 4 themes with instant live preview
-- ✅ Editor shows side-by-side layout on desktop with toggle options
-- ✅ Editor shows toggle mode on mobile
-- ✅ Saving profile persists all changes to database
-- ✅ Public page at `/<slug>` renders with selected theme (SSR)
-- ✅ Public page includes correct OG meta tags
-- ✅ Clicking a link on the public page tracks the click
-- ✅ Analytics dashboard shows click counts per link
-- ✅ Analytics dashboard shows time-series chart (7d/30d/90d)
-- ✅ Marketing landing page exists at `/`
-- ✅ All protected routes redirect to login when unauthenticated
-- ✅ Rate limiting prevents abuse on API endpoints
+- ✅ All seven screens render with populated data
+- ✅ Sidebar navigation works between all screens
+- ✅ Global filter bar present on every screen — account + product selectors update all visuals reactively
+- ✅ AppContext carries active account/product across all screens and stays in sync with filter bar
+- ✅ Chat accepts free-text, calls OpenAI, and renders the correct visual in the right panel
+- ✅ Chat sets AppContext when an account is identified in the response
+- ✅ CPQ three-scenario comparison panel works for Scenario 1
+- ✅ CPQ escalation fires at correct thresholds and simulates approval workflow
+- ✅ Segmentation shows Baker Klaas red dot 8% below floor by default
+- ✅ Segmentation comparison mode splits into two panels
+- ✅ Prospect dot animates onto the segmentation curve
+- ✅ "Explain what I see" works on every screen
+- ✅ Conversations save and reload from localStorage
+- ✅ All charts render without errors on a 1440px desktop viewport
+- ✅ PwC/Equazion branding consistent throughout
 
 ### Quality Indicators
+- Charts load in < 500ms (all data is local JSON)
+- AI responses return in < 5s on a standard connection
+- Switching account/product in filter bar updates visuals in < 100ms (no API call required)
+- No console errors during a full Scenario 1 walkthrough
+- Colour coding consistent across all screens (red/amber/green system)
 
-- TypeScript strict mode with zero type errors
-- Biome passes with zero lint/format warnings
-- Vitest unit test coverage on all utility functions and API logic
-- agent-browser E2E tests pass for every user journey
-- Lighthouse performance score ≥ 90 on public pages
-- All pages responsive from 320px to 1920px
-
-### User Experience Goals
-
-- Signup-to-published page in under 2 minutes
-- Theme switching feels instant (no loading states)
-- Drag-and-drop reordering is smooth and intuitive
-- Public page loads in under 1 second (server-rendered)
+### UX Goals
+- Sarah can complete Scenario 1 in under 2 minutes from landing on Chat
+- A cold viewer assumes the tool is connected to a live ChocoMaker data system
+- The filter bar always shows what's selected — no ambiguity about which account/product is in view
+- The "Explain what I see" responses feel like a knowledgeable analyst, not a chatbot
 
 ---
 
 ## 13. Implementation Phases
 
-### Phase 1: Profile Editor + Live Preview
+### Phase 1 — Foundation (Shell + Data)
+**Goal:** Working Next.js app with navigation, brand, filter bar wired to AppContext, and all mock data defined.
 
-**Goal:** Users can sign up, log in, and build their link page with a live preview.
+- ✅ Next.js project initialised with TypeScript + Tailwind
+- ✅ Brand assets integrated (palette, logos, fonts)
+- ✅ Sidebar and TopBar components built
+- ✅ All seven route pages scaffolded (placeholder content)
+- ✅ AppContext implemented (activeAccountId, activeProductId, setters)
+- ✅ `<FilterBar>` component built and mounted on all seven screens
+- ✅ All JSON data files created (accounts × 10, products × 6, quotes, segmentation, waterfall, pvm, win-loss, eor, chat-scenarios)
+- ✅ Baker Klaas + Milk Couverture data tuned to Scenario 1 numbers
+- ✅ `.env.local` template created
+- ✅ Vercel config in place
 
-**Deliverables:**
-- ✅ Project scaffolding (Next.js + Tailwind + shadcn/ui + Biome + Vitest)
-- ✅ Neon database setup + Drizzle schema + migrations
-- ✅ Neon Auth integration (email/password + Google OAuth)
-- ✅ Signup page with slug selection and real-time availability check
-- ✅ Login page (email/password + Google OAuth)
-- ✅ Auth middleware protecting dashboard routes
-- ✅ Profile editor form (name, bio, avatar URL)
-- ✅ Link management (add, remove, reorder with dnd-kit)
-- ✅ Header and divider support
-- ✅ Live preview panel (default "Minimal" theme)
-- ✅ Side-by-side layout (desktop) with editor-only/preview-only toggles
-- ✅ Toggle mode (mobile)
-- ✅ Explicit save button with toast feedback
-- ✅ Unit tests for validation logic, API handlers
-- ✅ E2E tests: signup flow, login flow, profile editing, link CRUD, drag-and-drop reorder
-
-**Validation:**
-- User can sign up, add 5 links + 1 header + 1 divider, reorder them, save, refresh, and see persisted data
-- Preview updates in real-time without saving
-- All E2E tests pass via agent-browser
+**Validation:** App navigates between all screens. Filter bar renders on each screen. Changing account in filter bar propagates to AppContext (verified via console/React DevTools).
 
 ---
 
-### Phase 2: Theme System
+### Phase 2 — Scenario 1 Screens (Segmentation + CPQ + Chat)
+**Goal:** Scenario 1 runs end-to-end.
 
-**Goal:** Users can choose from 4 distinct, layout-varying themes with instant preview.
+- ✅ Segmentation: scatter plot, Baker Klaas red dot, floor/target curves, filter-reactive re-render
+- ✅ Segmentation: comparison mode toggle, prospect input + animation
+- ✅ CPQ: price stack, live margin bridge, price band, filter-reactive re-render
+- ✅ CPQ: three-scenario comparison panel (give 5% / hold flat / +4% uplift)
+- ✅ CPQ: escalation state machine — amber at 5%, simulated approval at 10%
+- ✅ Chat: left/right split, conversation thread, DynamicRightPanel
+- ✅ Chat: Scenario 1 pre-scripted Q&A (peer comparison + cross-sell)
+- ✅ Chat: sets AppContext on account identification
 
-**Deliverables:**
-- ✅ 4 theme components: Minimal, Dark, Colorful, Professional
-- ✅ Each theme has its own layout structure and visual style
-- ✅ Theme picker UI with thumbnail previews
-- ✅ Instant theme switching in the live preview
-- ✅ Theme selection persisted to database
-- ✅ All themes responsive (320px – 1920px)
-- ✅ Smooth CSS transitions between themes
-- ✅ Unit tests for theme rendering logic
-- ✅ E2E tests: theme selection, preview updates, persistence after save and reload
-
-**Validation:**
-- Switching between all 4 themes updates the preview instantly
-- Theme persists after save → reload
-- Each theme looks correct and distinct on mobile and desktop
-- All E2E tests pass via agent-browser
+**Validation:** Full Scenario 1 walkthrough: Segmentation → CPQ → Chat. All three steps land cleanly.
 
 ---
 
-### Phase 3: Public URLs + SEO
+### Phase 3 — Remaining Screens + Full AI
+**Goal:** All seven screens fully functional. AI Explain working everywhere.
 
-**Goal:** Each user gets a public page at `/<slug>` with proper SEO and social sharing support.
+- ✅ Price Waterfall: full decomposition, segment average overlay, Baker Klaas rebate highlight, filter-reactive
+- ✅ PVM Bridge: signed bar chart, period selector, per-product table, filter-reactive
+- ✅ Win/Loss: win probability curve, historical scatter, cliff zone, filter-reactive
+- ✅ Ease of Realization: composite score, 7 dimension bars, account comparison table, filter-reactive
+- ✅ `/api/explain` route: screen-aware prompts for all seven screens
+- ✅ ExplainButton + ExplainPanel on all seven screens
+- ✅ Win Prob + EoR signals in CPQ with navigation links
+- ✅ Saved conversations (localStorage): save, list, reload
+- ✅ Pin visual (visual affordance)
 
-**Deliverables:**
-- ✅ Dynamic `[slug]` route with server-side rendering
-- ✅ Public page renders profile + links with the selected theme
-- ✅ OG meta tags (`og:title`, `og:description`, `og:image`, `og:url`, `twitter:card`)
-- ✅ 404 handling for non-existent slugs
-- ✅ Reserved slug protection (prevent registration of system routes)
-- ✅ Marketing landing page at `/` (hero, features, CTAs)
-- ✅ Slug change in user settings
-- ✅ Canonical URL in `<head>`
-- ✅ Unit tests for slug validation, OG tag generation
-- ✅ E2E tests: public page rendering, correct theme display, OG tag verification, 404 page, landing page navigation, slug change flow
-
-**Validation:**
-- Visiting `/<slug>` renders the correct profile with the correct theme
-- Sharing the URL on social media shows correct preview (OG tags)
-- Non-existent slugs show a 404 page
-- Landing page loads and CTAs navigate correctly
-- All E2E tests pass via agent-browser
+**Validation:** Every screen renders correct data for Baker Klaas + Milk Couverture by default. Filter switching works on every screen. Explain produces credible language on every screen.
 
 ---
 
-### Phase 4: Click Analytics
+### Phase 4 — Polish & Demo Readiness
+**Goal:** Demo-quality finish, rehearsal-ready.
 
-**Goal:** Track clicks on public page links and display analytics in a dashboard.
+- ✅ Micro-animations: prospect dot, escalation banner transitions, panel slide-ins, filter switch fade
+- ✅ Loading states: skeleton loaders on charts, spinner on AI calls
+- ✅ Hover states, tooltips, and empty states on all charts
+- ✅ Cross-browser check (Chrome primary, Edge secondary)
+- ✅ 1440px viewport QA pass
+- ✅ Vercel deployment verified
+- ✅ Full end-to-end Scenario 1 walkthrough — zero glitches
 
-**Deliverables:**
-- ✅ Click tracking endpoint (`POST /api/click`)
-- ✅ Click recording on public page link clicks (via `sendBeacon` or fetch)
-- ✅ Rate limiting on click endpoint (60/min per IP, 10-sec dedup)
-- ✅ Analytics API endpoint with period filtering
-- ✅ Analytics dashboard page (`/analytics`)
-- ✅ Summary cards (total clicks, this week, active links)
-- ✅ Top links table with click counts
-- ✅ Time-series line chart (7d / 30d / 90d toggle)
-- ✅ Per-link daily breakdown (expandable rows)
-- ✅ Unit tests for analytics aggregation queries, rate limiting logic
-- ✅ E2E tests: click tracking fires on public page, analytics dashboard shows correct data, period toggle works, chart renders
-
-**Validation:**
-- Clicking links on a public page increments the count
-- Analytics dashboard reflects clicks accurately
-- Time-series chart displays correctly for all period options
-- Rate limiting prevents click spam
-- All E2E tests pass via agent-browser
+**Validation:** Presenter can demo Scenario 1 without any hesitation, broken visuals, or navigation dead-ends.
 
 ---
 
 ## 14. Future Considerations
 
-### Post-MVP Enhancements
-- **File upload for avatars** — Use Vercel Blob or Cloudflare R2 for image storage
-- **Custom domains** — Allow users to point their own domain to their page
-- **Embed support** — YouTube, Spotify, SoundCloud embeds inline in the link list
-- **Auto-save with draft/publish** — Auto-save changes as draft, explicit publish to go live
-- **Link scheduling** — Show/hide links based on date ranges
-- **More themes** — Community-contributed themes, custom color overrides
+### Post-Demo Enhancements
+- Real data integration via an API layer (replace JSON with live endpoints)
+- Authentication and user roles (rep vs manager vs director views)
+- Actual approval workflow with email notifications
+- Export: quote to PDF, waterfall to Excel
+- Scenario builder: configure which accounts/products are featured
 
-### Integration Opportunities
-- **Social login expansion** — GitHub, Twitter/X, Discord OAuth
-- **Analytics export** — CSV/JSON download of click data
-- **Webhook notifications** — Notify external services on click milestones
-- **API access** — Public API for programmatic profile management
-
-### Advanced Features
-- **Admin panel** — User management, content moderation, system stats
-- **A/B testing** — Test different link orders or themes for click optimization
-- **Rich analytics** — Referrer tracking, geographic data, device breakdown
-- **Custom CSS** — Per-user CSS overrides for advanced customization
-- **Team accounts** — Shared pages managed by multiple users
+### Additional AI Features
+- Proactive anomaly alerts ("3 accounts crossed below floor this week")
+- Natural language price simulation ("what if we raised all Milk Couverture prices by 2%?")
+- Multi-account comparison in Chat
 
 ---
 
 ## 15. Risks & Mitigations
 
-| Risk | Impact | Mitigation |
-|---|---|---|
-| **Neon Auth is relatively new** — Less community support and documentation compared to established auth solutions. | Medium | Neon Auth is built on Better Auth, which has extensive docs. Fall back to Better Auth docs when Neon-specific docs are sparse. Keep auth logic isolated so it can be swapped if needed. |
-| **Click tracking volume** — Popular pages could generate high write volume to the `click_events` table. | Medium | Use `navigator.sendBeacon` (non-blocking). Rate limit aggressively. Consider batching writes or a summary table for high-volume pages in a future phase. Neon's serverless auto-scaling helps absorb bursts. |
-| **Slug collisions with app routes** — User-chosen slugs could conflict with app routes like `/login` or `/api`. | High | Maintain a strict reserved-slugs list checked at signup. The `[slug]` catch-all route should be the lowest priority in Next.js routing (place it last). |
-| **Theme layout complexity** — 4 themes with different layouts is significantly more work than CSS-only themes. | Medium | Start with shared base components and have each theme compose them differently. Define a clear `ThemeProps` interface so all themes receive the same data. Build Minimal first as the reference, then diverge. |
-| **E2E test reliability** — Browser-based E2E tests can be flaky, especially with auth flows and drag-and-drop. | Medium | Use agent-browser's `wait` commands extensively. Isolate test data per run. For drag-and-drop, test the reorder API directly as a unit test and use E2E only for the happy path. |
+| Risk | Likelihood | Impact | Mitigation |
+|---|---|---|---|
+| OpenAI API latency makes Chat feel sluggish during live demo | Medium | High | Add streaming responses; pre-cache Scenario 1 answers client-side as instant fallback |
+| gpt-4o mismatches a question to the wrong scenario | Medium | High | Tighten system prompt with explicit scenario ID list; confidence threshold; graceful fallback |
+| Filter bar switch feels slow if charts re-animate on every change | Low | Medium | Use `isAnimationActive={false}` on filter-triggered re-renders; animate only on initial mount |
+| Presenter goes off-script and Chat has no matching scenario | Medium | Medium | Graceful fallback: "Let me show you the closest relevant analysis" + sensible default visual |
+| Brand inconsistency across screens | Low | Medium | Single `tokens.ts` file with all colours derived from palette.css; enforce via Tailwind config |
 
 ---
 
 ## 16. Appendix
 
-### Key Dependencies
+### Key Accounts Reference
 
-| Package | Docs |
+| Account | Segment | Volume (kg/mo) | Price (€/kg) | Floor (€/kg) | Primary Scenario |
+|---|---|---|---|---|---|
+| Baker Klaas | Mid-Market Benelux | 320 | 4.20 | 4.05 | **Scenario 1 (primary)** |
+| Schoko Retail Group | Enterprise Key Accounts | 38,000 | 3.55 | 3.40 | Scenarios 3, 4, 5 |
+| + 8 supporting accounts | Various | Various | Various | Various | Background data only |
+
+### Key Products Reference
+
+| SKU | Family | List Price (€/kg) | Primary Scenario |
+|---|---|---|---|
+| Milk Couverture | Couverture | 5.80 | **Scenario 1 (primary)** |
+| White Couverture | Couverture | 6.20 | Scenario 1 cross-sell target |
+| Cocoa Powder | Ingredient | 3.20 | Scenario 1 cross-sell target |
+| Dark Compound | Compound | 4.60 | Scenarios 3, 4, 5 |
+| + 2 supporting SKUs | Various | Various | Background data only |
+
+### Scenario 1 Key Numbers (must match across all screens)
+
+| Metric | Value |
 |---|---|
-| Next.js | https://nextjs.org/docs |
-| Tailwind CSS | https://tailwindcss.com/docs |
-| shadcn/ui | https://ui.shadcn.com |
-| Drizzle ORM | https://orm.drizzle.team/docs |
-| Neon | https://neon.com/docs |
-| Neon Auth | https://neon.com/docs/auth/overview |
-| dnd-kit | https://dndkit.com |
-| Recharts | https://recharts.org |
-| Zod | https://zod.dev |
-| Biome | https://biomejs.dev |
-| Vitest | https://vitest.dev |
+| Baker Klaas current price (Milk Couverture) | €4.20/kg |
+| Segment floor (Mid-Market Benelux) | €4.05/kg |
+| Segment target | €4.85/kg |
+| Segment median | €4.85/kg |
+| % below floor | −8% |
+| Uplift needed to reach target | +12% |
+| Recommended uplift (sweet spot) | +4% → €4.37/kg |
+| GM% at −5% (discount scenario) | 14.1% |
+| GM% at flat (hold scenario) | 18.3% |
+| GM% at +4% (recommended scenario) | 19.8% |
+| Baker Klaas segment percentile | Bottom 15% |
+| White Couverture co-purchase rate (peers) | 73% |
+| Cocoa Powder co-purchase rate (peers) | 73% |
 
-### Reference Implementations
+### Brand Assets Location
+```
+/brand_assets/
+├── Equazion_logo.png
+├── PwC-logo-icon.png
+├── PwC-logo-white.svg
+└── palette.css
+```
 
-- [LinkStack](https://linkstack.org/) — Full-featured self-hosted Linktree alternative (PHP/Laravel)
-- [LittleLink-Server](https://github.com/techno-tim/littlelink-server) — Lightweight Node.js alternative
-- [LibreLinks](https://github.com/urdadx/librelinks) — Open-source Next.js link-in-bio tool
-- [OpenBento](https://github.com/syntax-syndicate/openbento-linkedin-bio-builder) — Bento-grid style bio page builder
+### Environment Setup
+```bash
+# Install
+npm install
+
+# Local development
+npm run dev
+
+# Build
+npm run build
+
+# Deploy
+vercel --prod
+```

@@ -1,0 +1,247 @@
+:root {
+/* yellow */
+--yellow-100: #ff0;
+/* black */
+--black-100: #000;
+--black-200: #4d1c1a;
+--black-300: #3a1513;
+--black-400: #1f0b0a;
+--black-500: #272727;
+--black-600: rgba(0,0,0,0);
+--black-700: rgba(0,0,0,0.25);
+--black-800: rgba(0,0,0,0.075);
+--black-900: rgba(0,0,0,.075);
+--black-1000: rgba(0,0,0,0.125);
+/* darkgray */
+--darkgray-100: #999;
+--darkgray-200: #939598;
+--darkgray-300: #adadad;
+--darkgray-400: #adaeb1;
+--darkgray-500: #aaa;
+--darkgray-600: #a0a0a0;
+--darkgray-700: #a8a8a8;
+/* white */
+--white-100: #fff;
+--white-200: rgba(255,255,255,0.1);
+--white-300: rgba(255,255,255,0.15);
+--white-400: rgba(255,255,255,0.9);
+--white-500: rgba(255,255,255,0.8);
+--white-600: rgba(255,255,255,0.4);
+--white-700: rgba(255,255,255,.85);
+--white-800: rgba(255,255,255,0.2);
+--white-900: rgba(255,255,255,0.5);
+--white-1000: rgba(255,255,255,0);
+/* gainsboro */
+--gainsboro-100: #ddd;
+--gainsboro-200: #e7e7e8;
+--gainsboro-300: #e1ded1;
+--gainsboro-400: #dadadc;
+--gainsboro-500: #e6e6e6;
+--gainsboro-600: #e5e5e5;
+--gainsboro-700: #e1dbd1;
+--gainsboro-800: #e7e7e7;
+--gainsboro-900: #e7e7e9;
+--gainsboro-1000: #dfe3e6;
+/* darkslategray */
+--darkslategray-100: #404041;
+--darkslategray-200: #333;
+--darkslategray-300: #333334;
+--darkslategray-400: #3f3f40;
+--darkslategray-500: #2d2d2d;
+--darkslategray-600: #464646;
+--darkslategray-700: #484848;
+--darkslategray-800: rgba(45,45,45,0.35);
+--darkslategray-900: #49494b;
+--darkslategray-1000: #3f3f3f;
+/* darkorange */
+--darkorange-100: #eb8c00;
+/* chocolate */
+--chocolate-100: #dc6900;
+--chocolate-200: #a95100;
+--chocolate-300: #d27d00;
+--chocolate-400: #c35d00;
+--chocolate-500: #b85800;
+--chocolate-600: #d04a02;
+--chocolate-700: #b13f02;
+/* silver */
+--silver-100: #c7c8ca;
+--silver-200: #c1bba8;
+--silver-300: #bbb;
+/* whitesmoke */
+--whitesmoke-100: #f5f4f0;
+--whitesmoke-200: #f9f2f4;
+--whitesmoke-300: #f5f5f5;
+--whitesmoke-400: #efe9e9;
+--whitesmoke-500: #eee;
+--whitesmoke-600: #eeefef;
+--whitesmoke-700: #f7f7f7;
+--whitesmoke-800: #ebebeb;
+--whitesmoke-900: #f3f3f3;
+--whitesmoke-1000: #f2f2f2;
+/* darkgoldenrod */
+--darkgoldenrod-100: #b86e00;
+/* indianred */
+--indianred-100: #db536a;
+--indianred-200: #a94442;
+/* crimson */
+--crimson-100: #d02b47;
+--crimson-200: #c7254e;
+--crimson-300: #d93954;
+--crimson-400: #dc2626;
+/* gray */
+--gray-100: #968c6d;
+--gray-200: #7f7f81;
+--gray-300: #7d7d7d;
+--gray-400: rgba(125,125,125,0.8);
+--gray-500: rgba(128,128,128,0.9);
+--gray-600: #7b7b7b;
+--gray-700: rgba(125,125,125,0.07);
+--gray-800: rgba(125,125,125,0.5);
+/* dimgray */
+--dimgray-100: #797157;
+--dimgray-200: #6d6e71;
+--dimgray-300: #6e6d72;
+--dimgray-400: #736b53;
+--dimgray-500: #625b47;
+--dimgray-600: #5c5642;
+--dimgray-700: #6d6c71;
+--dimgray-800: #4d4d4d;
+--dimgray-900: rgba(77,77,77,0.9);
+--dimgray-1000: rgba(77,77,77,0);
+/* tomato */
+--tomato-100: #e0301e;
+--tomato-200: #e1301e;
+--tomato-300: #db4935;
+/* firebrick */
+--firebrick-100: #b32618;
+--firebrick-200: #ca2b1b;
+--firebrick-300: #c24130;
+--firebrick-400: #be291a;
+--firebrick-500: #c52b09;
+--firebrick-600: #ba3e2d;
+--firebrick-700: #bf1503;
+/* linen */
+--linen-100: #fbf0e5;
+--linen-200: #ebe9e1;
+--linen-300: #ebe7e1;
+--linen-400: #e7e4db;
+/* peachpuff */
+--peachpuff-100: #f4d7b9;
+--peachpuff-200: #f4cdb9;
+/* lavenderblush */
+--lavenderblush-100: #fbeef0;
+/* pink */
+--pink-100: #f1c5cc;
+--pink-200: #f6bfbc;
+--pink-300: #efbccd;
+--pink-400: #f6bcc3;
+/* mistyrose */
+--mistyrose-100: #fceae9;
+--mistyrose-200: #f6d9de;
+--mistyrose-300: #f9d5d3;
+--mistyrose-400: #f8dccf;
+--mistyrose-500: #f4d1dc;
+--mistyrose-600: #f9d3d7;
+--mistyrose-700: #ebccd1;
+--mistyrose-800: #f2dede;
+/* lightgray */
+--lightgray-100: #ccc;
+--lightgray-200: #cdcdcf;
+--lightgray-300: #d1d1d1;
+--lightgray-400: #cdcdcd;
+--lightgray-500: #cbd1d6;
+/* antiquewhite */
+--antiquewhite-100: #f8e3cf;
+--antiquewhite-200: #ffe8d4;
+/* bisque */
+--bisque-100: #f6dabf;
+--bisque-200: rgba(246,218,191,0.6);
+/* sandybrown */
+--sandybrown-100: #ff9d43;
+/* lightcoral */
+--lightcoral-100: #ed8277;
+/* saddlebrown */
+--saddlebrown-100: #945800;
+--saddlebrown-200: #854000;
+/* sienna */
+--sienna-100: #602320;
+/* brown */
+--brown-100: #a32020;
+--brown-200: #8e1c1c;
+--brown-300: #bd4242;
+--brown-400: #b93147;
+--brown-500: #ae2e43;
+--brown-600: #8b1b1b;
+/* maroon */
+--maroon-100: #781818;
+--maroon-200: #5b1212;
+--maroon-300: #942014;
+--maroon-400: #821a1a;
+/* moccasin */
+--moccasin-100: #ffe2b8;
+/* steelblue */
+--steelblue-100: #305891;
+--steelblue-200: #284978;
+--steelblue-300: #0499d4;
+--steelblue-400: #007cb9;
+--steelblue-500: #006ba1;
+--steelblue-600: #00699d;
+--steelblue-700: #428bca;
+--steelblue-800: #31708f;
+/* deepskyblue */
+--deepskyblue-100: #05aced;
+--deepskyblue-200: #00aced;
+--deepskyblue-300: #55acee;
+/* darkred */
+--darkred-100: #a63b02;
+/* orangered */
+--orangered-100: #fd5108;
+/* lightgoldenrodyellow */
+--lightgoldenrodyellow-100: #d6e9c6;
+/* seagreen */
+--seagreen-100: #3c763d;
+--seagreen-200: #059669;
+/* beige */
+--beige-100: #dff0d8;
+--beige-200: #fcf8e3;
+/* powderblue */
+--powderblue-100: #bce8f1;
+/* aliceblue */
+--aliceblue-100: #d9edf7;
+/* blanchedalmond */
+--blanchedalmond-100: #faebcc;
+/* darkolivegreen */
+--darkolivegreen-100: #8a6d3b;
+/* oldlace */
+--oldlace-100: #fdf4e5;
+/* lavender */
+--lavender-100: #cce6fa;
+/* mediumseagreen */
+--mediumseagreen-100: #0f9e60;
+/* orange */
+--orange-100: #ffb600;
+/* teal */
+--teal-100: #11735c;
+/* slategray */
+--slategray-100: #787e8a;
+/* Logo Colors */
+--black: rgb(22, 22, 22);
+--peachpuff: rgb(229, 188, 176);
+--gray: rgb(146, 146, 146);
+--orangered: rgb(252, 72, 4);
+--dimgray: rgb(116, 116, 116);
+--dimgray: rgb(100, 100, 100);
+/* Homepage Colors */
+--darkslategray: rgb(50, 51, 54);
+--chocolate: rgb(199, 77, 14);
+--whitesmoke: rgb(238, 239, 238);
+--gray: rgb(141, 144, 147);
+--rosybrown: rgb(186, 162, 148);
+--darksalmon: rgb(184, 128, 95);
+--tan: rgb(206, 186, 164);
+--silver: rgb(188, 193, 193);
+--lightgray: rgb(211, 201, 193);
+--slategray: rgb(93, 128, 157);
+--rosybrown: rgb(156, 102, 136);
+--lightslategray: rgb(100, 140, 164);
+}
