@@ -1,13 +1,119 @@
-import { accounts, products } from '@/lib/data'
+'use client'
+
+import { useState } from 'react'
+import { accounts, products, getPVMForAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
+import { PVMBridge } from '@/components/charts/PVMBridge'
+import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
+import { ExplainPanel } from '@/components/shared/ExplainPanel'
+import { useAppContext } from '@/context/AppContext'
+
+function fmt(v: number): string {
+  return Math.abs(v) >= 1000
+    ? `€${(Math.abs(v) / 1000).toFixed(0)}k`
+    : `€${Math.abs(v).toFixed(0)}`
+}
+
+function fmtSigned(v: number): string {
+  const abs = fmt(v)
+  return v >= 0 ? `+${abs}` : `−${abs}`
+}
 
 export default function PVMPage() {
+  const { activeAccountId } = useAppContext()
+  const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
+  const [explainOpen, setExplainOpen] = useState(false)
+
+  const accountId = activeAccountId ?? 'schoko-retail'
+  const pvmData = getPVMForAccount(accountId) ?? getPVMForAccount('schoko-retail')!
+  const isFallback = !getPVMForAccount(accountId) && accountId !== 'schoko-retail'
+
+  const netChange = pvmData.currentRevenue - pvmData.priorRevenue
+  const netChangePct = pvmData.priorRevenue > 0
+    ? ((netChange / pvmData.priorRevenue) * 100).toFixed(1)
+    : '0.0'
+
+  const effects = [
+    { name: 'Volume', value: pvmData.volumeEffect },
+    { name: 'Price', value: pvmData.priceEffect },
+    { name: 'Mix', value: pvmData.mixEffect },
+  ]
+  const primaryDriver = effects.reduce((a, b) => Math.abs(a.value) > Math.abs(b.value) ? a : b)
+
+  type StatZone = 'green' | 'amber' | 'red' | undefined
+  const stats: { label: string; value: string; zone?: StatZone }[] = [
+    { label: 'Prior Revenue', value: fmt(pvmData.priorRevenue) },
+    {
+      label: 'Current Revenue',
+      value: fmt(pvmData.currentRevenue),
+      zone: pvmData.currentRevenue >= pvmData.priorRevenue ? 'green' : 'red',
+    },
+    {
+      label: 'Net Change',
+      value: `${fmtSigned(netChange)} (${netChange >= 0 ? '+' : ''}${netChangePct}%)`,
+      zone: netChange >= 0 ? 'green' : 'red',
+    },
+    {
+      label: 'Primary Driver',
+      value: `${primaryDriver.name} ${fmtSigned(primaryDriver.value)}`,
+      zone: primaryDriver.value >= 0 ? 'green' : 'red',
+    },
+  ]
+
+  const keyMetrics = {
+    accountId,
+    priorRevenue: pvmData.priorRevenue,
+    currentRevenue: pvmData.currentRevenue,
+    volumeEffect: pvmData.volumeEffect,
+    priceEffect: pvmData.priceEffect,
+    mixEffect: pvmData.mixEffect,
+    bothNegative: pvmData.priceEffect < 0 && pvmData.mixEffect < 0,
+  }
+
   return (
     <div className="flex flex-col h-full">
       <FilterBar accounts={accounts} products={products} />
-      <div className="flex-1 flex items-center justify-center text-text-muted text-sm">
-        PVM Bridge — coming in Phase 3
+
+      <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+        {/* Stats row */}
+        <div className="flex gap-4">
+          {stats.map(({ label, value, zone }) => (
+            <div key={label} className="card px-4 py-3 flex-1">
+              <p className="text-xs text-text-muted mb-0.5">{label}</p>
+              <p className={`text-lg font-semibold ${
+                zone === 'red' ? 'text-zone-red' :
+                zone === 'amber' ? 'text-zone-amber' :
+                zone === 'green' ? 'text-zone-green' :
+                'text-text-primary'
+              }`}>{value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Fallback note */}
+        {isFallback && (
+          <div className="px-3 py-2 bg-page-bg border border-border-default rounded-lg text-xs text-text-muted">
+            Showing Schoko Retail Group data (no PVM data for selected account)
+          </div>
+        )}
+
+        {/* Chart + table card */}
+        <div className="card p-4">
+          <h2 className="text-sm font-semibold text-text-primary mb-4">
+            Price / Volume / Mix Bridge — {accounts.find(a => a.id === (isFallback ? 'schoko-retail' : accountId))?.name ?? accountId}
+          </h2>
+          <PVMBridge data={pvmData} />
+        </div>
       </div>
+
+      <ExplainButton
+        screen="pvm"
+        accountId={activeAccountId}
+        productId={null}
+        keyMetrics={keyMetrics}
+        onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+      />
+      <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
     </div>
   )
 }

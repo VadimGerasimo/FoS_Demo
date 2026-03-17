@@ -1,13 +1,19 @@
 'use client'
 
-import { getSegmentationForProduct } from '@/lib/data'
+import { getSegmentationForProduct, getWaterfallForAccount, getPVMForAccount, getWinLossForProduct, getEoRForAccount, eorDataset } from '@/lib/data'
 import { SegmentationScatter } from '@/components/charts/SegmentationScatter'
+import { WaterfallChart } from '@/components/charts/WaterfallChart'
+import { PVMBridge } from '@/components/charts/PVMBridge'
+import { WinProbabilityCurve } from '@/components/charts/WinProbabilityCurve'
+import { EoRDimensions } from '@/components/charts/EoRDimensions'
 import { Sparkles } from 'lucide-react'
 
 interface DynamicRightPanelProps {
   visualType: string | null
   dataKey: string | null
   tableData?: Record<string, string | number>[] | null
+  accountId?: string | null
+  productId?: string | null
 }
 
 function DataTable({ data }: { data: Record<string, string | number>[] }) {
@@ -59,7 +65,7 @@ function EmptyState() {
   )
 }
 
-export function DynamicRightPanel({ visualType, dataKey, tableData }: DynamicRightPanelProps) {
+export function DynamicRightPanel({ visualType, dataKey, tableData, accountId, productId }: DynamicRightPanelProps) {
   if (!visualType) return <EmptyState />
 
   if (visualType === 'table' && tableData?.length) {
@@ -85,13 +91,50 @@ export function DynamicRightPanel({ visualType, dataKey, tableData }: DynamicRig
     )
   }
 
-  // For other visual types (waterfall, pvm, etc.) — Phase 3 will add full chart components
-  return (
-    <div className="flex items-center justify-center h-full">
-      <div className="text-center">
-        <p className="text-sm font-medium text-text-secondary mb-1 capitalize">{visualType} analysis</p>
-        <p className="text-xs text-text-muted">Full chart view available in Phase 3</p>
+  if (visualType === 'waterfall') {
+    const accId = accountId ?? 'baker-klaas'
+    const prodId = productId ?? 'milk-couverture'
+    const data = getWaterfallForAccount(accId, prodId) ?? getWaterfallForAccount('baker-klaas', 'milk-couverture')
+    if (!data) return <EmptyState />
+    return (
+      <div className="h-full">
+        <WaterfallChart data={data} />
       </div>
-    </div>
-  )
+    )
+  }
+
+  if (visualType === 'pvm') {
+    const accId = accountId ?? dataKey ?? 'schoko-retail'
+    const data = getPVMForAccount(accId as string) ?? getPVMForAccount('schoko-retail')
+    if (!data) return <EmptyState />
+    return (
+      <div className="h-full overflow-y-auto">
+        <PVMBridge data={data} />
+      </div>
+    )
+  }
+
+  if (visualType === 'winLoss') {
+    const prodId = productId ?? dataKey ?? 'milk-couverture'
+    const data = getWinLossForProduct(prodId as string) ?? getWinLossForProduct('milk-couverture')
+    if (!data) return <EmptyState />
+    return (
+      <div className="h-full">
+        <WinProbabilityCurve data={data} />
+      </div>
+    )
+  }
+
+  if (visualType === 'eor') {
+    const accId = accountId ?? dataKey ?? 'baker-klaas'
+    const data = getEoRForAccount(accId as string) ?? eorDataset[0]
+    if (!data) return <EmptyState />
+    return (
+      <div className="h-full overflow-y-auto p-2">
+        <EoRDimensions dimensions={data.dimensions} />
+      </div>
+    )
+  }
+
+  return <EmptyState />
 }

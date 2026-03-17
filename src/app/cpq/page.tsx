@@ -7,6 +7,10 @@ import { PriceBand } from '@/components/cpq/PriceBand'
 import { MarginBridge } from '@/components/cpq/MarginBridge'
 import { EscalationBanner, type EscalationLevel } from '@/components/cpq/EscalationBanner'
 import { ScenarioComparison } from '@/components/cpq/ScenarioComparison'
+import { WinProbSignal } from '@/components/cpq/WinProbSignal'
+import { EoRSignal } from '@/components/cpq/EoRSignal'
+import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
+import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
 import quotesData from '../../../data/quotes.json'
 
@@ -20,6 +24,8 @@ function getEscalationLevel(discountPct: number, thresholds: { rep: number; mana
 export default function CPQPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [dealDiscountPct, setDealDiscountPct] = useState(0)
+  const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
+  const [explainOpen, setExplainOpen] = useState(false)
 
   const accountId = activeAccountId ?? 'baker-klaas'
   const productId = activeProductId ?? 'milk-couverture'
@@ -169,7 +175,32 @@ export default function CPQPage() {
           <h3 className="text-xs font-semibold text-text-secondary mb-3 uppercase tracking-wide">Scenario Comparison</h3>
           <ScenarioComparison scenarios={scenarios} activeDiscountPct={dealDiscountPct} />
         </div>
+
+        {/* Win Probability + EoR signals */}
+        <div className="grid grid-cols-2 gap-4">
+          <WinProbSignal productId={productId} currentPrice={netPrice} />
+          <EoRSignal accountId={accountId} />
+        </div>
       </div>
+
+      <ExplainButton
+        screen="cpq"
+        accountId={activeAccountId}
+        productId={activeProductId}
+        keyMetrics={{
+          accountId,
+          productId,
+          listPrice,
+          netPrice,
+          tierDiscountPct,
+          dealDiscountPct,
+          escalationLevel,
+          floorPrice,
+          targetPrice,
+        }}
+        onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+      />
+      <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
     </div>
   )
 }

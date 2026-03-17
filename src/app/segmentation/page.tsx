@@ -8,6 +8,8 @@ import { ComparisonPanel } from '@/components/segmentation/ComparisonPanel'
 import { ProspectInput } from '@/components/segmentation/ProspectInput'
 import { useAppContext } from '@/context/AppContext'
 import { Columns2, LayoutPanelLeft } from 'lucide-react'
+import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
+import { ExplainPanel } from '@/components/shared/ExplainPanel'
 
 interface ProspectPoint {
   volume: number
@@ -18,6 +20,8 @@ export default function SegmentationPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [comparisonMode, setComparisonMode] = useState(false)
   const [prospectPoint, setProspectPoint] = useState<ProspectPoint | null>(null)
+  const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
+  const [explainOpen, setExplainOpen] = useState(false)
 
   const productId = activeProductId ?? 'milk-couverture'
   const points = getSegmentationForProduct(productId)
@@ -115,6 +119,21 @@ export default function SegmentationPage() {
           </>
         )}
       </div>
+
+      <ExplainButton
+        screen="segmentation"
+        accountId={activeAccountId}
+        productId={activeProductId ?? productId}
+        keyMetrics={{
+          currentPrice: activeAccount?.price,
+          floorPrice,
+          targetPrice,
+          vsFloor: activeAccount ? ((activeAccount.price - floorPrice) / floorPrice * 100).toFixed(1) : null,
+          zone: activeAccount ? (activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green') : null,
+        }}
+        onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+      />
+      <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
     </div>
   )
 }

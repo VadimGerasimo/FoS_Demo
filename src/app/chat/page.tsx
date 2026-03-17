@@ -7,21 +7,27 @@ import { ConversationThread, type Message } from '@/components/chat/Conversation
 import { MessageInput } from '@/components/chat/MessageInput'
 import { DynamicRightPanel } from '@/components/chat/DynamicRightPanel'
 import { useAppContext } from '@/context/AppContext'
+import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
+import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { Bookmark } from 'lucide-react'
 
 interface RightPanelState {
   visualType: string | null
   dataKey: string | null
   tableData?: Record<string, string | number>[] | null
+  accountId?: string | null
+  productId?: string | null
 }
 
 const STORAGE_KEY = 'equazion-conversations'
 
 export default function ChatPage() {
-  const { setAccount, setProduct } = useAppContext()
+  const { setAccount, setProduct, activeAccountId, activeProductId } = useAppContext()
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [rightPanel, setRightPanel] = useState<RightPanelState>({ visualType: null, dataKey: null })
+  const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
+  const [explainOpen, setExplainOpen] = useState(false)
   const threadRef = useRef<HTMLDivElement>(null)
 
   // Scroll to bottom on new message
@@ -64,6 +70,8 @@ export default function ChatPage() {
           visualType: data.visualType,
           dataKey: data.dataKey,
           tableData: data.tableData,
+          accountId: data.accountId,
+          productId: data.productId,
         })
       }
 
@@ -138,10 +146,21 @@ export default function ChatPage() {
               visualType={rightPanel.visualType}
               dataKey={rightPanel.dataKey}
               tableData={rightPanel.tableData}
+              accountId={rightPanel.accountId}
+              productId={rightPanel.productId}
             />
           </div>
         </div>
       </div>
+
+      <ExplainButton
+        screen="chat"
+        accountId={activeAccountId}
+        productId={activeProductId}
+        keyMetrics={{ messageCount: messages.length, lastVisualType: rightPanel.visualType }}
+        onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+      />
+      <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
     </div>
   )
 }
