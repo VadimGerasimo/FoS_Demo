@@ -1,0 +1,14 @@
+<svg viewBox="0 0 58 58" width="58" height="58" xmlns="http://www.w3.org/2000/svg">
+  <!-- Chip background -->
+  <circle cx="29" cy="29" r="29" fill="#3B3939"/>
+  <!-- Outer orange ring -->
+  <circle cx="29" cy="28" r="11.2" fill="#E8941A"/>
+  <!-- Inner cutout matching chip bg -->
+  <circle cx="29" cy="28" r="6.4" fill="#3B3939"/>
+  <!-- Diagonal compass slash -->
+  <line x1="20.3" y1="18.3" x2="38.2" y2="38.1"
+        stroke="#3B3939" stroke-width="3.8" stroke-linecap="round"/>
+  <!-- Tail -->
+  <line x1="35.2" y1="34.5" x2="40.9" y2="40.5"
+        stroke="#E8941A" stroke-width="4.2" stroke-linecap="round"/>
+</svg>

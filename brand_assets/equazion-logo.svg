@@ -1,0 +1,37 @@
+<svg viewBox="0 0 460 108" width="460" height="108"
+     xmlns="http://www.w3.org/2000/svg"
+     xmlns:xlink="http://www.w3.org/1999/xlink">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;display=swap');
+      .logo-main { font-family: 'Bebas Neue', Impact, Arial, sans-serif; font-size: 80px; fill: #1C1B19; }
+      .logo-reg  { font-family: Arial, sans-serif; font-size: 18px; fill: #1C1B19; }
+      .tagline   { font-family: Arial, 'Helvetica Neue', sans-serif; font-size: 10px;
+                   fill: #1C1B19; letter-spacing: 4px; }
+    </style>
+  </defs>
+
+  <!-- Logo text -->
+  <text class="logo-main" x="10" y="80" letter-spacing="1.5">eQUAZION</text>
+  <!-- Registered mark -->
+  <text class="logo-reg" x="402" y="22">®</text>
+
+  <!-- Q compass needle overlay (background color cuts through Q letterform) -->
+  <!-- Estimated Q bounding box: x≈54–106, y≈12–80 -->
+  <line x1="51" y1="13" x2="109" y2="77"
+        stroke="#EEECE8" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Z grid overlay (background color cuts 4×2 grid through Z letterform) -->
+  <!-- Estimated Z bounding box: x≈212–264, y≈12–80 -->
+  <!-- Horizontal cuts -->
+  <line x1="210" y1="26" x2="266" y2="26" stroke="#EEECE8" stroke-width="2.6"/>
+  <line x1="210" y1="39" x2="266" y2="39" stroke="#EEECE8" stroke-width="2.6"/>
+  <line x1="210" y1="53" x2="266" y2="53" stroke="#EEECE8" stroke-width="2.6"/>
+  <line x1="210" y1="66" x2="266" y2="66" stroke="#EEECE8" stroke-width="2.6"/>
+  <!-- Vertical cuts -->
+  <line x1="229" y1="10" x2="229" y2="82" stroke="#EEECE8" stroke-width="2.6"/>
+  <line x1="247" y1="10" x2="247" y2="82" stroke="#EEECE8" stroke-width="2.6"/>
+
+  <!-- Tagline -->
+  <text class="tagline" x="230" y="100" text-anchor="middle">FROM A BROADER PERSPECTIVE</text>
+</svg>

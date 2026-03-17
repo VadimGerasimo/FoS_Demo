@@ -1,6 +1,6 @@
 'use client'
 
-import { Bot } from 'lucide-react'
+import Image from 'next/image'
 
 export interface Message {
   id: string
@@ -20,8 +20,8 @@ export function ConversationThread({ messages, isLoading }: ConversationThreadPr
     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
       {messages.length === 0 && (
         <div className="flex flex-col items-center justify-center h-full text-center py-12">
-          <div className="w-12 h-12 rounded-full bg-pwc-orange/10 flex items-center justify-center mb-3">
-            <Bot size={22} className="text-pwc-orange" />
+          <div className="w-12 h-12 rounded-full overflow-hidden mb-3 shrink-0">
+            <Image src="/equazion-q-icon-light.svg" alt="Equazion" width={48} height={48} />
           </div>
           <p className="text-sm font-medium text-text-primary mb-1">Ask about any account or product</p>
           <p className="text-xs text-text-muted max-w-xs">
@@ -35,12 +35,12 @@ export function ConversationThread({ messages, isLoading }: ConversationThreadPr
           key={msg.id}
           className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
         >
-          <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-semibold ${
+          <div className={`w-7 h-7 rounded-full shrink-0 flex items-center justify-center text-xs font-semibold overflow-hidden ${
             msg.role === 'user'
               ? 'bg-pwc-orange text-white'
-              : 'bg-sidebar-bg text-white'
+              : ''
           }`}>
-            {msg.role === 'user' ? 'S' : <Bot size={14} />}
+            {msg.role === 'user' ? 'S' : <Image src="/equazion-q-icon-dark.svg" alt="Equazion" width={28} height={28} />}
           </div>
 
           <div className={`flex flex-col gap-1.5 max-w-[85%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
@@ -64,8 +64,8 @@ export function ConversationThread({ messages, isLoading }: ConversationThreadPr
 
       {isLoading && (
         <div className="flex gap-3">
-          <div className="w-7 h-7 rounded-full bg-sidebar-bg shrink-0 flex items-center justify-center">
-            <Bot size={14} className="text-white" />
+          <div className="w-7 h-7 rounded-full shrink-0 overflow-hidden">
+            <Image src="/equazion-q-icon-dark.svg" alt="Equazion" width={28} height={28} />
           </div>
           <div className="px-3.5 py-3 bg-white border border-border-default rounded-2xl rounded-tl-sm shadow-sm">
             <div className="flex gap-1">

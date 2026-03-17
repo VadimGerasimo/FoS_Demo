@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { clsx } from 'clsx'
+import { EquazionLogo } from '@/components/shared/EquazionLogo'
 import {
   MessageSquare,
   ScatterChart,
@@ -30,17 +31,8 @@ export function Sidebar() {
   return (
     <aside className="flex flex-col w-60 min-h-screen bg-sidebar-bg shrink-0">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-white/10">
-        <Image
-          src="/equazion-logo.png"
-          alt="Equazion"
-          width={28}
-          height={28}
-          className="rounded"
-        />
-        <span className="text-white font-semibold text-[15px] tracking-tight">
-          Equazion
-        </span>
+      <div className="flex items-center px-5 py-5 border-b border-white/10">
+        <EquazionLogo bg="rgb(50,51,54)" fontSize={28} />
       </div>
 
       {/* Navigation */}
