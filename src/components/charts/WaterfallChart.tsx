@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import {
   BarChart,
   Bar,
@@ -68,6 +69,11 @@ interface WaterfallChartProps {
 
 export function WaterfallChart({ data }: WaterfallChartProps) {
   const chartData = transformLayers(data.layers)
+  const [animateOnMount, setAnimateOnMount] = useState(true)
+  useEffect(() => {
+    const t = setTimeout(() => setAnimateOnMount(false), 1200)
+    return () => clearTimeout(t)
+  }, [])
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -88,7 +94,7 @@ export function WaterfallChart({ data }: WaterfallChartProps) {
         />
         <Tooltip content={<CustomTooltip />} />
         <Bar dataKey="spacer" stackId="wf" fill="transparent" isAnimationActive={false} />
-        <Bar dataKey="value" stackId="wf" isAnimationActive={false} radius={[3, 3, 0, 0]}>
+        <Bar dataKey="value" stackId="wf" isAnimationActive={animateOnMount} animationDuration={900} radius={[3, 3, 0, 0]}>
           {chartData.map((d, i) => (
             <Cell
               key={`cell-${i}`}

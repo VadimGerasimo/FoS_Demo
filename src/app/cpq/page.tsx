@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { accounts, products } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { PriceBand } from '@/components/cpq/PriceBand'
@@ -12,6 +12,8 @@ import { EoRSignal } from '@/components/cpq/EoRSignal'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
+import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
+import { FadeWrapper } from '@/components/shared/FadeWrapper'
 import quotesData from '../../../data/quotes.json'
 
 function getEscalationLevel(discountPct: number, thresholds: { rep: number; manager: number; director: number }): EscalationLevel {
@@ -26,6 +28,11 @@ export default function CPQPage() {
   const [dealDiscountPct, setDealDiscountPct] = useState(0)
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 350)
+    return () => clearTimeout(t)
+  }, [])
 
   const accountId = activeAccountId ?? 'baker-klaas'
   const productId = activeProductId ?? 'milk-couverture'
@@ -46,6 +53,12 @@ export default function CPQPage() {
   }, [listPrice, tierDiscountPct, dealDiscountPct])
 
   const escalationLevel = getEscalationLevel(dealDiscountPct, thresholds)
+
+  const approxGrossMarginPct = useMemo(() => {
+    if (dealDiscountPct <= -5) return 14.1
+    if (dealDiscountPct >= 4) return 19.8
+    return parseFloat((18.3 + ((dealDiscountPct / 4) * (19.8 - 18.3))).toFixed(1))
+  }, [dealDiscountPct])
 
   const floorPrice = account?.floor ?? 4.57
   const targetPrice = account?.target ?? 4.85
@@ -70,7 +83,7 @@ export default function CPQPage() {
     {
       label: 'Propose +4% uplift',
       discountPct: 4,
-      netPrice: listPrice * (1 - tierDiscountPct / 100) * 0.96,
+      netPrice: listPrice * (1 - tierDiscountPct / 100) * 1.04,
       grossMarginPct: 19.8,
       zone: 'amber' as const,
       verdict: 'Defensible step toward fair pricing',
@@ -89,7 +102,13 @@ export default function CPQPage() {
     <div className="flex flex-col h-full">
       <FilterBar accounts={accounts} products={products} />
 
-      <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-5">
+      {!mounted ? (
+        <div className="flex-1 overflow-y-auto p-6">
+          <ChartSkeleton rows={3} height="h-32" />
+        </div>
+      ) : (
+      <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 overflow-y-auto">
+      <div className="p-6 flex flex-col gap-5">
         {/* Quote header */}
         <div className="card p-5">
           <div className="flex items-start justify-between mb-4">
@@ -182,6 +201,8 @@ export default function CPQPage() {
           <EoRSignal accountId={accountId} />
         </div>
       </div>
+      </FadeWrapper>
+      )}
 
       <ExplainButton
         screen="cpq"
@@ -197,6 +218,7 @@ export default function CPQPage() {
           escalationLevel,
           floorPrice,
           targetPrice,
+          grossMarginPct: approxGrossMarginPct,
         }}
         onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
       />

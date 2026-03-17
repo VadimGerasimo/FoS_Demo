@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { accounts, products, getPVMForAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { PVMBridge } from '@/components/charts/PVMBridge'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
+import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
+import { FadeWrapper } from '@/components/shared/FadeWrapper'
 
 function fmt(v: number): string {
   return Math.abs(v) >= 1000
@@ -23,6 +25,11 @@ export default function PVMPage() {
   const { activeAccountId } = useAppContext()
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 350)
+    return () => clearTimeout(t)
+  }, [])
 
   const accountId = activeAccountId ?? 'schoko-retail'
   const pvmData = getPVMForAccount(accountId) ?? getPVMForAccount('schoko-retail')!
@@ -74,7 +81,11 @@ export default function PVMPage() {
     <div className="flex flex-col h-full">
       <FilterBar accounts={accounts} products={products} />
 
-      <div className="flex-1 overflow-y-auto p-6 flex flex-col gap-4">
+      {!mounted ? (
+        <div className="flex-1 p-6"><ChartSkeleton rows={1} height="h-56" /></div>
+      ) : (
+      <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}`} className="flex-1 overflow-y-auto">
+      <div className="p-6 flex flex-col gap-4">
         {/* Stats row */}
         <div className="flex gap-4">
           {stats.map(({ label, value, zone }) => (
@@ -105,6 +116,8 @@ export default function PVMPage() {
           <PVMBridge data={pvmData} />
         </div>
       </div>
+      </FadeWrapper>
+      )}
 
       <ExplainButton
         screen="pvm"

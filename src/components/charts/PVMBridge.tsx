@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   BarChart,
   Bar,
@@ -116,6 +116,11 @@ interface PVMBridgeProps {
 
 export function PVMBridge({ data }: PVMBridgeProps) {
   const [period, setPeriod] = useState(PERIOD_OPTIONS[0])
+  const [animateOnMount, setAnimateOnMount] = useState(true)
+  useEffect(() => {
+    const t = setTimeout(() => setAnimateOnMount(false), 1200)
+    return () => clearTimeout(t)
+  }, [])
   const chartData = transformPVM(data)
 
   return (
@@ -158,7 +163,7 @@ export function PVMBridge({ data }: PVMBridgeProps) {
             />
             <Tooltip content={<CustomTooltip />} />
             <Bar dataKey="spacer" stackId="pvm" fill="transparent" isAnimationActive={false} />
-            <Bar dataKey="value" stackId="pvm" isAnimationActive={false} radius={[3, 3, 0, 0]}>
+            <Bar dataKey="value" stackId="pvm" isAnimationActive={animateOnMount} animationDuration={900} radius={[3, 3, 0, 0]}>
               {chartData.map((d, i) => (
                 <Cell key={`cell-${i}`} fill={getFill(d)} />
               ))}

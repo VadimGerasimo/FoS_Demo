@@ -33,10 +33,10 @@
     ],
     "accountId": "baker-klaas",
     "productId": "milk-couverture",
-    "response": "Baker Klaas has a 9.2% flat rebate — €38,400 total annual leakage — which is 5.1 percentage points above the Mid-Market Benelux norm. Combined with the invoice discount, net-net realisation is €4.20/kg vs a list price of €5.80/kg. The rebate structure is the primary driver of margin erosion.",
+    "response": "Baker Klaas carries a rebate of €0.77/kg — approximately €2,960 in annual leakage at current volumes — applied after the invoice discount, bringing net-net price to €4.20/kg on a list price of €5.80/kg. The rebate layer is the primary margin driver and sits above the Mid-Market Benelux norm. Combined with the invoice discount, total deduction is €1.60/kg — a 27.6% departure from list.",
     "visualType": "waterfall",
     "dataKey": "baker-klaas-milk-couverture",
-    "suggestedAction": "Review rebate structure in next contract cycle — propose performance-linked rebate to cap total leakage",
+    "suggestedAction": "Review rebate structure at next contract renewal — propose a performance-linked rebate to cap total leakage and improve net-net realisation",
     "tableData": null
   },
   {

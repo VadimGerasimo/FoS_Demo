@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import {
   ComposedChart,
   Line,
@@ -52,6 +53,12 @@ interface WinProbabilityCurveProps {
 }
 
 export function WinProbabilityCurve({ data, currentPrice }: WinProbabilityCurveProps) {
+  const [animateOnMount, setAnimateOnMount] = useState(true)
+  useEffect(() => {
+    const t = setTimeout(() => setAnimateOnMount(false), 1200)
+    return () => clearTimeout(t)
+  }, [])
+
   const wonQuotes = data.historicalQuotes
     .filter(q => q.won)
     .map(q => ({ price: q.price, winRate: interpolateWinRate(data.curve, q.price), won: true }))
@@ -124,7 +131,8 @@ export function WinProbabilityCurve({ data, currentPrice }: WinProbabilityCurveP
           strokeWidth={2.5}
           dot={false}
           type="monotone"
-          isAnimationActive={false}
+          isAnimationActive={animateOnMount}
+          animationDuration={900}
         />
 
         {/* Won quotes */}

@@ -1,12 +1,14 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { accounts, products, getWinLossForProduct } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { WinProbabilityCurve } from '@/components/charts/WinProbabilityCurve'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
+import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
+import { FadeWrapper } from '@/components/shared/FadeWrapper'
 
 function interpolateWinRate(curve: { price: number; winRate: number }[], price: number): number {
   const sorted = [...curve].sort((a, b) => a.price - b.price)
@@ -22,6 +24,11 @@ export default function WinLossPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 350)
+    return () => clearTimeout(t)
+  }, [])
 
   const productId = activeProductId ?? 'milk-couverture'
   const winLossData =
@@ -50,6 +57,10 @@ export default function WinLossPage() {
     <div className="flex flex-col h-full">
       <FilterBar accounts={accounts} products={products} />
 
+      {!mounted ? (
+        <div className="flex-1 p-6"><ChartSkeleton rows={1} height="h-56" /></div>
+      ) : (
+      <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 flex min-h-0">
       <div className="flex-1 flex p-6 gap-6 min-h-0">
         {/* Left — chart (65%) */}
         <div className="card flex-1 p-4 min-h-0" style={{ flexBasis: '65%' }}>
@@ -95,6 +106,8 @@ export default function WinLossPage() {
           </div>
         </div>
       </div>
+      </FadeWrapper>
+      )}
 
       <ExplainButton
         screen="win-loss"

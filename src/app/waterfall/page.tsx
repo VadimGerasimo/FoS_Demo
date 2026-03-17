@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { accounts, products, getWaterfallForAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { WaterfallChart } from '@/components/charts/WaterfallChart'
@@ -8,11 +8,18 @@ import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainBu
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
 import { AlertTriangle } from 'lucide-react'
+import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
+import { FadeWrapper } from '@/components/shared/FadeWrapper'
 
 export default function WaterfallPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 350)
+    return () => clearTimeout(t)
+  }, [])
 
   const accountId = activeAccountId ?? 'baker-klaas'
   const productId = activeProductId ?? 'milk-couverture'
@@ -20,6 +27,7 @@ export default function WaterfallPage() {
   const waterfallData =
     getWaterfallForAccount(accountId, productId) ??
     getWaterfallForAccount('baker-klaas', 'milk-couverture')!
+  const isFallback = !getWaterfallForAccount(accountId, productId) && accountId !== 'baker-klaas'
 
   const listPrice = waterfallData.layers[0]?.cumulative ?? 0
   const netNetPrice = waterfallData.layers[waterfallData.layers.length - 1]?.cumulative ?? 0
@@ -48,6 +56,10 @@ export default function WaterfallPage() {
     <div className="flex flex-col h-full">
       <FilterBar accounts={accounts} products={products} />
 
+      {!mounted ? (
+        <div className="flex-1 p-6"><ChartSkeleton rows={1} height="h-56" /></div>
+      ) : (
+      <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 flex flex-col min-h-0">
       <div className="flex-1 flex flex-col p-6 gap-4 min-h-0">
         {/* Stats row */}
         <div className="flex gap-4">
@@ -74,6 +86,13 @@ export default function WaterfallPage() {
           </div>
         </div>
 
+        {/* Fallback notice */}
+        {isFallback && (
+          <div className="px-3 py-2 bg-page-bg border border-border-default rounded-lg text-xs text-text-muted">
+            Showing Baker Klaas data (no waterfall data for selected account/product)
+          </div>
+        )}
+
         {/* Highlighted layer banner */}
         {highlightedLayer && (
           <div className="flex items-center gap-2 px-3 py-2 bg-zone-amber-bg border border-zone-amber/30 rounded-lg text-xs text-zone-amber">
@@ -82,6 +101,8 @@ export default function WaterfallPage() {
           </div>
         )}
       </div>
+      </FadeWrapper>
+      )}
 
       <ExplainButton
         screen="waterfall"

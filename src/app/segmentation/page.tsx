@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { accounts, products, getSegmentationForProduct } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { SegmentationScatter } from '@/components/charts/SegmentationScatter'
@@ -10,6 +10,8 @@ import { useAppContext } from '@/context/AppContext'
 import { Columns2, LayoutPanelLeft } from 'lucide-react'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
+import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
+import { FadeWrapper } from '@/components/shared/FadeWrapper'
 
 interface ProspectPoint {
   volume: number
@@ -22,6 +24,11 @@ export default function SegmentationPage() {
   const [prospectPoint, setProspectPoint] = useState<ProspectPoint | null>(null)
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 350)
+    return () => clearTimeout(t)
+  }, [])
 
   const productId = activeProductId ?? 'milk-couverture'
   const points = getSegmentationForProduct(productId)
@@ -64,6 +71,10 @@ export default function SegmentationPage() {
 
       {/* Main content */}
       <div className="flex-1 flex flex-col p-6 gap-4 min-h-0">
+        {!mounted ? (
+          <ChartSkeleton rows={2} height="h-64" />
+        ) : (
+        <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex flex-col gap-4 flex-1 min-h-0">
         {comparisonMode ? (
           <ComparisonPanel productId={activeProductId} />
         ) : (
@@ -117,6 +128,8 @@ export default function SegmentationPage() {
               </div>
             </div>
           </>
+        )}
+        </FadeWrapper>
         )}
       </div>
 

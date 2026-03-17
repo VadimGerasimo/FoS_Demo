@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Sparkles, Loader2 } from 'lucide-react'
+import { Sparkles, Loader2, AlertCircle } from 'lucide-react'
 
 export interface ExplainResult {
   whatISee: string
@@ -19,6 +19,7 @@ interface ExplainButtonProps {
 
 export function ExplainButton({ screen, keyMetrics, accountId, productId, onResult }: ExplainButtonProps) {
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
 
   async function handleClick() {
     setLoading(true)
@@ -31,10 +32,23 @@ export function ExplainButton({ screen, keyMetrics, accountId, productId, onResu
       const data = await res.json()
       onResult(data)
     } catch {
-      // silent fail
+      setError(true)
+      setTimeout(() => setError(false), 3000)
     } finally {
       setLoading(false)
     }
+  }
+
+  if (error) {
+    return (
+      <button
+        disabled
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-full shadow-lg text-sm font-medium"
+      >
+        <AlertCircle size={15} />
+        Try again
+      </button>
+    )
   }
 
   return (
