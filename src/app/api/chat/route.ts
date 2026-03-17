@@ -21,9 +21,8 @@ const client = new OpenAI({
 })
 
 const SCENARIO_LIST = scenarios
-  .filter(s => s.id !== 'generic-fallback')
-  .map(s => `- "${s.id}": matches questions about ${s.matchPhrases.slice(0, 2).join(', ')}`)
-  .join('\n')
+  .map(s => `ID: "${s.id}"\nAnswer: ${s.response}`)
+  .join('\n\n')
 
 export async function POST(req: Request) {
   try {
@@ -33,26 +32,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'Question is required' }, { status: 400 })
     }
 
-    // Try local phrase matching first (instant, no API call needed for scripted demo)
-    const q = question.toLowerCase().trim()
-    for (const scenario of scenarios) {
-      if (scenario.id === 'generic-fallback') continue
-      const matched = scenario.matchPhrases.some(phrase => q.includes(phrase.toLowerCase()))
-      if (matched) {
-        return NextResponse.json({
-          scenarioId: scenario.id,
-          response: scenario.response,
-          visualType: scenario.visualType,
-          dataKey: scenario.dataKey,
-          suggestedAction: scenario.suggestedAction,
-          tableData: scenario.tableData ?? null,
-          accountId: scenario.accountId,
-          productId: scenario.productId,
-        })
-      }
-    }
-
-    // Fall back to OpenAI semantic matching
+    // Use OpenAI for semantic routing — handles any phrasing, not just exact phrases
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_key_here') {
       // No API key — return graceful fallback
       const fallback = scenarios.find(s => s.id === 'generic-fallback')!
@@ -75,15 +55,15 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: `You are a scenario router for a pricing intelligence demo. Given a user question, return ONLY the ID of the best matching scenario from this list, or "generic-fallback" if none match well:
+          content: `This is the question: "${question}"
+
+These are the predefined answers, including the fallback:
 
 ${SCENARIO_LIST}
 
-Context: activeAccountId="${activeAccountId ?? 'none'}", activeProductId="${activeProductId ?? 'none'}"
-
-Respond with ONLY the scenario ID string, nothing else.`,
+Which one should I respond with? Reply with ONLY the ID string of the best matching answer. Active account context: "${activeAccountId ?? 'none'}".`,
         },
-        { role: 'user', content: question },
+        { role: 'user', content: 'Which scenario ID should I respond with?' },
       ],
     })
 

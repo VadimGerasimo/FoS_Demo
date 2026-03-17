@@ -16,8 +16,8 @@ export function DealContextPanel({
   accountName, segment, volume, lastQuotedPrice,
   listPrice, floorPrice, targetPrice, currentPrice, tierDiscountPct,
 }: DealContextPanelProps) {
-  const segmentPosition = currentPrice < floorPrice ? 'Below floor' : currentPrice < targetPrice ? 'In-band' : 'Above target'
-  const posZone = currentPrice < floorPrice ? 'red' : currentPrice < targetPrice ? 'amber' : 'green'
+  const segmentPosition = lastQuotedPrice < floorPrice ? 'Below floor' : lastQuotedPrice < targetPrice ? 'In-band' : 'Above target'
+  const posZone = lastQuotedPrice < floorPrice ? 'red' : lastQuotedPrice < targetPrice ? 'amber' : 'green'
   const cogsApprox = currentPrice * 0.75
 
   return (

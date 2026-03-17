@@ -46,11 +46,11 @@ export default function CPQPage() {
   const tierDiscountPct = (quoteBase?.tierDiscount as number | undefined) ?? 5
   const thresholds = product?.escalationThresholds ?? { rep: 5, manager: 10, director: 15 }
 
-  const netPrice = useMemo(() => {
-    const afterTier = listPrice * (1 - tierDiscountPct / 100)
-    // dealDiscountPct > 0 means uplift (increase price); < 0 means discount (reduce price)
-    return afterTier * (1 + dealDiscountPct / 100)
-  }, [listPrice, tierDiscountPct, dealDiscountPct])
+  const basePrice = (quoteBase?.currentPrice as number | undefined) ?? account?.price ?? listPrice * (1 - tierDiscountPct / 100)
+  const netPrice = useMemo(
+    () => basePrice * (1 + dealDiscountPct / 100),
+    [basePrice, dealDiscountPct]
+  )
 
   const floorPrice = account?.floor ?? 4.57
   const targetPrice = account?.target ?? 4.85
@@ -115,17 +115,17 @@ export default function CPQPage() {
           {/* Price stack */}
           <div className="space-y-2 mb-5">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary">List price</span>
-              <span className="font-medium">€{listPrice.toFixed(2)}/kg</span>
+              <span className="text-text-secondary">Current deal price</span>
+              <span className="font-medium">€{basePrice.toFixed(2)}/kg</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-text-secondary flex items-center gap-1">
-                Tier discount
+                Tier discount (baked in)
                 <span className="text-[10px] bg-page-bg border border-border-default px-1.5 py-0.5 rounded text-text-muted">
-                  Tier 2 — auto-applied at −{tierDiscountPct}%
+                  −{tierDiscountPct}% vs list (€{listPrice.toFixed(2)}/kg)
                 </span>
               </span>
-              <span className="text-zone-red font-medium">−{tierDiscountPct}%</span>
+              <span className="text-text-muted font-medium">−{tierDiscountPct}%</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-text-secondary flex flex-col">
@@ -169,13 +169,12 @@ export default function CPQPage() {
             </div>
           </div>
 
-          {/* Combined effective discount */}
+          {/* Rep adjustment summary */}
           <div className="flex items-center justify-between text-xs pt-2 border-t border-border-default mb-4">
-            <span className="text-text-muted">Combined effective discount</span>
+            <span className="text-text-muted">Rep adjustment</span>
             <span className="font-semibold text-text-primary">
-              Tier (−{tierDiscountPct}%) + Rep ({dealDiscountPct >= 0 ? '+' : ''}{dealDiscountPct}%) ={' '}
-              <span className={dealDiscountPct < 0 ? 'text-zone-red' : 'text-zone-green'}>
-                {(-(tierDiscountPct) + dealDiscountPct).toFixed(1)}%
+              <span className={dealDiscountPct < 0 ? 'text-zone-red' : dealDiscountPct > 0 ? 'text-zone-green' : 'text-text-primary'}>
+                {dealDiscountPct >= 0 ? '+' : ''}{dealDiscountPct}%
               </span>
             </span>
           </div>

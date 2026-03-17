@@ -88,6 +88,11 @@ export default function SegmentationPage() {
             {/* Stats row */}
             {activeAccount && (() => {
               const vsFloorZone = activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green'
+              const sortedByPrice = [...points].sort((a, b) => a.price - b.price)
+              const accountRankIdx = sortedByPrice.findIndex(p => Math.abs(p.price - activeAccount.price) < 0.001)
+              const accountPercentile = accountRankIdx >= 0
+                ? Math.round(((accountRankIdx + 1) / sortedByPrice.length) * 100)
+                : null
               const KPI_CONFIG = [
                 {
                   label: 'Current price',
@@ -110,6 +115,11 @@ export default function SegmentationPage() {
                   zone: vsFloorZone,
                   borderColor: activeAccount.price < floorPrice ? 'border-l-zone-red' : 'border-l-zone-amber',
                   dominant: activeAccount.price < floorPrice,
+                },
+                {
+                  label: 'Segment rank',
+                  value: accountPercentile !== null ? `Bottom ${accountPercentile}%` : '—',
+                  borderColor: accountPercentile !== null && accountPercentile <= 25 ? 'border-l-zone-red' : 'border-l-blue-500',
                 },
               ]
               return (
@@ -181,10 +191,14 @@ export default function SegmentationPage() {
         accountId={activeAccountId}
         productId={activeProductId ?? productId}
         keyMetrics={{
+          accountName: activeAccount?.name,
           currentPrice: activeAccount?.price,
           floorPrice,
           targetPrice,
           vsFloor: activeAccount ? ((activeAccount.price - floorPrice) / floorPrice * 100).toFixed(1) : null,
+          upliftToFloor: activeAccount && activeAccount.price < floorPrice
+            ? ((floorPrice - activeAccount.price) / activeAccount.price * 100).toFixed(1)
+            : null,
           zone: activeAccount ? (activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green') : null,
         }}
         onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
