@@ -10,16 +10,6 @@
     "zone": "red"
   },
   {
-    "id": "seg-sr-mc",
-    "accountId": "schoko-retail",
-    "accountName": "Schoko Retail Group",
-    "productId": "milk-couverture",
-    "volume": 38000,
-    "price": 3.55,
-    "segment": "Enterprise Key Accounts",
-    "zone": "amber"
-  },
-  {
     "id": "seg-pm-mc",
     "accountId": "patisserie-moreau",
     "accountName": "Pâtisserie Moreau",
@@ -35,29 +25,9 @@
     "accountName": "Choco Artisan BV",
     "productId": "milk-couverture",
     "volume": 210,
-    "price": 4.90,
+    "price": 5.20,
     "segment": "Mid-Market Benelux",
     "zone": "green"
-  },
-  {
-    "id": "seg-nb-mc",
-    "accountId": "nordic-bakes",
-    "accountName": "Nordic Bakes AS",
-    "productId": "milk-couverture",
-    "volume": 650,
-    "price": 4.60,
-    "segment": "Mid-Market Nordics",
-    "zone": "amber"
-  },
-  {
-    "id": "seg-di-mc",
-    "accountId": "dolce-italia",
-    "accountName": "Dolce Italia SpA",
-    "productId": "milk-couverture",
-    "volume": 920,
-    "price": 4.40,
-    "segment": "Mid-Market Southern Europe",
-    "zone": "amber"
   },
   {
     "id": "seg-cl-mc",
@@ -70,13 +40,23 @@
     "zone": "green"
   },
   {
-    "id": "seg-mb-mc",
-    "accountId": "munchen-bakerei",
-    "accountName": "Münchener Bäckerei",
+    "id": "seg-bd-mc",
+    "accountId": "bruxelles-doux",
+    "accountName": "Bruxelles Doux NV",
     "productId": "milk-couverture",
-    "volume": 710,
-    "price": 4.30,
-    "segment": "Mid-Market DACH",
+    "volume": 560,
+    "price": 4.40,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-sr-mc",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "milk-couverture",
+    "volume": 38000,
+    "price": 3.55,
+    "segment": "Enterprise Key Accounts",
     "zone": "amber"
   },
   {
@@ -90,6 +70,86 @@
     "zone": "amber"
   },
   {
+    "id": "seg-gr-mc",
+    "accountId": "global-retail",
+    "accountName": "Global Retail GmbH",
+    "productId": "milk-couverture",
+    "volume": 48000,
+    "price": 3.25,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-if-mc",
+    "accountId": "interfood",
+    "accountName": "InterFood BV",
+    "productId": "milk-couverture",
+    "volume": 12000,
+    "price": 4.20,
+    "segment": "Enterprise Key Accounts",
+    "zone": "green"
+  },
+  {
+    "id": "seg-eu-mc",
+    "accountId": "euro-patisserie",
+    "accountName": "Euro Patisserie AG",
+    "productId": "milk-couverture",
+    "volume": 16000,
+    "price": 3.35,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-nb-mc",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "milk-couverture",
+    "volume": 650,
+    "price": 4.60,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sc-mc",
+    "accountId": "scandichoc",
+    "accountName": "Scandichoc AS",
+    "productId": "milk-couverture",
+    "volume": 280,
+    "price": 4.05,
+    "segment": "Mid-Market Nordics",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk2-mc",
+    "accountId": "bergens-konfekt",
+    "accountName": "Bergens Konfekt",
+    "productId": "milk-couverture",
+    "volume": 420,
+    "price": 4.85,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-hs-mc",
+    "accountId": "helsinki-sweet",
+    "accountName": "Helsinki Sweet OY",
+    "productId": "milk-couverture",
+    "volume": 350,
+    "price": 5.20,
+    "segment": "Mid-Market Nordics",
+    "zone": "green"
+  },
+  {
+    "id": "seg-di-mc",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "milk-couverture",
+    "volume": 920,
+    "price": 4.32,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
     "id": "seg-ac-mc",
     "accountId": "artisan-cacao",
     "accountName": "Artisan Cacao SL",
@@ -98,6 +158,66 @@
     "price": 4.65,
     "segment": "Mid-Market Southern Europe",
     "zone": "amber"
+  },
+  {
+    "id": "seg-cp-mc",
+    "accountId": "cioccolato-puro",
+    "accountName": "Cioccolato Puro Srl",
+    "productId": "milk-couverture",
+    "volume": 550,
+    "price": 3.90,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "red"
+  },
+  {
+    "id": "seg-dv-mc",
+    "accountId": "dulce-valencia",
+    "accountName": "Dulce Valencia SA",
+    "productId": "milk-couverture",
+    "volume": 320,
+    "price": 4.95,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-mc",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "milk-couverture",
+    "volume": 710,
+    "price": 4.30,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-wk-mc",
+    "accountId": "wiener-konditorei",
+    "accountName": "Wiener Konditorei GmbH",
+    "productId": "milk-couverture",
+    "volume": 450,
+    "price": 3.85,
+    "segment": "Mid-Market DACH",
+    "zone": "red"
+  },
+  {
+    "id": "seg-zc-mc",
+    "accountId": "zurich-chocolat",
+    "accountName": "Zürich Chocolat AG",
+    "productId": "milk-couverture",
+    "volume": 580,
+    "price": 4.45,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-dp-mc",
+    "accountId": "dresdner-pralinen",
+    "accountName": "Dresdner Pralinen GmbH",
+    "productId": "milk-couverture",
+    "volume": 320,
+    "price": 4.80,
+    "segment": "Mid-Market DACH",
+    "zone": "green"
   },
   {
     "id": "seg-bk-dc",

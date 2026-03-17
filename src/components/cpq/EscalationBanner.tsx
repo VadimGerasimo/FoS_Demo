@@ -16,22 +16,22 @@ const ESCALATION_CONFIG = {
     icon: AlertTriangle,
     bg: 'bg-zone-amber-bg border-zone-amber/30',
     text: 'text-zone-amber',
-    title: 'Manager approval required',
-    message: 'This discount level requires sign-off before submission.',
+    title: 'Manager awareness required',
+    message: 'Net price is below segment target — manager should be informed before submission.',
   },
   manager: {
     icon: Clock,
     bg: 'bg-orange-50 border-orange-200',
     text: 'text-orange-600',
-    title: 'Request sent to manager',
-    message: 'Awaiting manager approval — typical response time 15 minutes.',
+    title: 'Manager approval required — price below floor',
+    message: 'Net price has breached the segment floor. Formal manager sign-off required.',
   },
   director: {
     icon: ShieldAlert,
     bg: 'bg-zone-red-bg border-zone-red/30',
     text: 'text-zone-red',
-    title: 'Director sign-off required',
-    message: 'This discount level requires director approval. Deal is on hold.',
+    title: 'Director sign-off required — critical margin breach',
+    message: 'Net price is more than 5% below segment floor. Deal is on hold pending director approval.',
   },
 }
 
@@ -64,14 +64,14 @@ export function EscalationBanner({ level, discountPct: _discountPct }: Escalatio
       <div className="flex-1 min-w-0">
         <p className={`text-sm font-semibold ${cfg.text}`}>{cfg.title}</p>
         <p className="text-xs text-text-secondary mt-0.5">
-          {level === 'manager' && sending ? 'Sending request...' :
-           level === 'manager' && managerSent ? '✓ Request sent — awaiting approval' :
+          {level === 'manager' && sending ? 'Sending approval request...' :
+           level === 'manager' && managerSent ? '✓ Request sent to manager — awaiting approval' :
            cfg.message}
         </p>
       </div>
-      {level === 'rep' && (
+      {(
         <textarea
-          placeholder="Add deal justification..."
+          placeholder="Add deal justification (required)..."
           rows={2}
           className="text-xs border border-border-default rounded-lg px-2.5 py-1.5 resize-none focus:outline-none focus:border-pwc-orange w-48 shrink-0"
         />

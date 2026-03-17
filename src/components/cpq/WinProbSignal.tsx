@@ -27,29 +27,27 @@ export function WinProbSignal({ productId, currentPrice }: WinProbSignalProps) {
   const inCliff = currentPrice >= data.cliffMin && currentPrice <= data.cliffMax
 
   return (
-    <div className="card p-4">
-      <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-3">Win Probability</p>
-      <div className="flex items-end gap-2 mb-1">
-        <span className={`text-3xl font-bold ${
+    <div className="card px-4 py-3 flex items-center gap-4">
+      <div className="shrink-0">
+        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-0.5">Win Probability</p>
+        <span className={`text-3xl font-bold leading-none ${
           zone === 'green' ? 'text-zone-green' :
           zone === 'amber' ? 'text-zone-amber' :
           'text-zone-red'
         }`}>
           {winRate}%
         </span>
-        <span className="text-xs text-text-muted mb-1">at current price</span>
       </div>
-      {inCliff && (
-        <p className="text-[10px] text-zone-amber mb-2">
-          Current price is inside the cliff zone — win rate dropping fast
-        </p>
-      )}
-      <Link
-        href="/win-loss"
-        className="text-xs text-pwc-orange hover:underline mt-1 inline-block"
-      >
-        See full analysis →
-      </Link>
+      <div className="flex-1 min-w-0">
+        {inCliff && (
+          <p className="text-[10px] text-zone-amber mb-1">
+            Price in cliff zone — win rate dropping fast
+          </p>
+        )}
+        <Link href="/win-loss" className="text-[11px] text-pwc-orange hover:underline">
+          See full analysis →
+        </Link>
+      </div>
     </div>
   )
 }

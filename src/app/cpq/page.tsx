@@ -6,9 +6,9 @@ import { FilterBar } from '@/components/shared/FilterBar'
 import { PriceBand } from '@/components/cpq/PriceBand'
 import { MarginBridge } from '@/components/cpq/MarginBridge'
 import { EscalationBanner, type EscalationLevel } from '@/components/cpq/EscalationBanner'
-import { ScenarioComparison } from '@/components/cpq/ScenarioComparison'
 import { WinProbSignal } from '@/components/cpq/WinProbSignal'
 import { EoRSignal } from '@/components/cpq/EoRSignal'
+import { DealContextPanel } from '@/components/cpq/DealContextPanel'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
@@ -16,10 +16,10 @@ import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
 import { FadeWrapper } from '@/components/shared/FadeWrapper'
 import quotesData from '../../../data/quotes.json'
 
-function getEscalationLevel(discountPct: number, thresholds: { rep: number; manager: number; director: number }): EscalationLevel {
-  if (discountPct >= thresholds.director) return 'director'
-  if (discountPct >= thresholds.manager) return 'manager'
-  if (discountPct >= thresholds.rep) return 'rep'
+function getEscalationLevel(netPrice: number, floorPrice: number, targetPrice: number): EscalationLevel {
+  if (netPrice < floorPrice * 0.95) return 'director'  // >5% below floor
+  if (netPrice < floorPrice) return 'manager'           // below floor
+  if (netPrice < targetPrice) return 'rep'              // below target, in-band
   return 'none'
 }
 
@@ -48,11 +48,14 @@ export default function CPQPage() {
 
   const netPrice = useMemo(() => {
     const afterTier = listPrice * (1 - tierDiscountPct / 100)
-    // dealDiscountPct > 0 means discount (reduce); < 0 means uplift (increase)
-    return afterTier * (1 - dealDiscountPct / 100)
+    // dealDiscountPct > 0 means uplift (increase price); < 0 means discount (reduce price)
+    return afterTier * (1 + dealDiscountPct / 100)
   }, [listPrice, tierDiscountPct, dealDiscountPct])
 
-  const escalationLevel = getEscalationLevel(dealDiscountPct, thresholds)
+  const floorPrice = account?.floor ?? 4.57
+  const targetPrice = account?.target ?? 4.85
+
+  const escalationLevel = getEscalationLevel(netPrice, floorPrice, targetPrice)
 
   const approxGrossMarginPct = useMemo(() => {
     if (dealDiscountPct <= -5) return 14.1
@@ -60,43 +63,8 @@ export default function CPQPage() {
     return parseFloat((18.3 + ((dealDiscountPct / 4) * (19.8 - 18.3))).toFixed(1))
   }, [dealDiscountPct])
 
-  const floorPrice = account?.floor ?? 4.57
-  const targetPrice = account?.target ?? 4.85
-
-  const scenarios = [
-    {
-      label: 'Grant 5% discount',
-      discountPct: -5,
-      netPrice: listPrice * (1 - tierDiscountPct / 100) * 1.05,
-      grossMarginPct: 14.1,
-      zone: 'red' as const,
-      verdict: 'Below floor — margin critical, escalation required',
-    },
-    {
-      label: 'Hold flat',
-      discountPct: 0,
-      netPrice: listPrice * (1 - tierDiscountPct / 100),
-      grossMarginPct: 18.3,
-      zone: 'amber' as const,
-      verdict: 'Holds position but leaves pricing gap vs segment',
-    },
-    {
-      label: 'Propose +4% uplift',
-      discountPct: 4,
-      netPrice: listPrice * (1 - tierDiscountPct / 100) * 1.04,
-      grossMarginPct: 19.8,
-      zone: 'amber' as const,
-      verdict: 'Defensible step toward fair pricing',
-      isRecommended: true,
-    },
-  ]
-
-  // Use baker-klaas scenario 1 exact numbers when active
-  if (accountId === 'baker-klaas' && productId === 'milk-couverture') {
-    scenarios[0].netPrice = 3.99
-    scenarios[1].netPrice = 4.20
-    scenarios[2].netPrice = 4.37
-  }
+  // Floating slider value label position: ((value - min) / range) * 100
+  const sliderLabelLeft = ((dealDiscountPct - (-10)) / 30) * 100
 
   return (
     <div className="flex flex-col h-full">
@@ -109,6 +77,21 @@ export default function CPQPage() {
       ) : (
       <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 overflow-y-auto">
       <div className="p-6 flex flex-col gap-5">
+        {/* Deal Context Panel */}
+        {account && (
+          <DealContextPanel
+            accountName={account.name}
+            segment={account.segment}
+            volume={account.volume}
+            lastQuotedPrice={(quoteBase?.currentPrice as number | undefined) ?? account.price}
+            listPrice={listPrice}
+            floorPrice={floorPrice}
+            targetPrice={targetPrice}
+            currentPrice={netPrice}
+            tierDiscountPct={tierDiscountPct}
+          />
+        )}
+
         {/* Quote header */}
         <div className="card p-5">
           <div className="flex items-start justify-between mb-4">
@@ -139,14 +122,29 @@ export default function CPQPage() {
               <span className="text-text-secondary flex items-center gap-1">
                 Tier discount
                 <span className="text-[10px] bg-page-bg border border-border-default px-1.5 py-0.5 rounded text-text-muted">
-                  {account?.volume?.toLocaleString()} kg/mo
+                  Tier 2 — auto-applied at −{tierDiscountPct}%
                 </span>
               </span>
               <span className="text-zone-red font-medium">−{tierDiscountPct}%</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary">Deal discount / uplift</span>
-              <div className="flex items-center gap-3">
+              <span className="text-text-secondary flex flex-col">
+                Rep adjustment
+                <span className="text-[10px] text-text-muted">Allowed: −10% to +20%</span>
+              </span>
+              <div className="flex flex-col items-end gap-1">
+                {/* Floating value above thumb */}
+                <div className="relative w-32 h-4">
+                  <span
+                    className={`absolute text-xs font-semibold -translate-x-1/2 transition-all duration-150 ${
+                      dealDiscountPct < 0 ? 'text-zone-red' : dealDiscountPct > 0 ? 'text-zone-green' : 'text-text-primary'
+                    }`}
+                    style={{ left: `${sliderLabelLeft}%` }}
+                  >
+                    {dealDiscountPct > 0 ? `+${dealDiscountPct}` : dealDiscountPct}%
+                  </span>
+                </div>
+                {/* Slider */}
                 <input
                   type="range"
                   min={-10}
@@ -156,14 +154,30 @@ export default function CPQPage() {
                   onChange={e => setDealDiscountPct(parseFloat(e.target.value))}
                   className="w-32 accent-pwc-orange"
                 />
-                <span className={`w-14 text-right font-medium text-sm ${
-                  dealDiscountPct < 0 ? 'text-zone-red' :
-                  dealDiscountPct > 0 ? 'text-zone-green' : 'text-text-primary'
-                }`}>
-                  {dealDiscountPct > 0 ? `+${dealDiscountPct}` : dealDiscountPct}%
-                </span>
+                {/* Headroom label */}
+                {escalationLevel === 'none' && netPrice < targetPrice * 1.15 && (
+                  <p className="text-[10px] text-text-muted mt-0.5 text-right w-32">
+                    €{(netPrice - targetPrice).toFixed(2)} vs target
+                  </p>
+                )}
+                {escalationLevel === 'rep' && (
+                  <p className="text-[10px] text-zone-amber mt-0.5 text-right w-32">
+                    €{(netPrice - floorPrice).toFixed(2)} vs floor
+                  </p>
+                )}
               </div>
             </div>
+          </div>
+
+          {/* Combined effective discount */}
+          <div className="flex items-center justify-between text-xs pt-2 border-t border-border-default mb-4">
+            <span className="text-text-muted">Combined effective discount</span>
+            <span className="font-semibold text-text-primary">
+              Tier (−{tierDiscountPct}%) + Rep ({dealDiscountPct >= 0 ? '+' : ''}{dealDiscountPct}%) ={' '}
+              <span className={dealDiscountPct < 0 ? 'text-zone-red' : 'text-zone-green'}>
+                {(-(tierDiscountPct) + dealDiscountPct).toFixed(1)}%
+              </span>
+            </span>
           </div>
 
           {/* Price band */}
@@ -178,6 +192,12 @@ export default function CPQPage() {
         {/* Escalation banner */}
         <EscalationBanner level={escalationLevel} discountPct={dealDiscountPct} />
 
+        {/* Win Probability + EoR signals — above scenarios for visibility */}
+        <div className="grid grid-cols-2 gap-4">
+          <WinProbSignal productId={productId} currentPrice={netPrice} />
+          <EoRSignal accountId={accountId} />
+        </div>
+
         {/* Margin bridge */}
         <div className="card p-4">
           <h3 className="text-xs font-semibold text-text-secondary mb-3 uppercase tracking-wide">Margin Bridge</h3>
@@ -187,18 +207,6 @@ export default function CPQPage() {
             dealDiscountPct={dealDiscountPct}
             netPrice={netPrice}
           />
-        </div>
-
-        {/* Three-scenario comparison */}
-        <div className="card p-4">
-          <h3 className="text-xs font-semibold text-text-secondary mb-3 uppercase tracking-wide">Scenario Comparison</h3>
-          <ScenarioComparison scenarios={scenarios} activeDiscountPct={dealDiscountPct} />
-        </div>
-
-        {/* Win Probability + EoR signals */}
-        <div className="grid grid-cols-2 gap-4">
-          <WinProbSignal productId={productId} currentPrice={netPrice} />
-          <EoRSignal accountId={accountId} />
         </div>
       </div>
       </FadeWrapper>

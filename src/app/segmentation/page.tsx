@@ -1,11 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { clsx } from 'clsx'
 import { accounts, products, getSegmentationForProduct } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { SegmentationScatter } from '@/components/charts/SegmentationScatter'
 import { ComparisonPanel } from '@/components/segmentation/ComparisonPanel'
 import { ProspectInput } from '@/components/segmentation/ProspectInput'
+import { SegmentHealthPanel } from '@/components/segmentation/SegmentHealthPanel'
 import { useAppContext } from '@/context/AppContext'
 import { Columns2, LayoutPanelLeft } from 'lucide-react'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
@@ -31,10 +33,14 @@ export default function SegmentationPage() {
   }, [])
 
   const productId = activeProductId ?? 'milk-couverture'
-  const points = getSegmentationForProduct(productId)
+  const allPoints = getSegmentationForProduct(productId)
   const activeAccount = accounts.find(a => a.id === activeAccountId)
   const floorPrice = activeAccount?.floor ?? 4.57
   const targetPrice = activeAccount?.target ?? 4.85
+  // Only show dots from the same segment as the active account
+  const points = activeAccount
+    ? allPoints.filter(p => p.segment === activeAccount.segment)
+    : allPoints
 
   return (
     <div className="flex flex-col h-full">
@@ -80,29 +86,66 @@ export default function SegmentationPage() {
         ) : (
           <>
             {/* Stats row */}
+            {activeAccount && (() => {
+              const vsFloorZone = activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green'
+              const KPI_CONFIG = [
+                {
+                  label: 'Current price',
+                  value: `€${activeAccount.price.toFixed(2)}/kg`,
+                  borderColor: 'border-l-blue-500',
+                },
+                {
+                  label: 'Segment floor',
+                  value: `€${floorPrice.toFixed(2)}/kg`,
+                  borderColor: 'border-l-zone-red',
+                },
+                {
+                  label: 'Segment target',
+                  value: `€${targetPrice.toFixed(2)}/kg`,
+                  borderColor: 'border-l-zone-green',
+                },
+                {
+                  label: 'vs Floor',
+                  value: `${((activeAccount.price - floorPrice) / floorPrice * 100).toFixed(1)}%`,
+                  zone: vsFloorZone,
+                  borderColor: activeAccount.price < floorPrice ? 'border-l-zone-red' : 'border-l-zone-amber',
+                  dominant: activeAccount.price < floorPrice,
+                },
+              ]
+              return (
+                <div className="flex gap-4">
+                  {KPI_CONFIG.map((cfg) => (
+                    <div
+                      key={cfg.label}
+                      className={clsx(
+                        'card px-4 py-3 flex-1 border-l-4',
+                        cfg.borderColor,
+                        cfg.dominant && 'bg-zone-red-bg',
+                      )}
+                      style={cfg.dominant ? { borderLeftColor: '#dc2626' } : undefined}
+                    >
+                      <p className={clsx('text-xs mb-0.5', 'text-text-muted')}>{cfg.label}</p>
+                      <p className={clsx('text-lg font-semibold', cfg.dominant ? 'text-zone-red' : (
+                        cfg.zone === 'red' ? 'text-zone-red' :
+                        cfg.zone === 'amber' ? 'text-zone-amber' :
+                        cfg.zone === 'green' ? 'text-zone-green' :
+                        'text-text-primary'
+                      ))}>{cfg.value}</p>
+                    </div>
+                  ))}
+                </div>
+              )
+            })()}
+
+            {/* Segment Health Panel */}
             {activeAccount && (
-              <div className="flex gap-4">
-                {[
-                  { label: 'Current price', value: `€${activeAccount.price.toFixed(2)}/kg` },
-                  { label: 'Segment floor', value: `€${floorPrice.toFixed(2)}/kg`, highlight: true },
-                  { label: 'Segment target', value: `€${targetPrice.toFixed(2)}/kg` },
-                  {
-                    label: 'vs Floor',
-                    value: `${((activeAccount.price - floorPrice) / floorPrice * 100).toFixed(1)}%`,
-                    zone: activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green',
-                  },
-                ].map(({ label, value, zone }) => (
-                  <div key={label} className="card px-4 py-3 flex-1">
-                    <p className="text-xs text-text-muted mb-0.5">{label}</p>
-                    <p className={`text-lg font-semibold ${
-                      zone === 'red' ? 'text-zone-red' :
-                      zone === 'amber' ? 'text-zone-amber' :
-                      zone === 'green' ? 'text-zone-green' :
-                      'text-text-primary'
-                    }`}>{value}</p>
-                  </div>
-                ))}
-              </div>
+              <SegmentHealthPanel
+                segmentId={activeAccount.segmentId}
+                segmentName={activeAccount.segment}
+                points={points}
+                floorPrice={floorPrice}
+                targetPrice={targetPrice}
+              />
             )}
 
             {/* Chart */}
