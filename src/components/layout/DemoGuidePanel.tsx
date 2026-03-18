@@ -109,7 +109,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-pwc-orange/10 text-pwc-orange text-xs font-bold flex items-center justify-center mt-0.5">3</div>
                 <div>
                   <p className="font-semibold text-text-primary mb-1">Ask Your Data</p>
-                  <p className="text-text-secondary leading-relaxed">Ask <em>"How does Bakker Klaas compare to similar bakers?"</em> → bottom 15%, peers at €4.75–€5.10. Then ask <em>"What else can I sell Bakker Klaas?"</em> → White Couverture + Cocoa Powder, 80% co-purchase rate among peers.</p>
+                  <p className="text-text-secondary leading-relaxed">Ask <em>&ldquo;How does Bakker Klaas compare to similar bakers?&rdquo;</em> → bottom 15%, peers at €4.75–€5.10. Then ask <em>&ldquo;What else can I sell Bakker Klaas?&rdquo;</em> → White Couverture + Cocoa Powder, 80% co-purchase rate among peers.</p>
                 </div>
               </div>
 
@@ -118,7 +118,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
                 <div>
                   <p className="font-semibold text-text-primary mb-1">The pitch</p>
                   <blockquote className="border-l-2 border-pwc-orange/30 pl-3 text-text-secondary italic leading-relaxed">
-                    "You've been on a very favourable rate — well below similar bakeries at €4.20 versus a floor of €4.57. I've kept the adjustment to just +4%, bringing you to €4.37 — still well below where your peers are buying. I'd also love to set you up with a trial on White Couverture and Cocoa Powder — 80% of bakers your size are already bundling these."
+                    &ldquo;You&apos;ve been on a very favourable rate — well below similar bakeries at €4.20 versus a floor of €4.57. I&apos;ve kept the adjustment to just +4%, bringing you to €4.37 — still well below where your peers are buying. I&apos;d also love to set you up with a trial on White Couverture and Cocoa Powder — 80% of bakers your size are already bundling these.&rdquo;
                   </blockquote>
                   <p className="text-text-muted text-xs mt-2">Result: 9-point swing (−5% → +4%), cross-sell conversation on 2 new SKUs.</p>
                 </div>
@@ -136,7 +136,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
             <div className="space-y-3">
               {CHAT_QUESTIONS.map((item, i) => (
                 <div key={i} className="rounded-lg border border-border-default p-3">
-                  <p className="font-medium text-text-primary mb-1 text-xs">"{item.q}"</p>
+                  <p className="font-medium text-text-primary mb-1 text-xs">&ldquo;{item.q}&rdquo;</p>
                   <p className="text-text-muted text-xs leading-relaxed">{item.a}</p>
                 </div>
               ))}

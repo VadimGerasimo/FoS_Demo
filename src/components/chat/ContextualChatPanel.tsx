@@ -99,6 +99,7 @@ export function ContextualChatPanel({
         setMessages([{ role: 'assistant', type: 'text', content: 'Unable to load summary. Please try asking a question.' }])
       })
       .finally(() => setLoading(false))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen])
 
   useEffect(() => {
