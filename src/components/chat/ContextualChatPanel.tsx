@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { X, MessageSquare, Send, Loader2 } from 'lucide-react'
-import { buildContextualPrompt, type ScreenId } from '@/lib/contextualPrompts'
+import type { ScreenId } from '@/lib/contextualPrompts'
 
 interface ContextualChatPanelProps {
   isOpen: boolean
@@ -19,6 +19,8 @@ export function ContextualChatPanel({
   isOpen,
   onClose,
   screen,
+  accountId,
+  productId,
   accountName,
   productName,
   keyMetrics,
@@ -31,16 +33,23 @@ export function ContextualChatPanel({
   useEffect(() => {
     if (!isOpen || hasFiredRef.current) return
     hasFiredRef.current = true
-    const prompt = buildContextualPrompt(screen, accountName, productName, keyMetrics)
     setLoading(true)
-    fetch('/api/chat', {
+    fetch('/api/explain', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ question: prompt }),
+      body: JSON.stringify({ screen, accountId, productId, keyMetrics }),
     })
       .then(r => r.json())
       .then(data => {
-        setMessages([{ role: 'assistant', content: data.response }])
+        const lines: string[] = []
+        if (data.whatISee) lines.push(data.whatISee)
+        if (data.whyItMatters) lines.push(data.whyItMatters)
+        if (data.recommendedActions?.length) {
+          lines.push('Recommended actions:')
+          data.recommendedActions.forEach((a: string) => lines.push(`• ${a}`))
+        }
+        const content = lines.join('\n\n').replace(/\n\nRecommended actions:\n\n/g, '\n\nRecommended actions:\n')
+        setMessages([{ role: 'assistant', content: content || 'Unable to load summary.' }])
       })
       .catch(() => {
         setMessages([{ role: 'assistant', content: 'Unable to load summary. Please try asking a question.' }])
