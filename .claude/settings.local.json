@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Vadim Gerasimov/POCs/**)",
+      "Bash(npx create-next-app@14 equazion-temp --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --yes)",
+      "Bash(cd:*)",
+      "Bash(cp:*)",
+      "Bash(mkdir:*)",
+      "Bash(taskkill:*)",
+      "WebSearch",
+      "WebFetch(domain:chartexpo.com)",
+      "WebFetch(domain:medium.com)",
+      "WebFetch(domain:expertslides.com)",
+      "WebFetch(domain:recharts.github.io)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run:*)",
+      "Bash(node -e \"const d = require\\(''./data/segmentation.json''\\); console.log\\(JSON.stringify\\(d.slice\\(0,3\\), null, 2\\)\\)\")",
+      "Bash(node -e \":*)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f''''ID: {s[\"\"id\"\"]}\\\\nPhrases: {s[\"\"matchPhrases\"\"]}\\\\nResponse: {s[\"\"response\"\"][:120]}...\\\\n''''\\) for s in data]\")",
+      "Bash(curl:*)",
+      "Bash(node analysis.js)",
+      "Bash(node -e \"JSON.parse\\(require\\(''fs''\\).readFileSync\\(''data/accounts.json'',''utf8''\\)\\); console.log\\(''accounts.json OK''\\)\")",
+      "Bash(node -e \"const d=JSON.parse\\(require\\(''fs''\\).readFileSync\\(''data/segmentation.json'',''utf8''\\)\\); const ids=d.map\\(x=>x.id\\); console.log\\(''segmentation.json OK — entries:'', ids.length, ''/ unique IDs:'', new Set\\(ids\\).size\\)\")"
+    ]
+  }
+}

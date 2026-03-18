@@ -74,7 +74,6 @@ function CustomDot({ cx = 0, cy = 0, payload, activeAccountId, floorPrice, targe
 }
 
 function makeTooltip(floorPrice: number, targetPrice: number) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return function TooltipContent(props: any) {
     const d = props?.payload?.[0]?.payload as SegmentationPoint | undefined
     if (!props?.active || !d?.accountId) return null
