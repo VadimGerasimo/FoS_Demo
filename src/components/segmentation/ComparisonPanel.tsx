@@ -1,7 +1,7 @@
 'use client'
 
 import { SegmentationScatter } from '@/components/charts/SegmentationScatter'
-import { accounts as allAccounts, getSegmentationForProduct } from '@/lib/data'
+import { accounts as allAccounts, getSegmentationForProduct, getFloor, getTarget } from '@/lib/data'
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
@@ -47,8 +47,8 @@ export function ComparisonPanel({ productId }: ComparisonPanelProps) {
           <div className="flex-1 min-h-0">
             <SegmentationScatter
               points={points}
-              floorPrice={account?.floor ?? 4.57}
-              targetPrice={account?.target ?? 4.85}
+              floorPrice={account ? getFloor(account, productId ?? 'milk-couverture') : 4.57}
+              targetPrice={account ? getTarget(account, productId ?? 'milk-couverture') : 4.85}
               activeAccountId={accountId}
               isAnimationActive={false}
             />
@@ -57,8 +57,8 @@ export function ComparisonPanel({ productId }: ComparisonPanelProps) {
             <div className="mt-2 flex gap-4 text-xs text-text-muted border-t border-border-default pt-2">
               <span>Price: <strong className="text-text-primary">€{account.price.toFixed(2)}/kg</strong></span>
               <span>Vol: <strong className="text-text-primary">{account.volume.toLocaleString()} kg/mo</strong></span>
-              <span className={`font-semibold ${account.price < account.floor ? 'text-zone-red' : account.price < account.target ? 'text-zone-amber' : 'text-zone-green'}`}>
-                {account.price < account.floor ? 'Below floor' : account.price < account.target ? 'In-band' : 'Above target'}
+              <span className={`font-semibold ${account.price < getFloor(account, productId ?? 'milk-couverture') ? 'text-zone-red' : account.price < getTarget(account, productId ?? 'milk-couverture') ? 'text-zone-amber' : 'text-zone-green'}`}>
+                {account.price < getFloor(account, productId ?? 'milk-couverture') ? 'Below floor' : account.price < getTarget(account, productId ?? 'milk-couverture') ? 'In-band' : 'Above target'}
               </span>
             </div>
           )}

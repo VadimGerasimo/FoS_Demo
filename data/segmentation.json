@@ -160,7 +160,7 @@
     "zone": "amber"
   },
   {
-    "id": "seg-cp-mc",
+    "id": "seg-cpr-mc",
     "accountId": "cioccolato-puro",
     "accountName": "Cioccolato Puro Srl",
     "productId": "milk-couverture",
@@ -224,18 +224,1098 @@
     "accountId": "baker-klaas",
     "accountName": "Baker Klaas",
     "productId": "dark-compound",
-    "volume": 120,
-    "price": 3.85,
+    "volume": 320,
+    "price": 3.33,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-pm-dc",
+    "accountId": "patisserie-moreau",
+    "accountName": "Pâtisserie Moreau",
+    "productId": "dark-compound",
+    "volume": 480,
+    "price": 3.77,
     "segment": "Mid-Market Benelux",
     "zone": "amber"
+  },
+  {
+    "id": "seg-ca-dc",
+    "accountId": "choco-artisan",
+    "accountName": "Choco Artisan BV",
+    "productId": "dark-compound",
+    "volume": 210,
+    "price": 4.12,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-cl-dc",
+    "accountId": "confiserie-lambert",
+    "accountName": "Confiserie Lambert",
+    "productId": "dark-compound",
+    "volume": 390,
+    "price": 4.04,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-bd-dc",
+    "accountId": "bruxelles-doux",
+    "accountName": "Bruxelles Doux NV",
+    "productId": "dark-compound",
+    "volume": 560,
+    "price": 3.49,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-nb-dc",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "dark-compound",
+    "volume": 650,
+    "price": 3.65,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sc-dc",
+    "accountId": "scandichoc",
+    "accountName": "Scandichoc AS",
+    "productId": "dark-compound",
+    "volume": 280,
+    "price": 3.21,
+    "segment": "Mid-Market Nordics",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk2-dc",
+    "accountId": "bergens-konfekt",
+    "accountName": "Bergens Konfekt",
+    "productId": "dark-compound",
+    "volume": 420,
+    "price": 3.85,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-hs-dc",
+    "accountId": "helsinki-sweet",
+    "accountName": "Helsinki Sweet OY",
+    "productId": "dark-compound",
+    "volume": 350,
+    "price": 4.12,
+    "segment": "Mid-Market Nordics",
+    "zone": "green"
+  },
+  {
+    "id": "seg-di-dc",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "dark-compound",
+    "volume": 920,
+    "price": 3.43,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ac-dc",
+    "accountId": "artisan-cacao",
+    "accountName": "Artisan Cacao SL",
+    "productId": "dark-compound",
+    "volume": 280,
+    "price": 3.69,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-cpr-dc",
+    "accountId": "cioccolato-puro",
+    "accountName": "Cioccolato Puro Srl",
+    "productId": "dark-compound",
+    "volume": 550,
+    "price": 3.09,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "red"
+  },
+  {
+    "id": "seg-dv-dc",
+    "accountId": "dulce-valencia",
+    "accountName": "Dulce Valencia SA",
+    "productId": "dark-compound",
+    "volume": 320,
+    "price": 3.93,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-dc",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "dark-compound",
+    "volume": 710,
+    "price": 3.41,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-wk-dc",
+    "accountId": "wiener-konditorei",
+    "accountName": "Wiener Konditorei GmbH",
+    "productId": "dark-compound",
+    "volume": 450,
+    "price": 3.05,
+    "segment": "Mid-Market DACH",
+    "zone": "red"
+  },
+  {
+    "id": "seg-zc-dc",
+    "accountId": "zurich-chocolat",
+    "accountName": "Zürich Chocolat AG",
+    "productId": "dark-compound",
+    "volume": 580,
+    "price": 3.53,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-dp-dc",
+    "accountId": "dresdner-pralinen",
+    "accountName": "Dresdner Pralinen GmbH",
+    "productId": "dark-compound",
+    "volume": 320,
+    "price": 3.81,
+    "segment": "Mid-Market DACH",
+    "zone": "green"
   },
   {
     "id": "seg-sr-dc",
     "accountId": "schoko-retail",
     "accountName": "Schoko Retail Group",
     "productId": "dark-compound",
-    "volume": 45000,
-    "price": 3.70,
+    "volume": 38000,
+    "price": 2.82,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-rc-dc",
+    "accountId": "royal-confections",
+    "accountName": "Royal Confections Ltd",
+    "productId": "dark-compound",
+    "volume": 22000,
+    "price": 2.93,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-gr-dc",
+    "accountId": "global-retail",
+    "accountName": "Global Retail GmbH",
+    "productId": "dark-compound",
+    "volume": 48000,
+    "price": 2.58,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-if-dc",
+    "accountId": "interfood",
+    "accountName": "InterFood BV",
+    "productId": "dark-compound",
+    "volume": 12000,
+    "price": 3.33,
+    "segment": "Enterprise Key Accounts",
+    "zone": "green"
+  },
+  {
+    "id": "seg-eu-dc",
+    "accountId": "euro-patisserie",
+    "accountName": "Euro Patisserie AG",
+    "productId": "dark-compound",
+    "volume": 16000,
+    "price": 2.66,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk-wc",
+    "accountId": "baker-klaas",
+    "accountName": "Baker Klaas",
+    "productId": "white-couverture",
+    "volume": 320,
+    "price": 4.49,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-pm-wc",
+    "accountId": "patisserie-moreau",
+    "accountName": "Pâtisserie Moreau",
+    "productId": "white-couverture",
+    "volume": 480,
+    "price": 5.08,
+    "segment": "Mid-Market Benelux",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ca-wc",
+    "accountId": "choco-artisan",
+    "accountName": "Choco Artisan BV",
+    "productId": "white-couverture",
+    "volume": 210,
+    "price": 5.56,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-cl-wc",
+    "accountId": "confiserie-lambert",
+    "accountName": "Confiserie Lambert",
+    "productId": "white-couverture",
+    "volume": 390,
+    "price": 5.45,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-bd-wc",
+    "accountId": "bruxelles-doux",
+    "accountName": "Bruxelles Doux NV",
+    "productId": "white-couverture",
+    "volume": 560,
+    "price": 4.70,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-nb-wc",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "white-couverture",
+    "volume": 650,
+    "price": 4.92,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sc-wc",
+    "accountId": "scandichoc",
+    "accountName": "Scandichoc AS",
+    "productId": "white-couverture",
+    "volume": 280,
+    "price": 4.33,
+    "segment": "Mid-Market Nordics",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk2-wc",
+    "accountId": "bergens-konfekt",
+    "accountName": "Bergens Konfekt",
+    "productId": "white-couverture",
+    "volume": 420,
+    "price": 5.19,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-hs-wc",
+    "accountId": "helsinki-sweet",
+    "accountName": "Helsinki Sweet OY",
+    "productId": "white-couverture",
+    "volume": 350,
+    "price": 5.56,
+    "segment": "Mid-Market Nordics",
+    "zone": "green"
+  },
+  {
+    "id": "seg-di-wc",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "white-couverture",
+    "volume": 920,
+    "price": 4.62,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ac-wc",
+    "accountId": "artisan-cacao",
+    "accountName": "Artisan Cacao SL",
+    "productId": "white-couverture",
+    "volume": 280,
+    "price": 4.97,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-cpr-wc",
+    "accountId": "cioccolato-puro",
+    "accountName": "Cioccolato Puro Srl",
+    "productId": "white-couverture",
+    "volume": 550,
+    "price": 4.17,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "red"
+  },
+  {
+    "id": "seg-dv-wc",
+    "accountId": "dulce-valencia",
+    "accountName": "Dulce Valencia SA",
+    "productId": "white-couverture",
+    "volume": 320,
+    "price": 5.29,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-wc",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "white-couverture",
+    "volume": 710,
+    "price": 4.60,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-wk-wc",
+    "accountId": "wiener-konditorei",
+    "accountName": "Wiener Konditorei GmbH",
+    "productId": "white-couverture",
+    "volume": 450,
+    "price": 4.12,
+    "segment": "Mid-Market DACH",
+    "zone": "red"
+  },
+  {
+    "id": "seg-zc-wc",
+    "accountId": "zurich-chocolat",
+    "accountName": "Zürich Chocolat AG",
+    "productId": "white-couverture",
+    "volume": 580,
+    "price": 4.76,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-dp-wc",
+    "accountId": "dresdner-pralinen",
+    "accountName": "Dresdner Pralinen GmbH",
+    "productId": "white-couverture",
+    "volume": 320,
+    "price": 5.13,
+    "segment": "Mid-Market DACH",
+    "zone": "green"
+  },
+  {
+    "id": "seg-sr-wc",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "white-couverture",
+    "volume": 38000,
+    "price": 3.80,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-rc-wc",
+    "accountId": "royal-confections",
+    "accountName": "Royal Confections Ltd",
+    "productId": "white-couverture",
+    "volume": 22000,
+    "price": 3.96,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-gr-wc",
+    "accountId": "global-retail",
+    "accountName": "Global Retail GmbH",
+    "productId": "white-couverture",
+    "volume": 48000,
+    "price": 3.47,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-if-wc",
+    "accountId": "interfood",
+    "accountName": "InterFood BV",
+    "productId": "white-couverture",
+    "volume": 12000,
+    "price": 4.49,
+    "segment": "Enterprise Key Accounts",
+    "zone": "green"
+  },
+  {
+    "id": "seg-eu-wc",
+    "accountId": "euro-patisserie",
+    "accountName": "Euro Patisserie AG",
+    "productId": "white-couverture",
+    "volume": 16000,
+    "price": 3.58,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk-dcv",
+    "accountId": "baker-klaas",
+    "accountName": "Baker Klaas",
+    "productId": "dark-couverture",
+    "volume": 320,
+    "price": 3.91,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-pm-dcv",
+    "accountId": "patisserie-moreau",
+    "accountName": "Pâtisserie Moreau",
+    "productId": "dark-couverture",
+    "volume": 480,
+    "price": 4.42,
+    "segment": "Mid-Market Benelux",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ca-dcv",
+    "accountId": "choco-artisan",
+    "accountName": "Choco Artisan BV",
+    "productId": "dark-couverture",
+    "volume": 210,
+    "price": 4.84,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-cl-dcv",
+    "accountId": "confiserie-lambert",
+    "accountName": "Confiserie Lambert",
+    "productId": "dark-couverture",
+    "volume": 390,
+    "price": 4.75,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-bd-dcv",
+    "accountId": "bruxelles-doux",
+    "accountName": "Bruxelles Doux NV",
+    "productId": "dark-couverture",
+    "volume": 560,
+    "price": 4.10,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-nb-dcv",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "dark-couverture",
+    "volume": 650,
+    "price": 4.28,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sc-dcv",
+    "accountId": "scandichoc",
+    "accountName": "Scandichoc AS",
+    "productId": "dark-couverture",
+    "volume": 280,
+    "price": 3.77,
+    "segment": "Mid-Market Nordics",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk2-dcv",
+    "accountId": "bergens-konfekt",
+    "accountName": "Bergens Konfekt",
+    "productId": "dark-couverture",
+    "volume": 420,
+    "price": 4.52,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-hs-dcv",
+    "accountId": "helsinki-sweet",
+    "accountName": "Helsinki Sweet OY",
+    "productId": "dark-couverture",
+    "volume": 350,
+    "price": 4.84,
+    "segment": "Mid-Market Nordics",
+    "zone": "green"
+  },
+  {
+    "id": "seg-di-dcv",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "dark-couverture",
+    "volume": 920,
+    "price": 4.02,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ac-dcv",
+    "accountId": "artisan-cacao",
+    "accountName": "Artisan Cacao SL",
+    "productId": "dark-couverture",
+    "volume": 280,
+    "price": 4.33,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-cpr-dcv",
+    "accountId": "cioccolato-puro",
+    "accountName": "Cioccolato Puro Srl",
+    "productId": "dark-couverture",
+    "volume": 550,
+    "price": 3.63,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "red"
+  },
+  {
+    "id": "seg-dv-dcv",
+    "accountId": "dulce-valencia",
+    "accountName": "Dulce Valencia SA",
+    "productId": "dark-couverture",
+    "volume": 320,
+    "price": 4.61,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-dcv",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "dark-couverture",
+    "volume": 710,
+    "price": 4.00,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-wk-dcv",
+    "accountId": "wiener-konditorei",
+    "accountName": "Wiener Konditorei GmbH",
+    "productId": "dark-couverture",
+    "volume": 450,
+    "price": 3.58,
+    "segment": "Mid-Market DACH",
+    "zone": "red"
+  },
+  {
+    "id": "seg-zc-dcv",
+    "accountId": "zurich-chocolat",
+    "accountName": "Zürich Chocolat AG",
+    "productId": "dark-couverture",
+    "volume": 580,
+    "price": 4.14,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-dp-dcv",
+    "accountId": "dresdner-pralinen",
+    "accountName": "Dresdner Pralinen GmbH",
+    "productId": "dark-couverture",
+    "volume": 320,
+    "price": 4.47,
+    "segment": "Mid-Market DACH",
+    "zone": "green"
+  },
+  {
+    "id": "seg-sr-dcv",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "dark-couverture",
+    "volume": 38000,
+    "price": 3.31,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-rc-dcv",
+    "accountId": "royal-confections",
+    "accountName": "Royal Confections Ltd",
+    "productId": "dark-couverture",
+    "volume": 22000,
+    "price": 3.45,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-gr-dcv",
+    "accountId": "global-retail",
+    "accountName": "Global Retail GmbH",
+    "productId": "dark-couverture",
+    "volume": 48000,
+    "price": 3.03,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-if-dcv",
+    "accountId": "interfood",
+    "accountName": "InterFood BV",
+    "productId": "dark-couverture",
+    "volume": 12000,
+    "price": 3.91,
+    "segment": "Enterprise Key Accounts",
+    "zone": "green"
+  },
+  {
+    "id": "seg-eu-dcv",
+    "accountId": "euro-patisserie",
+    "accountName": "Euro Patisserie AG",
+    "productId": "dark-couverture",
+    "volume": 16000,
+    "price": 3.12,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk-cpw",
+    "accountId": "baker-klaas",
+    "accountName": "Baker Klaas",
+    "productId": "cocoa-powder",
+    "volume": 640,
+    "price": 2.32,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-pm-cpw",
+    "accountId": "patisserie-moreau",
+    "accountName": "Pâtisserie Moreau",
+    "productId": "cocoa-powder",
+    "volume": 960,
+    "price": 2.62,
+    "segment": "Mid-Market Benelux",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ca-cpw",
+    "accountId": "choco-artisan",
+    "accountName": "Choco Artisan BV",
+    "productId": "cocoa-powder",
+    "volume": 420,
+    "price": 2.87,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-cl-cpw",
+    "accountId": "confiserie-lambert",
+    "accountName": "Confiserie Lambert",
+    "productId": "cocoa-powder",
+    "volume": 780,
+    "price": 2.82,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-bd-cpw",
+    "accountId": "bruxelles-doux",
+    "accountName": "Bruxelles Doux NV",
+    "productId": "cocoa-powder",
+    "volume": 1120,
+    "price": 2.43,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-nb-cpw",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "cocoa-powder",
+    "volume": 1300,
+    "price": 2.54,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sc-cpw",
+    "accountId": "scandichoc",
+    "accountName": "Scandichoc AS",
+    "productId": "cocoa-powder",
+    "volume": 560,
+    "price": 2.24,
+    "segment": "Mid-Market Nordics",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk2-cpw",
+    "accountId": "bergens-konfekt",
+    "accountName": "Bergens Konfekt",
+    "productId": "cocoa-powder",
+    "volume": 840,
+    "price": 2.68,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-hs-cpw",
+    "accountId": "helsinki-sweet",
+    "accountName": "Helsinki Sweet OY",
+    "productId": "cocoa-powder",
+    "volume": 700,
+    "price": 2.87,
+    "segment": "Mid-Market Nordics",
+    "zone": "green"
+  },
+  {
+    "id": "seg-di-cpw",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "cocoa-powder",
+    "volume": 1840,
+    "price": 2.39,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ac-cpw",
+    "accountId": "artisan-cacao",
+    "accountName": "Artisan Cacao SL",
+    "productId": "cocoa-powder",
+    "volume": 560,
+    "price": 2.57,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-cpr-cpw",
+    "accountId": "cioccolato-puro",
+    "accountName": "Cioccolato Puro Srl",
+    "productId": "cocoa-powder",
+    "volume": 1100,
+    "price": 2.15,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "red"
+  },
+  {
+    "id": "seg-dv-cpw",
+    "accountId": "dulce-valencia",
+    "accountName": "Dulce Valencia SA",
+    "productId": "cocoa-powder",
+    "volume": 640,
+    "price": 2.73,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-cpw",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "cocoa-powder",
+    "volume": 1420,
+    "price": 2.37,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-wk-cpw",
+    "accountId": "wiener-konditorei",
+    "accountName": "Wiener Konditorei GmbH",
+    "productId": "cocoa-powder",
+    "volume": 900,
+    "price": 2.13,
+    "segment": "Mid-Market DACH",
+    "zone": "red"
+  },
+  {
+    "id": "seg-zc-cpw",
+    "accountId": "zurich-chocolat",
+    "accountName": "Zürich Chocolat AG",
+    "productId": "cocoa-powder",
+    "volume": 1160,
+    "price": 2.46,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-dp-cpw",
+    "accountId": "dresdner-pralinen",
+    "accountName": "Dresdner Pralinen GmbH",
+    "productId": "cocoa-powder",
+    "volume": 640,
+    "price": 2.65,
+    "segment": "Mid-Market DACH",
+    "zone": "green"
+  },
+  {
+    "id": "seg-sr-cpw",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "cocoa-powder",
+    "volume": 38000,
+    "price": 1.96,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-rc-cpw",
+    "accountId": "royal-confections",
+    "accountName": "Royal Confections Ltd",
+    "productId": "cocoa-powder",
+    "volume": 22000,
+    "price": 2.04,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-gr-cpw",
+    "accountId": "global-retail",
+    "accountName": "Global Retail GmbH",
+    "productId": "cocoa-powder",
+    "volume": 48000,
+    "price": 1.79,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-if-cpw",
+    "accountId": "interfood",
+    "accountName": "InterFood BV",
+    "productId": "cocoa-powder",
+    "volume": 12000,
+    "price": 2.32,
+    "segment": "Enterprise Key Accounts",
+    "zone": "green"
+  },
+  {
+    "id": "seg-eu-cpw",
+    "accountId": "euro-patisserie",
+    "accountName": "Euro Patisserie AG",
+    "productId": "cocoa-powder",
+    "volume": 16000,
+    "price": 1.85,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk-hp",
+    "accountId": "baker-klaas",
+    "accountName": "Baker Klaas",
+    "productId": "hazelnut-praline",
+    "volume": 160,
+    "price": 5.36,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-pm-hp",
+    "accountId": "patisserie-moreau",
+    "accountName": "Pâtisserie Moreau",
+    "productId": "hazelnut-praline",
+    "volume": 240,
+    "price": 6.06,
+    "segment": "Mid-Market Benelux",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ca-hp",
+    "accountId": "choco-artisan",
+    "accountName": "Choco Artisan BV",
+    "productId": "hazelnut-praline",
+    "volume": 105,
+    "price": 6.64,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-cl-hp",
+    "accountId": "confiserie-lambert",
+    "accountName": "Confiserie Lambert",
+    "productId": "hazelnut-praline",
+    "volume": 195,
+    "price": 6.51,
+    "segment": "Mid-Market Benelux",
+    "zone": "green"
+  },
+  {
+    "id": "seg-bd-hp",
+    "accountId": "bruxelles-doux",
+    "accountName": "Bruxelles Doux NV",
+    "productId": "hazelnut-praline",
+    "volume": 280,
+    "price": 5.61,
+    "segment": "Mid-Market Benelux",
+    "zone": "red"
+  },
+  {
+    "id": "seg-nb-hp",
+    "accountId": "nordic-bakes",
+    "accountName": "Nordic Bakes AS",
+    "productId": "hazelnut-praline",
+    "volume": 325,
+    "price": 5.87,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-sc-hp",
+    "accountId": "scandichoc",
+    "accountName": "Scandichoc AS",
+    "productId": "hazelnut-praline",
+    "volume": 140,
+    "price": 5.17,
+    "segment": "Mid-Market Nordics",
+    "zone": "red"
+  },
+  {
+    "id": "seg-bk2-hp",
+    "accountId": "bergens-konfekt",
+    "accountName": "Bergens Konfekt",
+    "productId": "hazelnut-praline",
+    "volume": 210,
+    "price": 6.19,
+    "segment": "Mid-Market Nordics",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-hs-hp",
+    "accountId": "helsinki-sweet",
+    "accountName": "Helsinki Sweet OY",
+    "productId": "hazelnut-praline",
+    "volume": 175,
+    "price": 6.64,
+    "segment": "Mid-Market Nordics",
+    "zone": "green"
+  },
+  {
+    "id": "seg-di-hp",
+    "accountId": "dolce-italia",
+    "accountName": "Dolce Italia SpA",
+    "productId": "hazelnut-praline",
+    "volume": 460,
+    "price": 5.51,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-ac-hp",
+    "accountId": "artisan-cacao",
+    "accountName": "Artisan Cacao SL",
+    "productId": "hazelnut-praline",
+    "volume": 140,
+    "price": 5.93,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-cpr-hp",
+    "accountId": "cioccolato-puro",
+    "accountName": "Cioccolato Puro Srl",
+    "productId": "hazelnut-praline",
+    "volume": 275,
+    "price": 4.98,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "red"
+  },
+  {
+    "id": "seg-dv-hp",
+    "accountId": "dulce-valencia",
+    "accountName": "Dulce Valencia SA",
+    "productId": "hazelnut-praline",
+    "volume": 160,
+    "price": 6.32,
+    "segment": "Mid-Market Southern Europe",
+    "zone": "green"
+  },
+  {
+    "id": "seg-mb-hp",
+    "accountId": "munchen-bakerei",
+    "accountName": "Münchener Bäckerei",
+    "productId": "hazelnut-praline",
+    "volume": 355,
+    "price": 5.49,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-wk-hp",
+    "accountId": "wiener-konditorei",
+    "accountName": "Wiener Konditorei GmbH",
+    "productId": "hazelnut-praline",
+    "volume": 225,
+    "price": 4.91,
+    "segment": "Mid-Market DACH",
+    "zone": "red"
+  },
+  {
+    "id": "seg-zc-hp",
+    "accountId": "zurich-chocolat",
+    "accountName": "Zürich Chocolat AG",
+    "productId": "hazelnut-praline",
+    "volume": 290,
+    "price": 5.68,
+    "segment": "Mid-Market DACH",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-dp-hp",
+    "accountId": "dresdner-pralinen",
+    "accountName": "Dresdner Pralinen GmbH",
+    "productId": "hazelnut-praline",
+    "volume": 160,
+    "price": 6.13,
+    "segment": "Mid-Market DACH",
+    "zone": "green"
+  },
+  {
+    "id": "seg-sr-hp",
+    "accountId": "schoko-retail",
+    "accountName": "Schoko Retail Group",
+    "productId": "hazelnut-praline",
+    "volume": 19000,
+    "price": 4.53,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-rc-hp",
+    "accountId": "royal-confections",
+    "accountName": "Royal Confections Ltd",
+    "productId": "hazelnut-praline",
+    "volume": 11000,
+    "price": 4.72,
+    "segment": "Enterprise Key Accounts",
+    "zone": "amber"
+  },
+  {
+    "id": "seg-gr-hp",
+    "accountId": "global-retail",
+    "accountName": "Global Retail GmbH",
+    "productId": "hazelnut-praline",
+    "volume": 24000,
+    "price": 4.15,
+    "segment": "Enterprise Key Accounts",
+    "zone": "red"
+  },
+  {
+    "id": "seg-if-hp",
+    "accountId": "interfood",
+    "accountName": "InterFood BV",
+    "productId": "hazelnut-praline",
+    "volume": 6000,
+    "price": 5.36,
+    "segment": "Enterprise Key Accounts",
+    "zone": "green"
+  },
+  {
+    "id": "seg-eu-hp",
+    "accountId": "euro-patisserie",
+    "accountName": "Euro Patisserie AG",
+    "productId": "hazelnut-praline",
+    "volume": 8000,
+    "price": 4.28,
     "segment": "Enterprise Key Accounts",
     "zone": "red"
   }

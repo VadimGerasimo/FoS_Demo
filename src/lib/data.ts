@@ -7,8 +7,8 @@ export interface Account {
   segmentId: string
   volume: number       // kg/month
   price: number        // €/kg current net-net
-  floor: number        // €/kg segment floor
-  target: number       // €/kg segment target
+  floors: Record<string, number>   // €/kg segment floor per product
+  targets: Record<string, number>  // €/kg segment target per product
   region: string
 }
 
@@ -145,4 +145,12 @@ export function getWinLossForProduct(productId: string): WinLossData | undefined
 
 export function getEoRForAccount(accountId: string): EoRData | undefined {
   return eorDataset.find(e => e.accountId === accountId)
+}
+
+export function getFloor(account: Account, productId: string): number {
+  return account.floors[productId] ?? account.floors['milk-couverture'] ?? 4.57
+}
+
+export function getTarget(account: Account, productId: string): number {
+  return account.targets[productId] ?? account.targets['milk-couverture'] ?? 4.85
 }

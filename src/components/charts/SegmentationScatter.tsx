@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import {
   ResponsiveContainer,
   ScatterChart,
@@ -9,7 +10,8 @@ import {
   YAxis,
   Tooltip,
   Label,
-  Customized,
+  useXAxisScale,
+  useYAxisScale,
 } from 'recharts'
 import type { SegmentationPoint } from '@/lib/data'
 
@@ -71,33 +73,84 @@ function CustomDot({ cx = 0, cy = 0, payload, activeAccountId, floorPrice, targe
   )
 }
 
-function makeTooltip(floorPrice: number) {
-  return function TooltipContent({ active, payload }: { active?: boolean; payload?: Array<{ payload: SegmentationPoint }> }) {
-    const d = payload?.[0]?.payload
-    if (!active || !d?.accountId) return null
-    const vsFloor = ((d.price - floorPrice) / floorPrice * 100).toFixed(1)
+function makeTooltip(floorPrice: number, targetPrice: number) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return function TooltipContent(props: any) {
+    const d = props?.payload?.[0]?.payload as SegmentationPoint | undefined
+    if (!props?.active || !d?.accountId) return null
+    const floorAtVol = priceCurve(floorPrice, [d.volume])[0].price
+    const targetAtVol = priceCurve(targetPrice, [d.volume])[0].price
+    const vsFloor = ((d.price - floorAtVol) / floorAtVol * 100).toFixed(1)
+    const vsTarget = ((d.price - targetAtVol) / targetAtVol * 100).toFixed(1)
     return (
       <div className="bg-white border border-border-default rounded-lg shadow-md px-3 py-2.5 text-xs">
         <p className="font-semibold text-text-primary mb-1">{d.accountName}</p>
         <p className="text-text-secondary">Price: <span className="font-medium text-text-primary">€{d.price.toFixed(2)}/kg</span></p>
         <p className="text-text-secondary">Volume: <span className="font-medium text-text-primary">{d.volume.toLocaleString()} kg/mo</span></p>
         <p className="text-text-secondary">Segment: <span className="font-medium text-text-primary">{d.segment}</span></p>
-        <p className={`font-medium mt-1 ${parseFloat(vsFloor) < 0 ? 'text-zone-red' : 'text-zone-green'}`}>
-          {parseFloat(vsFloor) >= 0 ? '+' : ''}{vsFloor}% vs floor
-        </p>
+        <div className="mt-1.5 pt-1.5 border-t border-gray-100 space-y-0.5">
+          <p style={{ color: '#dc2626' }}>Floor @ vol: <span className="font-semibold">€{floorAtVol.toFixed(2)}/kg</span></p>
+          <p style={{ color: '#059669' }}>Target @ vol: <span className="font-semibold">€{targetAtVol.toFixed(2)}/kg</span></p>
+          <p className={`font-medium mt-0.5 ${parseFloat(vsFloor) < 0 ? 'text-zone-red' : parseFloat(vsFloor) < ((targetAtVol - floorAtVol) / floorAtVol * 100) ? 'text-zone-amber' : 'text-zone-green'}`}>
+            {parseFloat(vsFloor) >= 0 ? '+' : ''}{vsFloor}% vs floor · {parseFloat(vsTarget) >= 0 ? '+' : ''}{vsTarget}% vs target
+          </p>
+        </div>
       </div>
     )
   }
 }
 
 const CURVE_VOLUMES = [150, 250, 400, 700, 1200, 5000, 15000, 50000]
+const FLATTEN_AT = 5000
 
 function priceCurve(base: number, volumes: number[]): { volume: number; price: number }[] {
-  return volumes.map(v => ({ volume: v, price: parseFloat((base * Math.pow(v / 320, -0.04)).toFixed(3)) }))
+  return volumes.map(v => ({ volume: v, price: parseFloat((base * Math.pow(Math.min(v, FLATTEN_AT) / 320, -0.04)).toFixed(3)) }))
 }
 
-interface AxisScale {
-  scale: (v: number) => number
+interface ChartOverlayProps {
+  floorCurve: { volume: number; price: number }[]
+  targetCurve: { volume: number; price: number }[]
+  floorPrice: number
+  targetPrice: number
+  hoveredPoint: SegmentationPoint | null
+}
+
+function ChartOverlay({ floorCurve, targetCurve, floorPrice, targetPrice, hoveredPoint }: ChartOverlayProps) {
+  const xScale = useXAxisScale()
+  const yScale = useYAxisScale()
+  if (!xScale || !yScale) return null
+
+  const topPoints = targetCurve.map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
+  const bottomPoints = [...floorCurve].reverse().map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
+
+  // Labels anchored at the start of the flat zone
+  const labelX = xScale(5000)
+  const floorLabelY = yScale(priceCurve(floorPrice, [5000])[0].price)
+  const targetLabelY = yScale(priceCurve(targetPrice, [5000])[0].price)
+
+  let connector = null
+  if (hoveredPoint) {
+    const floorAtVol = priceCurve(floorPrice, [hoveredPoint.volume])[0].price
+    const targetAtVol = priceCurve(targetPrice, [hoveredPoint.volume])[0].price
+    const xPos = xScale(hoveredPoint.volume)
+    const yFloor = yScale(floorAtVol)
+    const yTarget = yScale(targetAtVol)
+    const yDot = yScale(hoveredPoint.price)
+    const yTop = Math.min(yFloor, yTarget, yDot)
+    const yBottom = Math.max(yFloor, yTarget, yDot)
+    connector = (
+      <line x1={xPos} y1={yTop} x2={xPos} y2={yBottom} stroke="#94a3b8" strokeDasharray="3 2" strokeWidth={1} opacity={0.7} />
+    )
+  }
+
+  return (
+    <g pointerEvents="none">
+      <polygon points={`${topPoints} ${bottomPoints}`} fill="#059669" fillOpacity={0.07} stroke="none" />
+      <text x={labelX + 6} y={targetLabelY - 6} fontSize={10} fontWeight={600} fill="#059669">Segment target</text>
+      <text x={labelX + 6} y={floorLabelY + 14} fontSize={10} fontWeight={600} fill="#dc2626">Segment floor</text>
+      {connector}
+    </g>
+  )
 }
 
 export function SegmentationScatter({
@@ -108,6 +161,8 @@ export function SegmentationScatter({
   prospectPoint,
   isAnimationActive = true,
 }: SegmentationScatterProps) {
+  const [hoveredPoint, setHoveredPoint] = useState<SegmentationPoint | null>(null)
+
   const yMin = parseFloat((Math.min(floorPrice * 0.87, ...points.map(p => p.price)) - 0.1).toFixed(2))
   const yMax = parseFloat((Math.max(targetPrice * 1.12, ...points.map(p => p.price)) + 0.1).toFixed(2))
 
@@ -141,7 +196,7 @@ export function SegmentationScatter({
         >
           <Label value="€/kg" angle={-90} position="insideLeft" offset={10} style={{ fontSize: 11, fill: '#939598' }} />
         </YAxis>
-        <Tooltip content={makeTooltip(floorPrice)} />
+        <Tooltip content={makeTooltip(floorPrice, targetPrice)} />
 
         {/* Floor curve */}
         <Line
@@ -169,36 +224,53 @@ export function SegmentationScatter({
           legendType="none"
         />
 
-        {/* Shaded band + right-edge labels */}
-        <Customized
-          component={(props: unknown) => {
-            const { xAxisMap, yAxisMap } = props as { xAxisMap?: Record<string, AxisScale>; yAxisMap?: Record<string, AxisScale> }
-            if (!xAxisMap || !yAxisMap) return null
-            const xScale = Object.values(xAxisMap)[0]?.scale
-            const yScale = Object.values(yAxisMap)[0]?.scale
-            if (!xScale || !yScale) return null
-            const topPoints = targetCurve.map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
-            const bottomPoints = [...floorCurve].reverse().map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
-            const lastFloor = floorCurve[floorCurve.length - 1]
-            const lastTarget = targetCurve[targetCurve.length - 1]
-            return (
-              <g pointerEvents="none">
-                <polygon points={`${topPoints} ${bottomPoints}`} fill="#059669" fillOpacity={0.07} stroke="none" />
-                <text x={xScale(lastFloor.volume) + 6} y={yScale(lastFloor.price) + 4} fontSize={11} fontWeight={600} fill="#dc2626">
-                  Floor €{floorPrice.toFixed(2)}
-                </text>
-                <text x={xScale(lastTarget.volume) + 6} y={yScale(lastTarget.price) + 4} fontSize={11} fontWeight={600} fill="#059669">
-                  Target €{targetPrice.toFixed(2)}
-                </text>
-              </g>
-            )
-          }}
+        {/* Shaded band + curve labels + hover connector — recharts 3 direct child */}
+        <ChartOverlay
+          floorCurve={floorCurve}
+          targetCurve={targetCurve}
+          floorPrice={floorPrice}
+          targetPrice={targetPrice}
+          hoveredPoint={hoveredPoint}
         />
+
+        {/* Hover markers — dots on floor/target curves (adding this Scatter triggers recharts to re-render Customized) */}
+        {hoveredPoint && (() => {
+          const floorAtVol = priceCurve(floorPrice, [hoveredPoint.volume])[0].price
+          const targetAtVol = priceCurve(targetPrice, [hoveredPoint.volume])[0].price
+          return (
+            <Scatter
+              data={[
+                { volume: hoveredPoint.volume, price: floorAtVol, _markerType: 'floor' },
+                { volume: hoveredPoint.volume, price: targetAtVol, _markerType: 'target' },
+              ]}
+              isAnimationActive={false}
+              shape={(props: unknown) => {
+                const p = props as { cx?: number; cy?: number; payload?: { _markerType: string; price: number } }
+                if (p.cx === undefined || p.cy === undefined || !p.payload) return null
+                const isFloor = p.payload._markerType === 'floor'
+                const color = isFloor ? '#dc2626' : '#059669'
+                const priceVal = p.payload.price
+                return (
+                  <g pointerEvents="none">
+                    <circle cx={p.cx} cy={p.cy} r={5} fill={color} stroke="#fff" strokeWidth={2} />
+                    <rect x={p.cx + 8} y={p.cy - 9} width={52} height={14} fill="white" rx={2} stroke={color} strokeWidth={0.75} opacity={0.95} />
+                    <text x={p.cx + 12} y={p.cy + 1} fontSize={10} fontWeight={700} fill={color}>€{priceVal.toFixed(2)}/kg</text>
+                  </g>
+                )
+              }}
+            />
+          )
+        })()}
 
         {/* Main scatter — all accounts */}
         <Scatter
           data={points}
           isAnimationActive={isAnimationActive}
+          onMouseEnter={(data: unknown) => {
+            const d = data as SegmentationPoint
+            if (d?.accountId) setHoveredPoint(d)
+          }}
+          onMouseLeave={() => setHoveredPoint(null)}
           shape={(props: unknown) => (
             <CustomDot
               {...(props as CustomDotProps)}

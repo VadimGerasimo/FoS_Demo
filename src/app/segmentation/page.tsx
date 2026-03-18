@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { clsx } from 'clsx'
-import { accounts, products, getSegmentationForProduct } from '@/lib/data'
+import { accounts, products, getSegmentationForProduct, getFloor, getTarget } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { SegmentationScatter } from '@/components/charts/SegmentationScatter'
 import { ComparisonPanel } from '@/components/segmentation/ComparisonPanel'
@@ -35,8 +35,8 @@ export default function SegmentationPage() {
   const productId = activeProductId ?? 'milk-couverture'
   const allPoints = getSegmentationForProduct(productId)
   const activeAccount = accounts.find(a => a.id === activeAccountId)
-  const floorPrice = activeAccount?.floor ?? 4.57
-  const targetPrice = activeAccount?.target ?? 4.85
+  const floorPrice = activeAccount ? getFloor(activeAccount, productId) : 4.57
+  const targetPrice = activeAccount ? getTarget(activeAccount, productId) : 4.85
   // Only show dots from the same segment as the active account
   const points = activeAccount
     ? allPoints.filter(p => p.segment === activeAccount.segment)

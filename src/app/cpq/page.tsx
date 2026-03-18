@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { accounts, products } from '@/lib/data'
+import { accounts, products, getFloor, getTarget } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { PriceBand } from '@/components/cpq/PriceBand'
 import { MarginBridge } from '@/components/cpq/MarginBridge'
@@ -52,8 +52,8 @@ export default function CPQPage() {
     [basePrice, dealDiscountPct]
   )
 
-  const floorPrice = account?.floor ?? 4.57
-  const targetPrice = account?.target ?? 4.85
+  const floorPrice = account ? getFloor(account, productId) : 4.57
+  const targetPrice = account ? getTarget(account, productId) : 4.85
 
   const escalationLevel = getEscalationLevel(netPrice, floorPrice, targetPrice)
 

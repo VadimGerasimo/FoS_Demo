@@ -21,7 +21,8 @@ const client = new OpenAI({
 })
 
 const SCENARIO_LIST = scenarios
-  .map(s => `ID: "${s.id}"\nAnswer: ${s.response}`)
+  .filter(s => s.id !== 'generic-fallback')
+  .map(s => `ID: "${s.id}"\nTopics/phrases: ${s.matchPhrases.join(', ')}\nAnswer: ${s.response}`)
   .join('\n\n')
 
 export async function POST(req: Request) {
@@ -55,13 +56,16 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: `This is the question: "${question}"
+          content: `You are a routing classifier for a pricing analytics tool. Your job is to match a user's question to the best predefined scenario, even if the question has typos, varied phrasing, or slight misspellings (e.g. "Baker Klaar" means "Baker Klaas").
 
-These are the predefined answers, including the fallback:
+User question: "${question}"
+Active account context: "${activeAccountId ?? 'none'}"
+
+Predefined scenarios (each has an ID, topic phrases that should match, and an answer):
 
 ${SCENARIO_LIST}
 
-Which one should I respond with? Reply with ONLY the ID string of the best matching answer. Active account context: "${activeAccountId ?? 'none'}".`,
+Pick the scenario whose topic/phrases best match the user's intent. Reply with ONLY the ID string of the best matching scenario. If nothing is a reasonable match, reply with "generic-fallback".`,
         },
         { role: 'user', content: 'Which scenario ID should I respond with?' },
       ],

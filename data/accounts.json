@@ -6,8 +6,22 @@
     "segmentId": "mid-market-benelux",
     "volume": 320,
     "price": 4.20,
-    "floor": 4.57,
-    "target": 4.85,
+    "floors": {
+      "milk-couverture": 4.57,
+      "white-couverture": 4.89,
+      "dark-couverture": 4.25,
+      "dark-compound": 3.62,
+      "cocoa-powder": 2.52,
+      "hazelnut-praline": 5.83
+    },
+    "targets": {
+      "milk-couverture": 4.85,
+      "white-couverture": 5.18,
+      "dark-couverture": 4.52,
+      "dark-compound": 3.85,
+      "cocoa-powder": 2.68,
+      "hazelnut-praline": 6.19
+    },
     "region": "Benelux"
   },
   {
@@ -17,8 +31,22 @@
     "segmentId": "enterprise-key-accounts",
     "volume": 38000,
     "price": 3.55,
-    "floor": 3.40,
-    "target": 4.10,
+    "floors": {
+      "milk-couverture": 3.40,
+      "white-couverture": 3.63,
+      "dark-couverture": 3.17,
+      "dark-compound": 2.70,
+      "cocoa-powder": 1.88,
+      "hazelnut-praline": 4.34
+    },
+    "targets": {
+      "milk-couverture": 4.10,
+      "white-couverture": 4.38,
+      "dark-couverture": 3.82,
+      "dark-compound": 3.25,
+      "cocoa-powder": 2.26,
+      "hazelnut-praline": 5.23
+    },
     "region": "DACH"
   },
   {
@@ -28,8 +56,22 @@
     "segmentId": "mid-market-benelux",
     "volume": 480,
     "price": 4.75,
-    "floor": 4.57,
-    "target": 4.85,
+    "floors": {
+      "milk-couverture": 4.57,
+      "white-couverture": 4.89,
+      "dark-couverture": 4.25,
+      "dark-compound": 3.62,
+      "cocoa-powder": 2.52,
+      "hazelnut-praline": 5.83
+    },
+    "targets": {
+      "milk-couverture": 4.85,
+      "white-couverture": 5.18,
+      "dark-couverture": 4.52,
+      "dark-compound": 3.85,
+      "cocoa-powder": 2.68,
+      "hazelnut-praline": 6.19
+    },
     "region": "France"
   },
   {
@@ -38,9 +80,23 @@
     "segment": "Mid-Market Benelux",
     "segmentId": "mid-market-benelux",
     "volume": 210,
-    "price": 4.90,
-    "floor": 4.57,
-    "target": 4.85,
+    "price": 5.20,
+    "floors": {
+      "milk-couverture": 4.57,
+      "white-couverture": 4.89,
+      "dark-couverture": 4.25,
+      "dark-compound": 3.62,
+      "cocoa-powder": 2.52,
+      "hazelnut-praline": 5.83
+    },
+    "targets": {
+      "milk-couverture": 4.85,
+      "white-couverture": 5.18,
+      "dark-couverture": 4.52,
+      "dark-compound": 3.85,
+      "cocoa-powder": 2.68,
+      "hazelnut-praline": 6.19
+    },
     "region": "Netherlands"
   },
   {
@@ -50,8 +106,22 @@
     "segmentId": "mid-market-nordics",
     "volume": 650,
     "price": 4.60,
-    "floor": 4.20,
-    "target": 5.00,
+    "floors": {
+      "milk-couverture": 4.20,
+      "white-couverture": 4.49,
+      "dark-couverture": 3.91,
+      "dark-compound": 3.33,
+      "cocoa-powder": 2.32,
+      "hazelnut-praline": 5.36
+    },
+    "targets": {
+      "milk-couverture": 5.00,
+      "white-couverture": 5.34,
+      "dark-couverture": 4.66,
+      "dark-compound": 3.97,
+      "cocoa-powder": 2.76,
+      "hazelnut-praline": 6.38
+    },
     "region": "Scandinavia"
   },
   {
@@ -60,9 +130,23 @@
     "segment": "Mid-Market Southern Europe",
     "segmentId": "mid-market-south-eu",
     "volume": 920,
-    "price": 4.40,
-    "floor": 4.10,
-    "target": 4.80,
+    "price": 4.32,
+    "floors": {
+      "milk-couverture": 4.10,
+      "white-couverture": 4.38,
+      "dark-couverture": 3.82,
+      "dark-compound": 3.25,
+      "cocoa-powder": 2.26,
+      "hazelnut-praline": 5.23
+    },
+    "targets": {
+      "milk-couverture": 4.80,
+      "white-couverture": 5.13,
+      "dark-couverture": 4.47,
+      "dark-compound": 3.81,
+      "cocoa-powder": 2.65,
+      "hazelnut-praline": 6.12
+    },
     "region": "Italy"
   },
   {
@@ -72,8 +156,22 @@
     "segmentId": "mid-market-benelux",
     "volume": 390,
     "price": 5.10,
-    "floor": 4.57,
-    "target": 4.85,
+    "floors": {
+      "milk-couverture": 4.57,
+      "white-couverture": 4.89,
+      "dark-couverture": 4.25,
+      "dark-compound": 3.62,
+      "cocoa-powder": 2.52,
+      "hazelnut-praline": 5.83
+    },
+    "targets": {
+      "milk-couverture": 4.85,
+      "white-couverture": 5.18,
+      "dark-couverture": 4.52,
+      "dark-compound": 3.85,
+      "cocoa-powder": 2.68,
+      "hazelnut-praline": 6.19
+    },
     "region": "Belgium"
   },
   {
@@ -83,8 +181,22 @@
     "segmentId": "mid-market-dach",
     "volume": 710,
     "price": 4.30,
-    "floor": 4.00,
-    "target": 4.70,
+    "floors": {
+      "milk-couverture": 4.00,
+      "white-couverture": 4.28,
+      "dark-couverture": 3.72,
+      "dark-compound": 3.17,
+      "cocoa-powder": 2.21,
+      "hazelnut-praline": 5.10
+    },
+    "targets": {
+      "milk-couverture": 4.70,
+      "white-couverture": 5.02,
+      "dark-couverture": 4.38,
+      "dark-compound": 3.73,
+      "cocoa-powder": 2.59,
+      "hazelnut-praline": 5.99
+    },
     "region": "Germany"
   },
   {
@@ -94,8 +206,22 @@
     "segmentId": "enterprise-key-accounts",
     "volume": 22000,
     "price": 3.70,
-    "floor": 3.40,
-    "target": 4.10,
+    "floors": {
+      "milk-couverture": 3.40,
+      "white-couverture": 3.63,
+      "dark-couverture": 3.17,
+      "dark-compound": 2.70,
+      "cocoa-powder": 1.88,
+      "hazelnut-praline": 4.34
+    },
+    "targets": {
+      "milk-couverture": 4.10,
+      "white-couverture": 4.38,
+      "dark-couverture": 3.82,
+      "dark-compound": 3.25,
+      "cocoa-powder": 2.26,
+      "hazelnut-praline": 5.23
+    },
     "region": "UK"
   },
   {
@@ -104,9 +230,23 @@
     "segment": "Mid-Market Southern Europe",
     "segmentId": "mid-market-south-eu",
     "volume": 280,
-    "price": 4.55,
-    "floor": 4.10,
-    "target": 4.80,
+    "price": 4.65,
+    "floors": {
+      "milk-couverture": 4.10,
+      "white-couverture": 4.38,
+      "dark-couverture": 3.82,
+      "dark-compound": 3.25,
+      "cocoa-powder": 2.26,
+      "hazelnut-praline": 5.23
+    },
+    "targets": {
+      "milk-couverture": 4.80,
+      "white-couverture": 5.13,
+      "dark-couverture": 4.47,
+      "dark-compound": 3.81,
+      "cocoa-powder": 2.65,
+      "hazelnut-praline": 6.12
+    },
     "region": "Spain"
   }
 ]
