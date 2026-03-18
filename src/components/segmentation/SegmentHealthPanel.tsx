@@ -24,7 +24,7 @@ export function SegmentHealthPanel({ segmentId: _segmentId, segmentName, points,
   const belowPct  = Math.round((belowFloor / count) * 100) || 0
 
   return (
-    <div className="card px-4 py-3 flex items-center gap-6 flex-wrap">
+    <div className="card px-4 py-2.5 flex items-center gap-6 flex-wrap">
       <div className="min-w-0">
         <p className="text-[10px] text-text-muted uppercase tracking-wide font-medium">Segment</p>
         <p className="text-sm font-semibold text-text-primary">{segmentName}</p>

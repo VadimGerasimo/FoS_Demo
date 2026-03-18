@@ -49,7 +49,7 @@ export default function SegmentationPage() {
       <FilterBar accounts={accounts} products={products} />
 
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-6 py-3 bg-white border-b border-border-default">
+      <div className="flex items-center justify-between px-6 py-2 bg-white border-b border-border-default">
         <div className="flex items-center gap-2">
           <ProspectInput
             floorPrice={floorPrice}
@@ -78,7 +78,7 @@ export default function SegmentationPage() {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col p-6 gap-4 min-h-0">
+      <div className="flex-1 flex flex-col p-4 gap-3 min-h-0">
         {!mounted ? (
           <ChartSkeleton rows={2} height="h-64" />
         ) : (
@@ -130,7 +130,7 @@ export default function SegmentationPage() {
                     <div
                       key={cfg.label}
                       className={clsx(
-                        'card px-4 py-3 flex-1 border-l-4',
+                        'card px-4 py-2 flex-1 border-l-4',
                         cfg.borderColor,
                         cfg.dominant && 'bg-zone-red-bg',
                       )}

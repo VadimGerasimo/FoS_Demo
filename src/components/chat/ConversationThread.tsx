@@ -2,6 +2,26 @@
 
 import Image from 'next/image'
 
+function FormattedMessage({ content }: { content: string }) {
+  const lines = content.split('\n').filter(l => l.trim())
+  return (
+    <div className="flex flex-col gap-1.5">
+      {lines.map((line, i) => {
+        const parts = line.split(/(\*\*[^*]+\*\*)/)
+        return (
+          <p key={i}>
+            {parts.map((part, j) =>
+              part.startsWith('**') && part.endsWith('**')
+                ? <strong key={j}>{part.slice(2, -2)}</strong>
+                : part
+            )}
+          </p>
+        )
+      })}
+    </div>
+  )
+}
+
 export interface Message {
   id: string
   role: 'user' | 'assistant'
@@ -49,7 +69,9 @@ export function ConversationThread({ messages, isLoading }: ConversationThreadPr
                 ? 'bg-pwc-orange text-white rounded-tr-sm'
                 : 'bg-white border border-border-default text-text-primary rounded-tl-sm shadow-sm'
             }`}>
-              {msg.content}
+              {msg.role === 'assistant'
+                ? <FormattedMessage content={msg.content} />
+                : msg.content}
             </div>
 
             {msg.suggestedAction && (

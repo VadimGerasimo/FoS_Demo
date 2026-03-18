@@ -17,7 +17,7 @@ export function TopBar() {
   const title = SCREEN_TITLES[pathname] ?? 'Equazion'
 
   return (
-    <header className="flex items-center justify-between h-14 px-6 bg-white border-b border-border-default shrink-0">
+    <header className="flex items-center justify-between h-12 px-6 bg-white border-b border-border-default shrink-0">
       <h1 className="text-base font-semibold text-text-primary">{title}</h1>
       <div className="flex items-center gap-3">
         <button className="p-1.5 rounded-lg hover:bg-page-bg transition-colors text-text-muted hover:text-text-primary">

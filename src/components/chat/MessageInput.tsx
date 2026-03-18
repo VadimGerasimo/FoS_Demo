@@ -30,7 +30,7 @@ export function MessageInput({ onSubmit, disabled }: MessageInputProps) {
   }
 
   return (
-    <div className="border-t border-border-default px-4 py-3 bg-white">
+    <div className="border-t border-border-default px-4 py-2 bg-white">
       {/* Context chip */}
       {activeAccount && (
         <div className="flex items-center gap-1.5 mb-2">
@@ -50,7 +50,7 @@ export function MessageInput({ onSubmit, disabled }: MessageInputProps) {
           onChange={e => setValue(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Ask about an account, product, or pricing question..."
-          rows={2}
+          rows={1}
           disabled={disabled}
           className="flex-1 text-sm border border-border-default rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:border-pwc-orange transition-colors placeholder:text-text-muted disabled:opacity-50"
         />

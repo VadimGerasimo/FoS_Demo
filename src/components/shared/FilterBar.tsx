@@ -16,7 +16,7 @@ export function FilterBar({ accounts, products }: FilterBarProps) {
   const activeProduct = products.find(p => p.id === activeProductId)
 
   return (
-    <div className="flex items-center gap-3 px-6 py-3 bg-white border-b border-border-default">
+    <div className="flex items-center gap-3 px-6 py-2 bg-white border-b border-border-default">
       {/* Account selector */}
       <div className="relative">
         <label className="text-xs font-medium text-text-muted mr-1.5">Account</label>
