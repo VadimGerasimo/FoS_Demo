@@ -14,16 +14,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import type { WinLossData } from '@/lib/data'
-
-function interpolateWinRate(curve: { price: number; winRate: number }[], price: number): number {
-  const sorted = [...curve].sort((a, b) => a.price - b.price)
-  if (price <= sorted[0].price) return sorted[0].winRate
-  if (price >= sorted[sorted.length - 1].price) return sorted[sorted.length - 1].winRate
-  const lower = sorted.filter(p => p.price <= price).at(-1)!
-  const upper = sorted.find(p => p.price > price)!
-  const t = (price - lower.price) / (upper.price - lower.price)
-  return lower.winRate + t * (upper.winRate - lower.winRate)
-}
+import { interpolateWinRate } from '@/lib/interpolateWinRate'
 
 interface CustomTooltipProps {
   active?: boolean
@@ -50,9 +41,10 @@ function CustomTooltip({ active, payload }: CustomTooltipProps) {
 interface WinProbabilityCurveProps {
   data: WinLossData
   currentPrice?: number
+  quotedPrice?: number
 }
 
-export function WinProbabilityCurve({ data, currentPrice }: WinProbabilityCurveProps) {
+export function WinProbabilityCurve({ data, currentPrice, quotedPrice }: WinProbabilityCurveProps) {
   const [animateOnMount, setAnimateOnMount] = useState(true)
   useEffect(() => {
     const t = setTimeout(() => setAnimateOnMount(false), 1200)
@@ -119,7 +111,18 @@ export function WinProbabilityCurve({ data, currentPrice }: WinProbabilityCurveP
             x={currentPrice}
             stroke="#6d6e71"
             strokeDasharray="4 3"
-            label={{ value: 'Current', position: 'top', fontSize: 10, fill: '#6d6e71' }}
+            label={{ value: 'Contracted', position: 'top', fontSize: 10, fill: '#6d6e71' }}
+          />
+        )}
+
+        {/* CPQ quoted price line */}
+        {quotedPrice && quotedPrice !== currentPrice && (
+          <ReferenceLine
+            x={quotedPrice}
+            stroke="#3b82f6"
+            strokeWidth={2}
+            strokeDasharray="5 3"
+            label={{ value: `Quoted €${quotedPrice.toFixed(2)}`, position: 'insideBottom', offset: 8, fontSize: 10, fill: '#3b82f6' }}
           />
         )}
 

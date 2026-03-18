@@ -2,7 +2,7 @@
   {
     "id": "seg-bk-mc",
     "accountId": "baker-klaas",
-    "accountName": "Baker Klaas",
+    "accountName": "Bakker Klaas",
     "productId": "milk-couverture",
     "volume": 320,
     "price": 4.20,
@@ -222,7 +222,7 @@
   {
     "id": "seg-bk-dc",
     "accountId": "baker-klaas",
-    "accountName": "Baker Klaas",
+    "accountName": "Bakker Klaas",
     "productId": "dark-compound",
     "volume": 320,
     "price": 3.33,
@@ -442,7 +442,7 @@
   {
     "id": "seg-bk-wc",
     "accountId": "baker-klaas",
-    "accountName": "Baker Klaas",
+    "accountName": "Bakker Klaas",
     "productId": "white-couverture",
     "volume": 320,
     "price": 4.49,
@@ -662,7 +662,7 @@
   {
     "id": "seg-bk-dcv",
     "accountId": "baker-klaas",
-    "accountName": "Baker Klaas",
+    "accountName": "Bakker Klaas",
     "productId": "dark-couverture",
     "volume": 320,
     "price": 3.91,
@@ -882,7 +882,7 @@
   {
     "id": "seg-bk-cpw",
     "accountId": "baker-klaas",
-    "accountName": "Baker Klaas",
+    "accountName": "Bakker Klaas",
     "productId": "cocoa-powder",
     "volume": 640,
     "price": 2.32,
@@ -1102,7 +1102,7 @@
   {
     "id": "seg-bk-hp",
     "accountId": "baker-klaas",
-    "accountName": "Baker Klaas",
+    "accountName": "Bakker Klaas",
     "productId": "hazelnut-praline",
     "volume": 160,
     "price": 5.36,

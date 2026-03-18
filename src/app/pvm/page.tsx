@@ -9,6 +9,8 @@ import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
 import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
 import { FadeWrapper } from '@/components/shared/FadeWrapper'
+import { ContextualChatPanel } from '@/components/chat/ContextualChatPanel'
+import { MessageSquare } from 'lucide-react'
 
 function fmt(v: number): string {
   return Math.abs(v) >= 1000
@@ -25,6 +27,7 @@ export default function PVMPage() {
   const { activeAccountId } = useAppContext()
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 350)
@@ -125,8 +128,26 @@ export default function PVMPage() {
         productId={null}
         keyMetrics={keyMetrics}
         onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+        className="right-[124px]"
       />
       <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+      <button
+        onClick={() => setChatOpen(true)}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-white border border-border-default text-text-primary rounded-full shadow-lg hover:bg-page-bg transition-colors text-sm font-medium"
+      >
+        <MessageSquare size={15} className="text-pwc-orange" />
+        Ask
+      </button>
+      <ContextualChatPanel
+        isOpen={chatOpen}
+        onClose={() => setChatOpen(false)}
+        screen="pvm"
+        accountId={activeAccountId}
+        productId={null}
+        accountName={accounts.find(a => a.id === activeAccountId)?.name ?? null}
+        productName={null}
+        keyMetrics={keyMetrics}
+      />
     </div>
   )
 }

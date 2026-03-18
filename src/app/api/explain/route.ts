@@ -48,21 +48,30 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
     ],
   },
   'ease-of-realization': {
-    whatISee: 'The Ease of Realization composite score aggregates 7 dimensions of account attractiveness beyond price — including purchasing power, cooperation, and relationship stability.',
-    whyItMatters: 'A high list price is only valuable if the deal can be realised — EoR flags operationally risky accounts that may not be worth aggressive discounting.',
+    whatISee: 'The Account Quality Score aggregates 7 dimensions of account attractiveness beyond price — including purchasing power, cooperation, and relationship stability.',
+    whyItMatters: 'A high list price is only valuable if the deal can be realised — the Account Quality Score flags operationally risky accounts that may not be worth aggressive discounting.',
     recommendedActions: [
-      'Combine EoR score with segment position to prioritise renewal effort',
+      'Combine Account Quality Score with segment position to prioritise renewal effort',
       'Accounts with low EoR and below-floor pricing are highest risk',
       'Use dimension notes to tailor the commercial conversation',
     ],
   },
-  chat: {
+  'ask-your-data': {
     whatISee: 'The chat interface allows free-text questions about account pricing data, with AI responses displayed alongside relevant visualisations.',
     whyItMatters: 'Conversational access to pricing data enables reps to get instant insight without navigating multiple screens.',
     recommendedActions: [
       'Ask about specific accounts to pull their segment position',
       'Use follow-up questions to drill into waterfall or cross-sell data',
       'Save useful conversations for future reference',
+    ],
+  },
+  'deal-intelligence': {
+    whatISee: 'The Deal Intelligence page combines win probability at the current quoted price with the Account Quality Score to produce a single Deal Score for this account and product.',
+    whyItMatters: 'A high win rate alone does not make a good deal — EoR flags whether the account can deliver the contracted value. The Deal Score synthesises both signals into one actionable verdict.',
+    recommendedActions: [
+      'Check the Deal Score before submitting any quote — green (≥70) means proceed, amber (45–69) means attach conditions',
+      'If EoR is below 6.0, review the weakest dimension before agreeing to a price concession',
+      'Use the cliff zone on the win curve to set the hard floor for this negotiation',
     ],
   },
 }

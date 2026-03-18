@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useMemo, useEffect } from 'react'
-import { accounts, products, getFloor, getTarget } from '@/lib/data'
+import { accounts, products, getFloor, getTarget, getWaterfallForAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { PriceBand } from '@/components/cpq/PriceBand'
 import { MarginBridge } from '@/components/cpq/MarginBridge'
@@ -14,6 +14,8 @@ import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
 import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
 import { FadeWrapper } from '@/components/shared/FadeWrapper'
+import { ContextualChatPanel } from '@/components/chat/ContextualChatPanel'
+import { MessageSquare } from 'lucide-react'
 import quotesData from '../../../data/quotes.json'
 
 function getEscalationLevel(netPrice: number, floorPrice: number, targetPrice: number): EscalationLevel {
@@ -26,8 +28,10 @@ function getEscalationLevel(netPrice: number, floorPrice: number, targetPrice: n
 export default function CPQPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [dealDiscountPct, setDealDiscountPct] = useState(0)
+  const [priceInputStr, setPriceInputStr] = useState('')
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 350)
@@ -45,6 +49,8 @@ export default function CPQPage() {
   const listPrice = product?.listPrice ?? 5.80
   const tierDiscountPct = (quoteBase?.tierDiscount as number | undefined) ?? 5
   const thresholds = product?.escalationThresholds ?? { rep: 5, manager: 10, director: 15 }
+  const contractedDiscountLayers = (getWaterfallForAccount(accountId, productId)?.layers ?? [])
+    .filter(l => l.value < 0)
 
   const basePrice = (quoteBase?.currentPrice as number | undefined) ?? account?.price ?? listPrice * (1 - tierDiscountPct / 100)
   const netPrice = useMemo(
@@ -115,18 +121,19 @@ export default function CPQPage() {
           {/* Price stack */}
           <div className="space-y-2 mb-5">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary">Current deal price</span>
+              <span className="text-text-secondary">Contracted base price</span>
               <span className="font-medium">€{basePrice.toFixed(2)}/kg</span>
             </div>
             <div className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary flex items-center gap-1">
-                Tier discount (baked in)
-                <span className="text-[10px] bg-page-bg border border-border-default px-1.5 py-0.5 rounded text-text-muted">
-                  −{tierDiscountPct}% vs list (€{listPrice.toFixed(2)}/kg)
-                </span>
-              </span>
-              <span className="text-text-muted font-medium">−{tierDiscountPct}%</span>
+              <span className="text-text-secondary">Contracted discounts vs list</span>
+              <span className="text-zone-red font-medium">−{((listPrice - basePrice) / listPrice * 100).toFixed(1)}%</span>
             </div>
+            {contractedDiscountLayers.map(layer => (
+              <div key={layer.name} className="flex items-center justify-between text-xs pl-3 border-l-2 border-zone-red/20 ml-1">
+                <span className="text-text-muted">{layer.name}</span>
+                <span className="text-text-muted">−€{Math.abs(layer.value).toFixed(2)}</span>
+              </div>
+            ))}
             <div className="flex items-center justify-between text-sm">
               <span className="text-text-secondary flex flex-col">
                 Rep adjustment
@@ -151,17 +158,67 @@ export default function CPQPage() {
                   max={20}
                   step={0.5}
                   value={dealDiscountPct}
-                  onChange={e => setDealDiscountPct(parseFloat(e.target.value))}
+                  onChange={e => {
+                    const pct = parseFloat(e.target.value)
+                    setDealDiscountPct(pct)
+                    setPriceInputStr((basePrice * (1 + pct / 100)).toFixed(2))
+                  }}
                   className="w-32 accent-pwc-orange"
                 />
+                {/* Direct price input */}
+                <div className="flex items-center gap-1 w-32">
+                  <span className="text-[10px] text-text-muted">€</span>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={priceInputStr || netPrice.toFixed(2)}
+                    onChange={e => setPriceInputStr(e.target.value)}
+                    onBlur={() => {
+                      const parsed = parseFloat(priceInputStr)
+                      if (!isNaN(parsed) && parsed > 0) {
+                        const newPct = Math.max(-10, Math.min(20, ((parsed / basePrice) - 1) * 100))
+                        setDealDiscountPct(parseFloat(newPct.toFixed(1)))
+                        setPriceInputStr((basePrice * (1 + newPct / 100)).toFixed(2))
+                      } else {
+                        setPriceInputStr(netPrice.toFixed(2))
+                      }
+                    }}
+                    onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+                    className="w-full text-xs font-medium border border-border-default rounded px-1.5 py-0.5 text-right bg-page-bg focus:outline-none focus:border-pwc-orange"
+                  />
+                  <span className="text-[10px] text-text-muted">/kg</span>
+                </div>
+                {/* Snap-to buttons */}
+                <div className="flex gap-1 w-32">
+                  <button
+                    onClick={() => {
+                      const pct = Math.max(-10, Math.min(20, ((floorPrice / basePrice) - 1) * 100))
+                      setDealDiscountPct(parseFloat(pct.toFixed(1)))
+                      setPriceInputStr(floorPrice.toFixed(2))
+                    }}
+                    className="flex-1 text-[9px] px-1 py-0.5 rounded border border-zone-red/40 text-zone-red hover:bg-zone-red/10 transition-colors"
+                  >
+                    → Floor
+                  </button>
+                  <button
+                    onClick={() => {
+                      const pct = Math.max(-10, Math.min(20, ((targetPrice / basePrice) - 1) * 100))
+                      setDealDiscountPct(parseFloat(pct.toFixed(1)))
+                      setPriceInputStr(targetPrice.toFixed(2))
+                    }}
+                    className="flex-1 text-[9px] px-1 py-0.5 rounded border border-zone-green/40 text-zone-green hover:bg-zone-green/10 transition-colors"
+                  >
+                    → Target
+                  </button>
+                </div>
                 {/* Headroom label */}
                 {escalationLevel === 'none' && netPrice < targetPrice * 1.15 && (
-                  <p className="text-[10px] text-text-muted mt-0.5 text-right w-32">
+                  <p className="text-[10px] text-text-muted text-right w-32">
                     €{(netPrice - targetPrice).toFixed(2)} vs target
                   </p>
                 )}
                 {escalationLevel === 'rep' && (
-                  <p className="text-[10px] text-zone-amber mt-0.5 text-right w-32">
+                  <p className="text-[10px] text-zone-amber text-right w-32">
                     €{(netPrice - floorPrice).toFixed(2)} vs floor
                   </p>
                 )}
@@ -181,7 +238,6 @@ export default function CPQPage() {
 
           {/* Price band */}
           <PriceBand
-            listPrice={listPrice}
             floorPrice={floorPrice}
             targetPrice={targetPrice}
             netPrice={netPrice}
@@ -202,20 +258,18 @@ export default function CPQPage() {
           <h3 className="text-xs font-semibold text-text-secondary mb-3 uppercase tracking-wide">Margin Bridge</h3>
           <MarginBridge
             listPrice={listPrice}
-            tierDiscountPct={tierDiscountPct}
+            basePrice={basePrice}
             dealDiscountPct={dealDiscountPct}
             netPrice={netPrice}
+            grossMarginPct={approxGrossMarginPct}
           />
         </div>
       </div>
       </FadeWrapper>
       )}
 
-      <ExplainButton
-        screen="cpq"
-        accountId={activeAccountId}
-        productId={activeProductId}
-        keyMetrics={{
+      {(() => {
+        const keyMetrics = {
           accountId,
           productId,
           listPrice,
@@ -226,10 +280,38 @@ export default function CPQPage() {
           floorPrice,
           targetPrice,
           grossMarginPct: approxGrossMarginPct,
-        }}
-        onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
-      />
-      <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+        }
+        return (
+          <>
+            <ExplainButton
+              screen="cpq"
+              accountId={activeAccountId}
+              productId={activeProductId}
+              keyMetrics={keyMetrics}
+              onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+              className="right-[124px]"
+            />
+            <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+            <button
+              onClick={() => setChatOpen(true)}
+              className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-white border border-border-default text-text-primary rounded-full shadow-lg hover:bg-page-bg transition-colors text-sm font-medium"
+            >
+              <MessageSquare size={15} className="text-pwc-orange" />
+              Ask
+            </button>
+            <ContextualChatPanel
+              isOpen={chatOpen}
+              onClose={() => setChatOpen(false)}
+              screen="cpq"
+              accountId={activeAccountId}
+              productId={activeProductId}
+              accountName={accounts.find(a => a.id === activeAccountId)?.name ?? null}
+              productName={products.find(p => p.id === activeProductId)?.name ?? null}
+              keyMetrics={keyMetrics}
+            />
+          </>
+        )
+      })()}
     </div>
   )
 }

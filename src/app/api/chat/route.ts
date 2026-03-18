@@ -56,7 +56,7 @@ export async function POST(req: Request) {
       messages: [
         {
           role: 'system',
-          content: `You are a routing classifier for a pricing analytics tool. Your job is to match a user's question to the best predefined scenario, even if the question has typos, varied phrasing, or slight misspellings (e.g. "Baker Klaar" means "Baker Klaas").
+          content: `You are a routing classifier for a pricing analytics tool. Your job is to match a user's question to the best predefined scenario, even if the question has typos, varied phrasing, or slight misspellings (e.g. "Baker Klaar" means "Bakker Klaas").
 
 User question: "${question}"
 Active account context: "${activeAccountId ?? 'none'}"

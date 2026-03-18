@@ -18,7 +18,7 @@ export function EoRSignal({ accountId }: EoRSignalProps) {
   return (
     <div className="card px-4 py-3 flex items-center gap-4">
       <div className="shrink-0">
-        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-0.5">Ease of Realization</p>
+        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-0.5">Account Quality</p>
         <div className="flex items-baseline gap-1">
           <span className={`text-3xl font-bold leading-none ${
             zone === 'green' ? 'text-zone-green' :
@@ -39,7 +39,7 @@ export function EoRSignal({ accountId }: EoRSignalProps) {
             </div>
             <span className="text-[10px] text-text-muted shrink-0">{topRisk.score}/10</span>
           </div>
-          <Link href="/ease-of-realization" className="text-[11px] text-pwc-orange hover:underline mt-1 inline-block">
+          <Link href="/deal-intelligence" className="text-[11px] text-pwc-orange hover:underline mt-1 inline-block">
             See detail →
           </Link>
         </div>

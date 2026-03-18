@@ -4,13 +4,12 @@ import { usePathname } from 'next/navigation'
 import { Bell } from 'lucide-react'
 
 const SCREEN_TITLES: Record<string, string> = {
-  '/chat': 'Chat with Your Data',
+  '/ask-your-data': 'Ask Your Data',
   '/segmentation': 'Segmentation',
   '/cpq': 'CPQ',
-  '/win-loss': 'Win / Loss Price Intelligence',
-  '/ease-of-realization': 'Ease of Realization',
+  '/deal-intelligence': 'Deal Intelligence',
   '/waterfall': 'Price Waterfall',
-  '/pvm': 'PVM Bridge',
+  '/pvm': 'Price-Volume-Mix',
 }
 
 export function TopBar() {
@@ -26,9 +25,9 @@ export function TopBar() {
         </button>
         <div className="flex items-center gap-2">
           <div className="w-7 h-7 rounded-full bg-pwc-orange flex items-center justify-center text-white text-xs font-semibold">
-            S
+            M
           </div>
-          <span className="text-sm text-text-secondary font-medium">Sarah</span>
+          <span className="text-sm text-text-secondary font-medium">Maxime</span>
         </div>
       </div>
     </header>

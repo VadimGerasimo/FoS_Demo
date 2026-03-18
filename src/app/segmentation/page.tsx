@@ -9,9 +9,10 @@ import { ComparisonPanel } from '@/components/segmentation/ComparisonPanel'
 import { ProspectInput } from '@/components/segmentation/ProspectInput'
 import { SegmentHealthPanel } from '@/components/segmentation/SegmentHealthPanel'
 import { useAppContext } from '@/context/AppContext'
-import { Columns2, LayoutPanelLeft } from 'lucide-react'
+import { Columns2, LayoutPanelLeft, MessageSquare } from 'lucide-react'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
+import { ContextualChatPanel } from '@/components/chat/ContextualChatPanel'
 import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
 import { FadeWrapper } from '@/components/shared/FadeWrapper'
 
@@ -26,6 +27,7 @@ export default function SegmentationPage() {
   const [prospectPoint, setProspectPoint] = useState<ProspectPoint | null>(null)
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 350)
@@ -186,11 +188,8 @@ export default function SegmentationPage() {
         )}
       </div>
 
-      <ExplainButton
-        screen="segmentation"
-        accountId={activeAccountId}
-        productId={activeProductId ?? productId}
-        keyMetrics={{
+      {(() => {
+        const keyMetrics = {
           accountName: activeAccount?.name,
           currentPrice: activeAccount?.price,
           floorPrice,
@@ -200,10 +199,40 @@ export default function SegmentationPage() {
             ? ((floorPrice - activeAccount.price) / activeAccount.price * 100).toFixed(1)
             : null,
           zone: activeAccount ? (activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green') : null,
-        }}
-        onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
-      />
-      <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+        }
+        const accountName = accounts.find(a => a.id === activeAccountId)?.name ?? null
+        const productName = products.find(p => p.id === activeProductId)?.name ?? null
+        return (
+          <>
+            <ExplainButton
+              screen="segmentation"
+              accountId={activeAccountId}
+              productId={activeProductId ?? productId}
+              keyMetrics={keyMetrics}
+              onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+              className="right-[124px]"
+            />
+            <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+            <button
+              onClick={() => setChatOpen(true)}
+              className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-white border border-border-default text-text-primary rounded-full shadow-lg hover:bg-page-bg transition-colors text-sm font-medium"
+            >
+              <MessageSquare size={15} className="text-pwc-orange" />
+              Ask
+            </button>
+            <ContextualChatPanel
+              isOpen={chatOpen}
+              onClose={() => setChatOpen(false)}
+              screen="segmentation"
+              accountId={activeAccountId}
+              productId={activeProductId ?? productId}
+              accountName={accountName}
+              productName={productName}
+              keyMetrics={keyMetrics}
+            />
+          </>
+        )
+      })()}
     </div>
   )
 }

@@ -7,14 +7,16 @@ import { WaterfallChart } from '@/components/charts/WaterfallChart'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
-import { AlertTriangle } from 'lucide-react'
+import { AlertTriangle, MessageSquare } from 'lucide-react'
 import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
 import { FadeWrapper } from '@/components/shared/FadeWrapper'
+import { ContextualChatPanel } from '@/components/chat/ContextualChatPanel'
 
 export default function WaterfallPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [chatOpen, setChatOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 350)
@@ -89,7 +91,7 @@ export default function WaterfallPage() {
         {/* Fallback notice */}
         {isFallback && (
           <div className="px-3 py-2 bg-page-bg border border-border-default rounded-lg text-xs text-text-muted">
-            Showing Baker Klaas data (no waterfall data for selected account/product)
+            Showing Bakker Klaas data (no waterfall data for selected account/product)
           </div>
         )}
 
@@ -110,8 +112,26 @@ export default function WaterfallPage() {
         productId={activeProductId}
         keyMetrics={keyMetrics}
         onResult={(r) => { setExplainResult(r); setExplainOpen(true) }}
+        className="right-[124px]"
       />
       <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+      <button
+        onClick={() => setChatOpen(true)}
+        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-white border border-border-default text-text-primary rounded-full shadow-lg hover:bg-page-bg transition-colors text-sm font-medium"
+      >
+        <MessageSquare size={15} className="text-pwc-orange" />
+        Ask
+      </button>
+      <ContextualChatPanel
+        isOpen={chatOpen}
+        onClose={() => setChatOpen(false)}
+        screen="waterfall"
+        accountId={activeAccountId}
+        productId={activeProductId}
+        accountName={accounts.find(a => a.id === activeAccountId)?.name ?? null}
+        productName={products.find(p => p.id === activeProductId)?.name ?? null}
+        keyMetrics={keyMetrics}
+      />
     </div>
   )
 }

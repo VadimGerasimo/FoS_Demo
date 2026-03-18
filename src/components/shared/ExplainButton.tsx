@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Sparkles, Loader2, AlertCircle } from 'lucide-react'
+import { clsx } from 'clsx'
 
 export interface ExplainResult {
   whatISee: string
@@ -15,9 +16,10 @@ interface ExplainButtonProps {
   accountId?: string | null
   productId?: string | null
   onResult: (result: ExplainResult) => void
+  className?: string
 }
 
-export function ExplainButton({ screen, keyMetrics, accountId, productId, onResult }: ExplainButtonProps) {
+export function ExplainButton({ screen, keyMetrics, accountId, productId, onResult, className }: ExplainButtonProps) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
@@ -43,7 +45,10 @@ export function ExplainButton({ screen, keyMetrics, accountId, productId, onResu
     return (
       <button
         disabled
-        className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-full shadow-lg text-sm font-medium"
+        className={clsx(
+          'fixed bottom-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-full shadow-lg text-sm font-medium',
+          className ?? 'right-6'
+        )}
       >
         <AlertCircle size={15} />
         Try again
@@ -55,7 +60,10 @@ export function ExplainButton({ screen, keyMetrics, accountId, productId, onResu
     <button
       onClick={handleClick}
       disabled={loading}
-      className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-sidebar-bg text-white rounded-full shadow-lg hover:bg-pwc-orange transition-colors text-sm font-medium disabled:opacity-60"
+      className={clsx(
+        'fixed bottom-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-sidebar-bg text-white rounded-full shadow-lg hover:bg-pwc-orange transition-colors text-sm font-medium disabled:opacity-60',
+        className ?? 'right-6'
+      )}
     >
       {loading ? <Loader2 size={15} className="animate-spin" /> : <Sparkles size={15} />}
       Explain
