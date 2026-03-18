@@ -123,9 +123,9 @@ function ChartOverlay({ floorCurve, targetCurve, floorPrice, targetPrice, hovere
   const bottomPoints = [...floorCurve].reverse().map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
 
   // Labels anchored at the start of the flat zone
-  const labelX = xScale(5000)
-  const floorLabelY = yScale(priceCurve(floorPrice, [5000])[0].price)
-  const targetLabelY = yScale(priceCurve(targetPrice, [5000])[0].price)
+  const labelX = xScale(5000) ?? 0
+  const floorLabelY = yScale(priceCurve(floorPrice, [5000])[0].price) ?? 0
+  const targetLabelY = yScale(priceCurve(targetPrice, [5000])[0].price) ?? 0
 
   let connector = null
   if (hoveredPoint) {
