@@ -72,10 +72,9 @@ function CustomDot({ cx = 0, cy = 0, payload, activeAccountId, floorPrice, targe
 }
 
 function makeTooltip(floorPrice: number) {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  return function TooltipContent(props: any) {
-    const d = props?.payload?.[0]?.payload as SegmentationPoint | undefined
-    if (!props?.active || !d?.accountId) return null
+  return function TooltipContent({ active, payload }: { active?: boolean; payload?: Array<{ payload: SegmentationPoint }> }) {
+    const d = payload?.[0]?.payload
+    if (!active || !d?.accountId) return null
     const vsFloor = ((d.price - floorPrice) / floorPrice * 100).toFixed(1)
     return (
       <div className="bg-white border border-border-default rounded-lg shadow-md px-3 py-2.5 text-xs">
