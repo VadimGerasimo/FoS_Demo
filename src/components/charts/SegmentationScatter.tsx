@@ -131,10 +131,10 @@ function ChartOverlay({ floorCurve, targetCurve, floorPrice, targetPrice, hovere
   if (hoveredPoint) {
     const floorAtVol = priceCurve(floorPrice, [hoveredPoint.volume])[0].price
     const targetAtVol = priceCurve(targetPrice, [hoveredPoint.volume])[0].price
-    const xPos = xScale(hoveredPoint.volume)
-    const yFloor = yScale(floorAtVol)
-    const yTarget = yScale(targetAtVol)
-    const yDot = yScale(hoveredPoint.price)
+    const xPos = xScale(hoveredPoint.volume) ?? 0
+    const yFloor = yScale(floorAtVol) ?? 0
+    const yTarget = yScale(targetAtVol) ?? 0
+    const yDot = yScale(hoveredPoint.price) ?? 0
     const yTop = Math.min(yFloor, yTarget, yDot)
     const yBottom = Math.max(yFloor, yTarget, yDot)
     connector = (
