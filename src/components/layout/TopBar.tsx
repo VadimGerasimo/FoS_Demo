@@ -12,6 +12,10 @@ const SCREEN_TITLES: Record<string, string> = {
   '/deal-intelligence': 'Deal Intelligence',
   '/waterfall': 'Price Waterfall',
   '/pvm': 'Price-Volume-Mix',
+  '/portfolio-overview': 'Portfolio Overview',
+  '/price-elasticity': 'Price Elasticity',
+  '/cross-sell': 'Cross-Sell / Upsell',
+  '/raw-materials': 'Raw Material Insights',
 }
 
 export function TopBar() {
