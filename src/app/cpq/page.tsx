@@ -111,7 +111,7 @@ export default function CPQPage() {
           <div className="flex items-start justify-between mb-4">
             <div>
               <h2 className="text-base font-semibold text-text-primary">
-                {account?.name ?? 'Select account'} — {product?.name ?? 'Select product'}
+                {account?.name ?? 'Select account'} · {product?.name ?? 'Select product'}
               </h2>
               <p className="text-xs text-text-muted mt-0.5">
                 {account?.segment} · Vol {(account?.volume ?? 0).toLocaleString()} kg/mo
@@ -267,7 +267,7 @@ export default function CPQPage() {
 
         {/* Margin bridge */}
         <div className="card p-4">
-          <h3 className="text-xs font-semibold text-text-secondary mb-3 uppercase tracking-wide">Margin Bridge</h3>
+          <h3 className="text-xs font-semibold text-text-secondary mb-3">Margin bridge</h3>
           <MarginBridge
             listPrice={listPrice}
             basePrice={basePrice}

@@ -30,17 +30,17 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
     ],
   },
   pvm: {
-    whatISee: 'The PVM bridge decomposes revenue change into volume, price, and mix effects — showing whether growth is commercially healthy or masking margin erosion.',
-    whyItMatters: 'Revenue growth driven only by volume while price and mix are negative signals deteriorating commercial quality — the account is growing by selling more at lower prices into a declining-margin basket.',
+    whatISee: 'The PVM bridge decomposes revenue change into volume, price, and mix effects, showing whether growth is commercially healthy or masking margin erosion.',
+    whyItMatters: 'Revenue growth driven only by volume while price and mix are negative signals deteriorating commercial quality. The account is growing by selling more at lower prices into a declining-margin basket.',
     recommendedActions: [
-      'Review accounts where both price AND mix are negative — this signals discounting-driven volume with deteriorating commercial quality',
+      'Review accounts where both price AND mix are negative. This signals discounting-driven volume with deteriorating commercial quality',
       'Investigate product mix shift: if a lower-margin SKU is growing faster than the premium line, set a mix recovery target in the next commercial planning cycle',
-      'For accounts with negative price effect, check whether discounts were tied to volume commitments — undocumented concessions compound over renewal cycles',
+      'For accounts with negative price effect, check whether discounts were tied to volume commitments. Undocumented concessions compound over renewal cycles',
     ],
   },
   'win-loss': {
     whatISee: 'The win probability curve shows how win rate changes with price for this product, with the cliff zone marking the region of rapid win rate decline.',
-    whyItMatters: 'Pricing above the cliff zone significantly increases deal loss risk — knowing the cliff boundary helps set the right floor.',
+    whyItMatters: 'Pricing above the cliff zone significantly increases deal loss risk. Knowing the cliff boundary helps set the right floor.',
     recommendedActions: [
       'Avoid quoting above the cliff maximum without strong differentiation',
       'Use the optimal price point as a benchmark for new quotes',
@@ -48,8 +48,8 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
     ],
   },
   'ease-of-realization': {
-    whatISee: 'The Account Quality Score aggregates 7 dimensions of account attractiveness beyond price — including purchasing power, cooperation, and relationship stability.',
-    whyItMatters: 'A high list price is only valuable if the deal can be realised — the Account Quality Score flags operationally risky accounts that may not be worth aggressive discounting.',
+    whatISee: 'The Account Quality Score aggregates 7 dimensions of account attractiveness beyond price, including purchasing power, cooperation, and relationship stability.',
+    whyItMatters: 'A high list price is only valuable if the deal can be realised. The Account Quality Score flags operationally risky accounts that may not be worth aggressive discounting.',
     recommendedActions: [
       'Combine Account Quality Score with segment position to prioritise renewal effort',
       'Accounts with low EoR and below-floor pricing are highest risk',
@@ -67,9 +67,9 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
   },
   'deal-intelligence': {
     whatISee: 'The Deal Intelligence page combines win probability at the current quoted price with the Account Quality Score to produce a single Deal Score for this account and product.',
-    whyItMatters: 'A high win rate alone does not make a good deal — EoR flags whether the account can deliver the contracted value. The Deal Score synthesises both signals into one actionable verdict.',
+    whyItMatters: 'A high win rate alone does not make a good deal. EoR flags whether the account can deliver the contracted value. The Deal Score synthesises both signals into one actionable verdict.',
     recommendedActions: [
-      'Check the Deal Score before submitting any quote — green (≥70) means proceed, amber (45–69) means attach conditions',
+      'Check the Deal Score before submitting any quote. Green (≥70) means proceed, amber (45–69) means attach conditions',
       'If EoR is below 6.0, review the weakest dimension before agreeing to a price concession',
       'Use the cliff zone on the win curve to set the hard floor for this negotiation',
     ],
@@ -111,7 +111,7 @@ Generate a concise, professional pricing insight in exactly this JSON format:
   "recommendedActions": ["Action 1", "Action 2", "Action 3"]
 }
 
-Be specific — reference the actual metric values provided. Sound like a knowledgeable pricing consultant, not a generic chatbot. Return ONLY valid JSON.`
+Be specific; reference the actual metric values provided. Sound like a knowledgeable pricing consultant, not a generic chatbot. Use sentence case (not Title Case) for labels and headings. Never use em-dashes; use commas, periods, or parentheses instead. Return ONLY valid JSON.`
 
     const completion = await client.chat.completions.create({
       model: 'gpt-4o',

@@ -20,7 +20,7 @@ export function WinProbSignal({ productId, currentPrice }: WinProbSignalProps) {
   return (
     <div className="card px-4 py-3 flex items-center gap-4">
       <div className="shrink-0">
-        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-0.5">Win Probability</p>
+        <p className="text-[10px] font-semibold text-text-secondary mb-0.5">Win probability</p>
         <span className={`text-3xl font-bold leading-none ${
           zone === 'green' ? 'text-zone-green' :
           zone === 'amber' ? 'text-zone-amber' :
@@ -32,7 +32,7 @@ export function WinProbSignal({ productId, currentPrice }: WinProbSignalProps) {
       <div className="flex-1 min-w-0">
         {inCliff && (
           <p className="text-[10px] text-zone-amber mb-1">
-            Price in cliff zone — win rate dropping fast
+            Price in cliff zone. Win rate dropping fast
           </p>
         )}
         <Link href={`/deal-intelligence?quotedPrice=${currentPrice.toFixed(2)}`} className="text-[11px] text-pwc-orange hover:underline">

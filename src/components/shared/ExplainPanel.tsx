@@ -43,17 +43,17 @@ export function ExplainPanel({ isOpen, onClose, result }: ExplainPanelProps) {
           {result ? (
             <>
               <div className="p-4 bg-page-bg rounded-xl">
-                <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-2">What I&apos;m Seeing</p>
+                <p className="text-[10px] font-semibold text-text-muted mb-2">What I see</p>
                 <p className="text-sm text-text-primary">{result.whatISee}</p>
               </div>
 
               <div className="p-4 bg-zone-amber-bg border border-zone-amber/20 rounded-xl">
-                <p className="text-[10px] font-semibold text-zone-amber uppercase tracking-wide mb-2">Why It Matters</p>
+                <p className="text-[10px] font-semibold text-zone-amber mb-2">Why it matters</p>
                 <p className="text-sm text-text-primary">{result.whyItMatters}</p>
               </div>
 
               <div>
-                <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-3">Recommended Actions</p>
+                <p className="text-[10px] font-semibold text-text-muted mb-3">Recommended actions</p>
                 <ul className="flex flex-col gap-2">
                   {result.recommendedActions.map((action, i) => (
                     <li key={i} className="flex items-start gap-2.5 text-sm text-text-primary">

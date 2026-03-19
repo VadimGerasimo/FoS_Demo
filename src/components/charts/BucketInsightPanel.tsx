@@ -95,7 +95,7 @@ export function BucketInsightPanel({
               <span className="text-sm font-semibold text-text-primary">
                 {insight?.title ?? 'Bucket Analysis'}
               </span>
-              <p className="text-[10px] text-text-muted">YTD 2025</p>
+              <p className="text-[10px] text-text-muted">YTD 2026</p>
             </div>
           </div>
           <button
@@ -121,7 +121,7 @@ export function BucketInsightPanel({
 
               {/* Narrative */}
               <div className="p-4 bg-page-bg rounded-xl">
-                <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-2">
+                <p className="text-[10px] font-semibold text-text-muted mb-2">
                   What this means
                 </p>
                 <p className="text-sm text-text-primary leading-relaxed">{insight.narrative}</p>
@@ -130,8 +130,8 @@ export function BucketInsightPanel({
               {/* Top Contributors */}
               {sortedContributors.length > 0 && (
                 <div>
-                  <p className="text-[10px] font-semibold text-text-muted uppercase tracking-wide mb-3">
-                    Top Contributors
+                  <p className="text-[10px] font-semibold text-text-muted mb-3">
+                    Top contributors
                   </p>
                   <div className="flex flex-col gap-3">
                     {sortedContributors.map(c => (
@@ -153,7 +153,7 @@ export function BucketInsightPanel({
                   className="w-full flex items-center justify-between px-4 py-3 text-xs font-semibold text-text-secondary hover:bg-page-bg transition-colors"
                   onClick={() => setFormulaOpen(v => !v)}
                 >
-                  <span className="uppercase tracking-wide text-[10px] text-text-muted">How it&apos;s calculated</span>
+                  <span className="text-[10px] text-text-muted">How it&apos;s calculated</span>
                   {formulaOpen
                     ? <ChevronUp size={13} className="text-text-muted" />
                     : <ChevronDown size={13} className="text-text-muted" />

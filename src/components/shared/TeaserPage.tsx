@@ -164,7 +164,7 @@ export function TeaserPage({ subtitle, skeletons }: TeaserPageProps) {
             key={skeleton.label}
             className={`card p-4 flex flex-col gap-3 ${skeleton.wide ? 'flex-1 min-w-[300px]' : 'flex-1 min-w-[240px]'}`}
           >
-            <p className="text-xs font-semibold text-text-secondary uppercase tracking-wide opacity-40">
+            <p className="text-xs font-semibold text-text-secondary opacity-40">
               {skeleton.label}
             </p>
             <SkeletonChart variant={skeleton.variant} height={skeleton.height ?? 'h-48'} />

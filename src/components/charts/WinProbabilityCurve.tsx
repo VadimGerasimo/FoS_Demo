@@ -42,9 +42,10 @@ interface WinProbabilityCurveProps {
   data: WinLossData
   currentPrice?: number
   quotedPrice?: number
+  contractedPrice?: number
 }
 
-export function WinProbabilityCurve({ data, currentPrice, quotedPrice }: WinProbabilityCurveProps) {
+export function WinProbabilityCurve({ data, currentPrice, quotedPrice, contractedPrice }: WinProbabilityCurveProps) {
   const [animateOnMount, setAnimateOnMount] = useState(true)
   useEffect(() => {
     const t = setTimeout(() => setAnimateOnMount(false), 1200)
@@ -105,24 +106,24 @@ export function WinProbabilityCurve({ data, currentPrice, quotedPrice }: WinProb
           label={{ value: 'Optimal', position: 'top', fontSize: 10, fill: '#059669' }}
         />
 
-        {/* Current price line */}
-        {currentPrice && (
+        {/* Contracted price line */}
+        {(contractedPrice ?? currentPrice) && (
           <ReferenceLine
-            x={currentPrice}
+            x={contractedPrice ?? currentPrice!}
             stroke="#6d6e71"
             strokeDasharray="4 3"
             label={{ value: 'Contracted', position: 'top', fontSize: 10, fill: '#6d6e71' }}
           />
         )}
 
-        {/* CPQ quoted price line */}
-        {quotedPrice && quotedPrice !== currentPrice && (
+        {/* Simulated price line — only when adjusted away from contracted */}
+        {currentPrice && contractedPrice && Math.abs(currentPrice - contractedPrice) > 0.005 && (
           <ReferenceLine
-            x={quotedPrice}
+            x={currentPrice}
             stroke="#3b82f6"
             strokeWidth={2}
             strokeDasharray="5 3"
-            label={{ value: `Quoted €${quotedPrice.toFixed(2)}`, position: 'insideBottom', offset: 8, fontSize: 10, fill: '#3b82f6' }}
+            label={{ value: `Simulated €${currentPrice.toFixed(2)}`, position: 'insideBottomRight', offset: 6, fontSize: 10, fill: '#3b82f6' }}
           />
         )}
 

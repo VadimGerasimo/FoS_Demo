@@ -25,9 +25,9 @@ export function DealContextPanel({
 
       {/* Left: Deal context */}
       <div className="flex flex-wrap items-start gap-x-6 gap-y-2 p-3 flex-1">
-        <p className="text-[9px] font-semibold text-text-muted uppercase tracking-widest w-full">Deal Context</p>
+        <p className="text-[9px] font-semibold text-text-muted w-full">Deal context</p>
         <div>
-          <p className="text-[10px] text-text-muted uppercase tracking-wide">Account</p>
+          <p className="text-[10px] text-text-muted">Account</p>
           <p className="font-semibold text-text-primary">{accountName}</p>
           <p className="text-text-muted">{volume.toLocaleString()} kg/mo</p>
         </div>
@@ -40,7 +40,7 @@ export function DealContextPanel({
           { label: 'CoGS', value: `€${actualCOGS.toFixed(2)}/kg` },
         ].map(({ label, value }) => (
           <div key={label}>
-            <p className="text-[10px] text-text-muted uppercase tracking-wide">{label}</p>
+            <p className="text-[10px] text-text-muted">{label}</p>
             <p className="font-medium text-text-primary">{value}</p>
           </div>
         ))}
@@ -48,21 +48,21 @@ export function DealContextPanel({
 
       {/* Right: Segment benchmarks */}
       <div className="flex flex-wrap items-start gap-x-6 gap-y-2 p-3 bg-page-bg">
-        <p className="text-[9px] font-semibold text-pwc-orange uppercase tracking-widest w-full">Segment</p>
+        <p className="text-[9px] font-semibold text-pwc-orange w-full">Segment</p>
         <div>
-          <p className="text-[10px] text-text-muted uppercase tracking-wide">Name</p>
+          <p className="text-[10px] text-text-muted">Name</p>
           <p className="font-semibold text-text-primary">{segment}</p>
         </div>
         <div>
-          <p className="text-[10px] text-text-muted uppercase tracking-wide">Floor</p>
+          <p className="text-[10px] text-text-muted">Floor</p>
           <p className="font-medium text-zone-red">€{floorPrice.toFixed(2)}/kg</p>
         </div>
         <div>
-          <p className="text-[10px] text-text-muted uppercase tracking-wide">Target</p>
+          <p className="text-[10px] text-text-muted">Target</p>
           <p className="font-medium text-zone-green">€{targetPrice.toFixed(2)}/kg</p>
         </div>
         <div>
-          <p className="text-[10px] text-text-muted uppercase tracking-wide">Position</p>
+          <p className="text-[10px] text-text-muted">Position</p>
           <p className={`font-semibold ${
             posZone === 'red' ? 'text-zone-red' : posZone === 'amber' ? 'text-zone-amber' : 'text-zone-green'
           }`}>{segmentPosition}</p>

@@ -6,8 +6,8 @@ export default function CrossSellPage() {
     <TeaserPage
       subtitle="Surface white space opportunities and propensity scores across your customer base."
       skeletons={[
-        { label: 'White Space Map — Products × Accounts', variant: 'scatter', height: 'h-56', wide: true },
-        { label: 'Propensity Score Ranking', variant: 'bar', height: 'h-44' },
+        { label: 'White space map: products × accounts', variant: 'scatter', height: 'h-56', wide: true },
+        { label: 'Propensity score ranking', variant: 'bar', height: 'h-44' },
       ]}
     />
   )

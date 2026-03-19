@@ -76,24 +76,24 @@ export default function PVMPage() {
 
   type StatZone = 'green' | 'amber' | 'red' | undefined
   const stats: { label: string; value: string; zone?: StatZone }[] = [
-    { label: 'Prior Revenue', value: fmt(pvmData.priorRevenue) },
+    { label: 'Prior revenue', value: fmt(pvmData.priorRevenue) },
     {
-      label: 'Current Revenue',
+      label: 'Current revenue',
       value: fmt(pvmData.currentRevenue),
       zone: pvmData.currentRevenue >= pvmData.priorRevenue ? 'green' : 'red',
     },
     {
-      label: 'Net Change',
+      label: 'Net change',
       value: `${fmtSigned(netChange)} (${netChange >= 0 ? '+' : ''}${netChangePct}%)`,
       zone: netChange >= 0 ? 'green' : 'red',
     },
     {
-      label: 'Primary Driver',
+      label: 'Primary driver',
       value: primaryDriverLabel,
       zone: primaryDriver.value >= 0 ? 'green' : 'red',
     },
     {
-      label: 'Price Realization',
+      label: 'Price realization',
       value: `${priceRealizationNum >= 0 ? '+' : ''}${priceRealizationRate}%`,
       zone: priceRealizationNum >= 0 ? 'green' : 'red',
     },
@@ -142,7 +142,7 @@ export default function PVMPage() {
         <div className="grid grid-cols-5 gap-3">
           {stats.map(({ label, value, zone }) => (
             <div key={label} className="card px-3 py-2.5">
-              <p className="text-[10px] text-text-muted mb-0.5 uppercase tracking-wide">{label}</p>
+              <p className="text-[10px] text-text-muted mb-0.5">{label}</p>
               <p className={`text-sm font-bold leading-snug ${
                 zone === 'red' ? 'text-zone-red' :
                 zone === 'amber' ? 'text-zone-amber' :
@@ -163,7 +163,7 @@ export default function PVMPage() {
         {/* Chart + table card */}
         <div className="card p-4">
           <h2 className="text-sm font-semibold text-text-primary mb-1">
-            Price / Volume / Mix Bridge — {accounts.find(a => a.id === (isFallback ? 'schoko-retail' : accountId))?.name ?? accountId}
+            Price / Volume / Mix Bridge: {accounts.find(a => a.id === (isFallback ? 'schoko-retail' : accountId))?.name ?? accountId}
           </h2>
           <p className="text-xs text-text-muted mb-4">Click a bar to explore that effect in detail</p>
           <PVMBridge

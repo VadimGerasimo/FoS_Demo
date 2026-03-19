@@ -14,7 +14,7 @@ const DEFAULT_QUESTIONS = [
 export function SuggestedQuestions({ onSelect }: SuggestedQuestionsProps) {
   return (
     <div className="px-4 pb-2 flex flex-wrap gap-2">
-      <p className="w-full text-[10px] text-text-muted font-medium uppercase tracking-wide mb-1">Suggested questions</p>
+      <p className="w-full text-[10px] text-text-muted font-medium mb-1">Suggested questions</p>
       {DEFAULT_QUESTIONS.map((q) => (
         <button
           key={q}

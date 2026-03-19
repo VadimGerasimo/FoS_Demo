@@ -72,18 +72,18 @@ export default function WaterfallPage() {
   const showRebateAlert = highlightedLayer != null
 
   const pricingStats = [
-    { label: 'List Price',        value: `€${listPrice.toFixed(2)}/kg` },
-    { label: 'Net-Net Price',     value: `€${netNetPrice.toFixed(2)}/kg`,   zone: 'red' as const },
-    { label: 'Total Deduction',   value: `€${totalDeduction.toFixed(2)}/kg (−${((totalDeduction / listPrice) * 100).toFixed(1)}%)` },
-    { label: 'Price Realisation', value: `${priceRealization.toFixed(1)}%`, zone: priceRealization >= 80 ? 'green' as const : priceRealization >= 70 ? 'amber' as const : 'red' as const },
+    { label: 'List price',        value: `€${listPrice.toFixed(2)}/kg` },
+    { label: 'Net-net price',     value: `€${netNetPrice.toFixed(2)}/kg`,   zone: 'red' as const },
+    { label: 'Total deduction',   value: `€${totalDeduction.toFixed(2)}/kg (−${((totalDeduction / listPrice) * 100).toFixed(1)}%)` },
+    { label: 'Price realisation', value: `${priceRealization.toFixed(1)}%`, zone: priceRealization >= 80 ? 'green' as const : priceRealization >= 70 ? 'amber' as const : 'red' as const },
   ]
 
   const marginStats = [
-    { label: 'Gross Margin %',      value: `${grossMarginPct.toFixed(1)}%`,  zone: 'blue' as const },
-    { label: 'Net Margin %',        value: `${netMarginPct.toFixed(1)}%`,    zone: netMarginPct >= 18 ? 'green' as const : netMarginPct >= 12 ? 'amber' as const : 'red' as const },
-    { label: 'Revenue Leakage',     value: revenueLeakage > 0 ? formatLeakage(revenueLeakage) : '—',
+    { label: 'Gross margin %',      value: `${grossMarginPct.toFixed(1)}%`,  zone: 'blue' as const },
+    { label: 'Net margin %',        value: `${netMarginPct.toFixed(1)}%`,    zone: netMarginPct >= 18 ? 'green' as const : netMarginPct >= 12 ? 'amber' as const : 'red' as const },
+    { label: 'Revenue leakage',     value: revenueLeakage > 0 ? formatLeakage(revenueLeakage) : '—',
       zone: revenueLeakage > 500_000 ? 'red' as const : revenueLeakage > 100_000 ? 'amber' as const : undefined },
-    { label: 'Rebate Intensity',    value: `${rebateIntensity.toFixed(1)}%`, zone: rebateIntensity > 15 ? 'red' as const : rebateIntensity > 8 ? 'amber' as const : 'green' as const },
+    { label: 'Rebate intensity',    value: `${rebateIntensity.toFixed(1)}%`, zone: rebateIntensity > 15 ? 'red' as const : rebateIntensity > 8 ? 'amber' as const : 'green' as const },
   ]
 
   const keyMetrics = {
@@ -141,7 +141,7 @@ export default function WaterfallPage() {
         {/* Chart card */}
         <div className="card flex-1 p-4 min-h-0">
           <h2 className="text-sm font-semibold text-text-primary mb-3">
-            Commercial Margin Waterfall — {accounts.find(a => a.id === accountId)?.name ?? accountId} · {products.find(p => p.id === productId)?.name ?? productId}
+            Commercial Margin Waterfall: {accounts.find(a => a.id === accountId)?.name ?? accountId} · {products.find(p => p.id === productId)?.name ?? productId}
           </h2>
           <div style={{ height: 'calc(100% - 32px)' }}>
             <WaterfallChart data={waterfallData} />
@@ -159,7 +159,7 @@ export default function WaterfallPage() {
         {showRebateAlert && (
           <div className="flex items-center gap-2 px-3 py-2 bg-zone-amber-bg border border-zone-amber/30 rounded-lg text-xs text-zone-amber">
             <AlertTriangle size={13} />
-            Rebate is {rebatePct.toFixed(1)}% of list price — {rebatePct > 8 ? `${(rebatePct - 4.1).toFixed(1)}pts above the Mid-Market Benelux norm of 4.1%` : 'within segment norms'}
+            Rebate is {rebatePct.toFixed(1)}% of list price, {rebatePct > 8 ? `${(rebatePct - 4.1).toFixed(1)}pts above the Mid-Market Benelux norm of 4.1%` : 'within segment norms'}
           </div>
         )}
       </div>

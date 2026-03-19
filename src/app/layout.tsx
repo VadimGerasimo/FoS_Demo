@@ -7,7 +7,7 @@ import { PageTransitionWrapper } from '@/components/layout/PageTransitionWrapper
 
 export const metadata: Metadata = {
   title: 'Equazion',
-  description: 'Commercial Pricing Intelligence — PwC',
+  description: 'Commercial Pricing Intelligence | PwC',
 }
 
 export default function RootLayout({

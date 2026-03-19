@@ -61,6 +61,36 @@
   }
 }
 
+/* Slim range slider for Deal Intelligence price simulator */
+input[type="range"].slider-slim {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: #e7e7e8;
+  border-radius: 2px;
+  outline: none;
+}
+input[type="range"].slider-slim::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #eb8c00;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+input[type="range"].slider-slim::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #eb8c00;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
 @keyframes pageIn {
   from { opacity: 0; }
   to   { opacity: 1; }

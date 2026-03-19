@@ -28,7 +28,7 @@ const CHAT_QUESTIONS = [
   },
   {
     q: 'What else can I sell Bakker Klaas? / Cross-sell Bakker Klaas',
-    a: 'No White Couverture or Cocoa Powder yet — 80% co-purchase rate among peers. White Couverture target €5.18/kg. → Peer table',
+    a: 'No White Couverture or Cocoa Powder yet. 80% co-purchase rate among peers. White Couverture target €5.18/kg. → Peer table',
   },
 ]
 
@@ -46,8 +46,8 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-border-default shrink-0">
           <div>
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-pwc-orange mb-0.5">Demo Prep</p>
-            <h2 className="text-base font-semibold text-text-primary">Scenario 1 — Bakker Klaas Asks for More Discount</h2>
+            <p className="text-[10px] font-semibold text-pwc-orange mb-0.5">Demo prep</p>
+            <h2 className="text-base font-semibold text-text-primary">Scenario 1: Bakker Klaas Asks for More Discount</h2>
           </div>
           <button
             onClick={onClose}
@@ -62,21 +62,21 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
 
           {/* Demo flow */}
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-3">Demo Flow</h3>
+            <h3 className="text-xs font-semibold text-text-muted mb-3">Demo flow</h3>
             <div className="space-y-4">
 
               <div className="flex gap-3">
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-pwc-orange/10 text-pwc-orange text-xs font-bold flex items-center justify-center mt-0.5">1</div>
                 <div>
                   <p className="font-semibold text-text-primary mb-1">Segmentation</p>
-                  <p className="text-text-secondary leading-relaxed">Bakker Klaas is at <strong>€4.20/kg</strong> — <strong>8.1% below the floor of €4.57</strong> and in the bottom 15% of Mid-Market Benelux. Target is €4.85. Granting more discount widens the gap. Recommendation: staged correction over 2–3 renewal cycles.</p>
+                  <p className="text-text-secondary leading-relaxed">Bakker Klaas is at <strong>€4.20/kg</strong>, <strong>8.1% below the floor of €4.57</strong> and in the bottom 15% of Mid-Market Benelux. Target is €4.85. Granting more discount widens the gap. Recommendation: staged correction over 2–3 renewal cycles.</p>
                 </div>
               </div>
 
               <div className="flex gap-3">
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-pwc-orange/10 text-pwc-orange text-xs font-bold flex items-center justify-center mt-0.5">2</div>
                 <div>
-                  <p className="font-semibold text-text-primary mb-1">CPQ — Three scenarios</p>
+                  <p className="font-semibold text-text-primary mb-1">CPQ: Three scenarios</p>
                   <div className="text-text-secondary leading-relaxed space-y-1">
                     <div className="grid grid-cols-3 gap-2 mt-2 text-xs">
                       <div className="bg-zone-red-bg rounded p-2 text-center">
@@ -98,7 +98,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
                         <p className="text-zone-green font-medium">Sweet spot</p>
                       </div>
                     </div>
-                    <p className="mt-2">Even at +4%, Bakker Klaas is still €0.20 below floor and €0.48 below target — the uplift is defensible.</p>
+                    <p className="mt-2">Even at +4%, Bakker Klaas is still €0.20 below floor and €0.48 below target, so the uplift is defensible.</p>
                   </div>
                 </div>
               </div>
@@ -116,7 +116,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
                 <div>
                   <p className="font-semibold text-text-primary mb-1">The pitch</p>
                   <blockquote className="border-l-2 border-pwc-orange/30 pl-3 text-text-secondary italic leading-relaxed">
-                    &ldquo;You&apos;ve been on a very favourable rate — well below similar bakeries at €4.20 versus a floor of €4.57. I&apos;ve kept the adjustment to just +4%, bringing you to €4.37 — still well below where your peers are buying. I&apos;d also love to set you up with a trial on White Couverture and Cocoa Powder — 80% of bakers your size are already bundling these.&rdquo;
+                    &ldquo;You&apos;ve been on a very favourable rate, well below similar bakeries at €4.20 versus a floor of €4.57. I&apos;ve kept the adjustment to just +4%, bringing you to €4.37, still well below where your peers are buying. I&apos;d also love to set you up with a trial on White Couverture and Cocoa Powder. 80% of bakers your size are already bundling these.&rdquo;
                   </blockquote>
                   <p className="text-text-muted text-xs mt-2">Result: 9-point swing (−5% → +4%), cross-sell conversation on 2 new SKUs.</p>
                 </div>
@@ -130,7 +130,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
 
           {/* Chat questions */}
           <section>
-            <h3 className="text-xs font-semibold uppercase tracking-widest text-text-muted mb-3">Questions You Can Ask</h3>
+            <h3 className="text-xs font-semibold text-text-muted mb-3">Questions you can ask</h3>
             <div className="space-y-3">
               {CHAT_QUESTIONS.map((item, i) => (
                 <div key={i} className="rounded-lg border border-border-default p-3">

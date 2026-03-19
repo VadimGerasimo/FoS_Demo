@@ -27,7 +27,7 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
       heroValue: '+€42k',
       heroDirection: 'up',
       narrative:
-        'Volume growth of +€42k is driven by Dark Compound expanding in the discount channel. Milk Couverture volume is declining — growth is concentrated in one SKU. The overall volume number looks stronger than the underlying mix warrants.',
+        'Volume growth of +€42k is driven by Dark Compound expanding in the discount channel. Milk Couverture volume is declining, so growth is concentrated in one SKU. The overall volume number looks stronger than the underlying mix warrants.',
       topContributors: [
         { name: 'Dark Compound', value: 88200, formatted: fmtSigned(88200) },
         { name: 'Milk Couverture', value: -46200, formatted: fmtSigned(-46200) },
@@ -44,7 +44,7 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
       heroValue: '−€22k',
       heroDirection: 'down',
       narrative:
-        'Price realization declined €22k versus the prior period — consistent with reactive discounting. Three off-invoice adjustments were granted in Q3–Q4 without documented volume commitments. At current volumes this erosion pattern compounds to ~€85k annually if uncorrected.',
+        'Price realization declined €22k versus the prior period, consistent with reactive discounting. Three off-invoice adjustments were granted in Q3–Q4 without documented volume commitments. At current volumes this erosion pattern compounds to ~€85k annually if uncorrected.',
       topContributors: [
         { name: 'Dark Compound', value: -31500, formatted: fmtSigned(-31500) },
         { name: 'Milk Couverture', value: 9500, formatted: fmtSigned(9500) },
@@ -61,7 +61,7 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
       heroValue: '−€19k',
       heroDirection: 'down',
       narrative:
-        'Mix erosion of −€19k reflects a portfolio shift toward lower-margin SKUs. Milk Couverture — the higher-margin product — is declining as a revenue share while Dark Compound grows. Even as total revenue holds, commercial quality is deteriorating.',
+        'Mix erosion of −€19k reflects a portfolio shift toward lower-margin SKUs. Milk Couverture, the higher-margin product, is declining as a revenue share while Dark Compound grows. Even as total revenue holds, commercial quality is deteriorating.',
       topContributors: [
         { name: 'Dark Compound', value: -12600, formatted: fmtSigned(-12600) },
         { name: 'Milk Couverture', value: -6400, formatted: fmtSigned(-6400) },
@@ -80,7 +80,7 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
       heroValue: '+€3.4k',
       heroDirection: 'up',
       narrative:
-        'Bakker Klaas is growing at +13.3% — above category average. Volume gains reflect successful penetration of the artisan and bakery segment. This account is in an early growth phase and pricing discipline remains intact.',
+        'Bakker Klaas is growing at +13.3%, above category average. Volume gains reflect successful penetration of the artisan and bakery segment. This account is in an early growth phase and pricing discipline remains intact.',
       topContributors: [{ name: 'Milk Couverture', value: 3360, formatted: fmtSigned(3360) }],
       formula: {
         expression: '(Curr Qty − Prior Qty) × Prior Unit Price',
@@ -94,7 +94,7 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
       heroValue: '−€840',
       heroDirection: 'down',
       narrative:
-        'A modest price concession of −€840 was extended in Q4, likely tied to a new contract negotiation. At this account size and growth rate this is within acceptable tolerance. However, this is the first price concession on record — flag as a leading indicator to monitor over the next two periods.',
+        'A modest price concession of −€840 was extended in Q4, likely tied to a new contract negotiation. At this account size and growth rate this is within acceptable tolerance. However, this is the first price concession on record. Flag as a leading indicator to monitor over the next two periods.',
       topContributors: [{ name: 'Milk Couverture', value: -840, formatted: fmtSigned(-840) }],
       formula: {
         expression: 'Curr Qty × (Curr Unit Price − Prior Unit Price)',
@@ -152,7 +152,7 @@ const GENERIC_FALLBACK: Record<BucketKey, BucketInsight> = {
     heroValue: '—',
     heroDirection: 'neutral',
     narrative:
-      'The Mix Effect captures revenue change from portfolio composition shifts — selling proportionally more of lower-value vs higher-value products. It is the residual after removing Volume and Price effects.',
+      'The Mix Effect captures revenue change from portfolio composition shifts: selling proportionally more of lower-value vs higher-value products. It is the residual after removing Volume and Price effects.',
     topContributors: [],
     formula: {
       expression: 'Total Revenue − Prior Revenue − Volume Effect − Price Effect',

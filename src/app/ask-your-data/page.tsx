@@ -132,7 +132,7 @@ export default function AskYourDataPage() {
         <div className="flex flex-col w-[40%] border-r border-border-default min-h-0">
           {/* Thread header */}
           <div className="flex items-center justify-between px-4 py-2 border-b border-border-default bg-white">
-            <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Conversation</span>
+            <span className="text-xs font-semibold text-text-secondary">Conversation</span>
             <button
               onClick={saveConversation}
               disabled={!messages.length}
@@ -160,7 +160,7 @@ export default function AskYourDataPage() {
         {/* Right panel — 60% */}
         <div className="flex-1 bg-white min-h-0 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2 border-b border-border-default">
-            <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Analysis</span>
+            <span className="text-xs font-semibold text-text-secondary">Analysis</span>
             {rightPanel.visualType && (
               <span className="text-[10px] text-text-muted px-2 py-0.5 bg-page-bg border border-border-default rounded-full capitalize">
                 {rightPanel.visualType}

@@ -96,15 +96,15 @@ const getFill = (d: PVMBarDatum): string => {
 function getAlertConfig(d: PVMData): { message: string; severity: 'high' | 'medium' | 'info' } | null {
   const { volumeEffect: vol, priceEffect: price, mixEffect: mix } = d
   if (vol > 0 && price < 0 && mix < 0)
-    return { message: 'Both price and mix are negative while volume grows — discounting-driven growth. Revenue quality is declining even as top-line holds.', severity: 'high' }
+    return { message: 'Both price and mix are negative while volume grows. This indicates discounting-driven growth; revenue quality is declining even as top-line holds.', severity: 'high' }
   if (vol < 0 && price < 0 && mix < 0)
-    return { message: 'Critical: Revenue declining across all three drivers — escalate to commercial review.', severity: 'high' }
+    return { message: 'Critical: revenue declining across all three drivers. Escalate to commercial review.', severity: 'high' }
   if (price < 0 && mix < 0 && vol <= 0)
-    return { message: 'Price and mix erosion without volume offset — pure commercial quality deterioration.', severity: 'high' }
+    return { message: 'Price and mix erosion without volume offset. This signals pure commercial quality deterioration.', severity: 'high' }
   if (price > 0 && vol < 0)
-    return { message: 'Monitor: Volume declined following price action — assess demand elasticity.', severity: 'medium' }
+    return { message: 'Monitor: volume declined following price action. Assess demand elasticity.', severity: 'medium' }
   if (Math.abs(mix) > Math.abs(price) && mix < 0 && price > 0)
-    return { message: 'Mix erosion is outpacing price gains — net yield is declining despite price improvement.', severity: 'medium' }
+    return { message: 'Mix erosion is outpacing price gains; net yield is declining despite price improvement.', severity: 'medium' }
   if (vol < 0 && price < 0 && mix > 0)
     return { message: 'Positive signal: Revenue quality improving as lower-margin volume is shed.', severity: 'info' }
   return null
@@ -114,7 +114,7 @@ function getAlertConfig(d: PVMData): { message: string; severity: 'high' | 'medi
 const BUCKET_DEFINITIONS: Record<string, string> = {
   Volume: 'Revenue change from selling more or fewer units, holding prior-period prices and mix constant.',
   Price: 'Revenue change from realized price movements on the same products, isolating rate changes from volume or portfolio shifts.',
-  Mix: 'Revenue change from portfolio composition shift — selling proportionally more of lower-value vs higher-value products.',
+  Mix: 'Revenue change from portfolio composition shift: selling proportionally more of lower-value vs higher-value products.',
 }
 
 interface CustomTooltipProps {
@@ -237,7 +237,7 @@ function CustomXTick(props: {
   )
 }
 
-const PERIOD_OPTIONS = ['YTD 2025 vs YTD 2024', 'Q4 2025 vs Q4 2024']
+const PERIOD_OPTIONS = ['YTD 2026 vs YTD 2025', 'Q4 2026 vs Q4 2025']
 
 interface PVMBridgeProps {
   data: PVMData
@@ -371,11 +371,11 @@ export function PVMBridge({ data, selectedBarName, onBarSelect }: PVMBridgeProps
           <thead>
             <tr className="border-b border-border-default">
               <th className="text-left px-3 py-2 font-semibold text-text-secondary">Product</th>
-              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Prior Rev</th>
-              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Vol Effect</th>
-              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Price Effect</th>
-              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Mix Effect</th>
-              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Current Rev</th>
+              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Prior rev</th>
+              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Vol effect</th>
+              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Price effect</th>
+              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Mix effect</th>
+              <th className="text-right px-3 py-2 font-semibold text-text-secondary">Current rev</th>
               <th className="text-right px-3 py-2 font-semibold text-text-secondary">Δ%</th>
             </tr>
           </thead>

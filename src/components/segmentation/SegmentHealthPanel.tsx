@@ -26,7 +26,7 @@ export function SegmentHealthPanel({ segmentId: _segmentId, segmentName, points,
   return (
     <div className="card px-4 py-2.5 flex items-center gap-6 flex-wrap">
       <div className="min-w-0">
-        <p className="text-[10px] text-text-muted uppercase tracking-wide font-medium">Segment</p>
+        <p className="text-[10px] text-text-muted font-medium">Segment</p>
         <p className="text-sm font-semibold text-text-primary">{segmentName}</p>
       </div>
 
@@ -38,7 +38,7 @@ export function SegmentHealthPanel({ segmentId: _segmentId, segmentName, points,
         { label: 'Avg margin proxy', value: `${avgMargin.toFixed(1)}%` },
       ].map(({ label, value }) => (
         <div key={label} className="shrink-0">
-          <p className="text-[10px] text-text-muted uppercase tracking-wide">{label}</p>
+          <p className="text-[10px] text-text-muted">{label}</p>
           <p className="text-sm font-semibold text-text-primary">{value}</p>
         </div>
       ))}
@@ -46,7 +46,7 @@ export function SegmentHealthPanel({ segmentId: _segmentId, segmentName, points,
       <div className="h-8 w-px bg-border-default shrink-0" />
 
       <div className="flex-1 min-w-48">
-        <p className="text-[10px] text-text-muted uppercase tracking-wide mb-1.5">Distribution</p>
+        <p className="text-[10px] text-text-muted mb-1.5">Distribution</p>
         <div className="flex h-4 rounded overflow-hidden gap-px">
           {abovePct > 0  && <div className="bg-zone-green" style={{ width: `${abovePct}%` }} title={`Above target: ${abovePct}%`} />}
           {inBandPct > 0 && <div className="bg-zone-amber" style={{ width: `${inBandPct}%` }} title={`In-band: ${inBandPct}%`} />}

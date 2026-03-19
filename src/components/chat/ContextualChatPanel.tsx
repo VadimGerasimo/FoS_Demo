@@ -30,16 +30,16 @@ function ExplainMessage({ data }: { data: ExplainData }) {
   return (
     <div className="flex flex-col gap-3.5 text-sm">
       <div>
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-pwc-orange mb-1">What I see</p>
+        <p className="text-[10px] font-semibold text-pwc-orange mb-1">What I see</p>
         <p className="text-text-primary leading-relaxed">{data.whatISee}</p>
       </div>
       <div className="border-t border-border-default pt-3">
-        <p className="text-[10px] font-semibold uppercase tracking-wide text-pwc-orange mb-1">Why it matters</p>
+        <p className="text-[10px] font-semibold text-pwc-orange mb-1">Why it matters</p>
         <p className="text-text-primary leading-relaxed">{data.whyItMatters}</p>
       </div>
       {data.recommendedActions?.length > 0 && (
         <div className="border-t border-border-default pt-3">
-          <p className="text-[10px] font-semibold uppercase tracking-wide text-pwc-orange mb-2">Recommended actions</p>
+          <p className="text-[10px] font-semibold text-pwc-orange mb-2">Recommended actions</p>
           <ul className="flex flex-col gap-2">
             {data.recommendedActions.map((action, i) => (
               <li key={i} className="flex gap-2 text-text-primary leading-relaxed">

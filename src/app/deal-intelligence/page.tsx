@@ -15,7 +15,8 @@ import { FadeWrapper } from '@/components/shared/FadeWrapper'
 import { interpolateWinRate } from '@/lib/interpolateWinRate'
 import { ChevronUp, ChevronDown, MessageSquare } from 'lucide-react'
 
-function WinLossLegend({ optimalPrice, currentPrice, quotedPrice }: { optimalPrice: number; currentPrice?: number; quotedPrice?: number }) {
+function WinLossLegend({ optimalPrice, currentPrice, contractedPrice }: { optimalPrice: number; currentPrice?: number; contractedPrice?: number }) {
+  const hasSimulated = currentPrice && contractedPrice && Math.abs(currentPrice - contractedPrice) > 0.005
   return (
     <div className="flex flex-wrap gap-x-4 gap-y-1 mt-2 px-1">
       <span className="flex items-center gap-1.5 text-[10px] text-text-muted">
@@ -34,16 +35,14 @@ function WinLossLegend({ optimalPrice, currentPrice, quotedPrice }: { optimalPri
         <span className="w-5 h-2 bg-zone-red/20 border border-zone-red/40 inline-block rounded-sm" />
         Price cliff zone
       </span>
-      {currentPrice && (
-        <span className="flex items-center gap-1.5 text-[10px] text-text-muted">
-          <span className="w-5 border-t-2 border-dashed border-[#6d6e71] inline-block" />
-          Contracted price
-        </span>
-      )}
-      {quotedPrice && quotedPrice !== currentPrice && (
+      <span className="flex items-center gap-1.5 text-[10px] text-text-muted">
+        <span className="w-5 border-t-2 border-dashed border-[#6d6e71] inline-block" />
+        Contracted price
+      </span>
+      {hasSimulated && (
         <span className="flex items-center gap-1.5 text-[10px] text-text-muted">
           <span className="w-5 border-t-2 border-dashed border-blue-500 inline-block" style={{ borderStyle: 'dashed' }} />
-          CPQ quoted price
+          Simulated price
         </span>
       )}
       <span className="flex items-center gap-1.5 text-[10px] text-text-muted">
@@ -62,6 +61,8 @@ function DealIntelligenceContent() {
   const [chatOpen, setChatOpen] = useState(false)
   const [sortAsc, setSortAsc] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [priceAdjustPct, setPriceAdjustPct] = useState(0)
+  const [diPriceInputStr, setDiPriceInputStr] = useState('')
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 350)
     return () => clearTimeout(t)
@@ -74,10 +75,29 @@ function DealIntelligenceContent() {
   const winLossData = getWinLossForProduct(productId) ?? getWinLossForProduct('milk-couverture')!
 
   const account = accounts.find(a => a.id === activeAccountId)
-  const currentPrice = account?.price ?? winLossData.optimalPrice
+  const contractedPrice = account?.price ?? winLossData.optimalPrice
+
+  // Reset adjustment when account/product changes
+  useEffect(() => {
+    setPriceAdjustPct(0)
+    setDiPriceInputStr('')
+  }, [activeAccountId, activeProductId])
+
+  // Initialize from CPQ quoted price if present
+  useEffect(() => {
+    if (quotedPrice && quotedPrice !== contractedPrice) {
+      const pct = ((quotedPrice / contractedPrice) - 1) * 100
+      setPriceAdjustPct(parseFloat(Math.max(-15, Math.min(25, pct)).toFixed(1)))
+      setDiPriceInputStr(quotedPrice.toFixed(2))
+    }
+  }, [quotedPrice, contractedPrice])
+
+  const currentPrice = contractedPrice * (1 + priceAdjustPct / 100)
+  const hasAdjustment = Math.abs(priceAdjustPct) > 0.05
 
   const winRateAtCurrent = Math.round(interpolateWinRate(winLossData.curve, currentPrice))
   const winRateAtOptimal = Math.round(interpolateWinRate(winLossData.curve, winLossData.optimalPrice))
+  const winRateAtContracted = Math.round(interpolateWinRate(winLossData.curve, contractedPrice))
   const winRateAtQuoted = quotedPrice ? Math.round(interpolateWinRate(winLossData.curve, quotedPrice)) : undefined
   const winZone = winRateAtCurrent >= 65 ? 'green' : winRateAtCurrent >= 40 ? 'amber' : 'red'
   const quotedZone = winRateAtQuoted !== undefined
@@ -105,10 +125,10 @@ function DealIntelligenceContent() {
   const dealScoreLabel = dealScore >= 70 ? 'Proceed' : dealScore >= 45 ? 'Proceed with Conditions' : 'Escalate / Review'
 
   const winZoneLabel = winZone === 'green'
-    ? 'Safe zone — strong win probability'
+    ? 'Safe zone. Strong win probability'
     : winZone === 'amber'
-    ? 'Caution — approaching cliff'
-    : 'Danger — high deal loss risk'
+    ? 'Caution: approaching cliff'
+    : 'Danger: high deal loss risk'
 
   const keyMetrics = {
     winRateAtCurrentPrice: winRateAtCurrent,
@@ -134,140 +154,210 @@ function DealIntelligenceContent() {
         <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 flex flex-col overflow-y-auto">
           <div className="p-6 flex flex-col gap-6">
 
-            {/* CPQ QUOTED PRICE BANNER */}
-            {quotedPrice && quotedPrice !== currentPrice && (
-              <div className="flex items-center gap-3 px-4 py-2.5 bg-blue-50 border border-blue-200 rounded-lg text-xs">
-                <span className="w-2 h-2 rounded-full bg-blue-500 shrink-0" />
-                <span className="text-blue-700 font-medium">Viewing CPQ quoted price: €{quotedPrice.toFixed(2)}/kg</span>
-                <span className="text-blue-500 mx-1">·</span>
-                <span className="text-blue-600">
-                  Win probability at this price: <span className={`font-bold ${
-                    quotedZone === 'green' ? 'text-zone-green' :
-                    quotedZone === 'amber' ? 'text-zone-amber' :
-                    'text-zone-red'
-                  }`}>{winRateAtQuoted}%</span>
-                  {winRateAtQuoted !== undefined && winRateAtQuoted !== winRateAtCurrent && (
-                    <span className={`ml-1 ${winRateAtQuoted > winRateAtCurrent ? 'text-zone-green' : 'text-zone-red'}`}>
-                      ({winRateAtQuoted > winRateAtCurrent ? '+' : ''}{winRateAtQuoted - winRateAtCurrent}pp vs contracted)
-                    </span>
-                  )}
-                </span>
-              </div>
-            )}
-
-            {/* DEAL SCORE TILE */}
-            <div className="card p-5 flex items-center gap-6">
-              <div className="shrink-0">
-                <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-1">Deal Score</p>
-                <div className="flex items-baseline gap-2">
-                  <span className={`text-5xl font-bold leading-none ${
-                    dealScoreZone === 'green' ? 'text-zone-green' :
-                    dealScoreZone === 'amber' ? 'text-zone-amber' :
-                    'text-zone-red'
-                  }`}>{dealScore}</span>
-                  <span className="text-text-muted text-lg">/ 100</span>
-                </div>
-                <span className={`mt-2 inline-block text-xs font-semibold px-3 py-1 rounded-full ${
-                  dealScoreZone === 'green' ? 'bg-zone-green-bg text-zone-green' :
-                  dealScoreZone === 'amber' ? 'bg-zone-amber-bg text-zone-amber' :
-                  'bg-zone-red-bg text-zone-red'
-                }`}>{dealScoreLabel}</span>
-                <div className="mt-2 flex flex-col gap-0.5">
-                  <p className="text-[9px] text-text-muted">
-                    Price risk: <span className="font-medium text-text-secondary">{Math.round((winRateAtCurrent / 100) * 0.6 * 100)}</span>
-                    <span className="text-text-muted"> (60%)</span>
-                  </p>
-                  <p className="text-[9px] text-text-muted">
-                    Account quality: <span className="font-medium text-text-secondary">{Math.round((eorCompositeScore / 10) * 0.4 * 100)}</span>
-                    <span className="text-text-muted"> (40%)</span>
-                  </p>
-                </div>
-              </div>
-              <div className="h-16 w-px bg-border-default shrink-0" />
-              <div className="flex gap-8">
-                <div>
-                  <p className="text-[10px] text-text-muted mb-0.5">Win Rate — Contracted Price</p>
-                  <p className={`text-2xl font-bold ${
-                    winZone === 'green' ? 'text-zone-green' :
-                    winZone === 'amber' ? 'text-zone-amber' :
-                    'text-zone-red'
-                  }`}>{winRateAtCurrent}%</p>
-                  <p className="text-[10px] text-text-muted">at €{currentPrice.toFixed(2)}/kg</p>
-                </div>
-                {quotedPrice && quotedPrice !== currentPrice && winRateAtQuoted !== undefined && (
-                  <div>
-                    <p className="text-[10px] text-blue-600 font-medium mb-0.5">Win Rate — Quoted Price</p>
-                    <p className={`text-2xl font-bold ${
-                      quotedZone === 'green' ? 'text-zone-green' :
-                      quotedZone === 'amber' ? 'text-zone-amber' :
+            {/* DEAL ANALYSIS — deal score left, price simulator right, single row */}
+            <div className="card p-4">
+              <div className="flex items-center gap-5">
+                {/* Deal score — left */}
+                <div className="shrink-0">
+                  <p className="text-[10px] font-semibold text-text-secondary mb-1">Deal score</p>
+                  <div className="flex items-baseline gap-1.5">
+                    <span className={`text-4xl font-bold leading-none ${
+                      dealScoreZone === 'green' ? 'text-zone-green' :
+                      dealScoreZone === 'amber' ? 'text-zone-amber' :
                       'text-zone-red'
-                    }`}>{winRateAtQuoted}%</p>
-                    <p className="text-[10px] text-blue-500">at €{quotedPrice.toFixed(2)}/kg</p>
+                    }`}>{dealScore}</span>
+                    <span className="text-text-muted text-sm">/ 100</span>
                   </div>
-                )}
-                <div>
-                  <p className="text-[10px] text-text-muted mb-0.5">Account Quality Score</p>
-                  <div className="flex items-baseline gap-1">
-                    <p className={`text-2xl font-bold ${
+                  <span className={`mt-1.5 inline-block text-[10px] font-semibold px-2.5 py-0.5 rounded-full ${
+                    dealScoreZone === 'green' ? 'bg-zone-green-bg text-zone-green' :
+                    dealScoreZone === 'amber' ? 'bg-zone-amber-bg text-zone-amber' :
+                    'bg-zone-red-bg text-zone-red'
+                  }`}>{dealScoreLabel}</span>
+                </div>
+
+                <div className="h-14 w-px bg-border-default shrink-0" />
+
+                {/* Score breakdown */}
+                <div className="flex gap-5 shrink-0">
+                  <div>
+                    <p className="text-[10px] text-text-muted mb-0.5">Price risk <span className="opacity-60">(60%)</span></p>
+                    <p className={`text-lg font-bold ${
+                      winZone === 'green' ? 'text-zone-green' :
+                      winZone === 'amber' ? 'text-zone-amber' :
+                      'text-zone-red'
+                    }`}>{Math.round((winRateAtCurrent / 100) * 0.6 * 100)}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] text-text-muted mb-0.5">Account <span className="opacity-60">(40%)</span></p>
+                    <p className={`text-lg font-bold ${
                       eorZone === 'green' ? 'text-zone-green' :
                       eorZone === 'amber' ? 'text-zone-amber' :
                       'text-zone-red'
-                    }`}>{eorCompositeScore.toFixed(1)}</p>
-                    <span className="text-text-muted text-sm">/ 10</span>
+                    }`}>{Math.round((eorCompositeScore / 10) * 0.4 * 100)}</p>
                   </div>
-                  <p className="text-[10px] text-text-muted">
-                    {eorCompositeScore >= 7 ? 'High Quality' : eorCompositeScore >= 5 ? 'Medium Quality' : 'Low Quality'}
-                  </p>
+                </div>
+
+                <div className="h-14 w-px bg-border-default shrink-0" />
+
+                {/* Price simulator — right side */}
+                <div className="flex-1 flex flex-col gap-1.5" style={{ minWidth: 0 }}>
+                  <div className="flex items-center justify-between">
+                    <p className="text-[10px] text-text-muted font-medium">Price simulator</p>
+                    {hasAdjustment && (
+                      <button
+                        onClick={() => { setPriceAdjustPct(0); setDiPriceInputStr('') }}
+                        className="text-[9px] text-pwc-orange hover:underline"
+                      >
+                        Reset
+                      </button>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="range"
+                      min={-15}
+                      max={25}
+                      step={0.5}
+                      value={priceAdjustPct}
+                      onChange={e => {
+                        const pct = parseFloat(e.target.value)
+                        setPriceAdjustPct(pct)
+                        setDiPriceInputStr((contractedPrice * (1 + pct / 100)).toFixed(2))
+                      }}
+                      className="flex-1 slider-slim"
+                      style={{ minWidth: 0 }}
+                    />
+                    <div className="flex items-center gap-0.5 border border-border-default rounded px-1.5 py-0.5 bg-page-bg shrink-0">
+                      <span className="text-[9px] text-text-muted">€</span>
+                      <input
+                        type="number"
+                        step="0.01"
+                        value={diPriceInputStr || currentPrice.toFixed(2)}
+                        onChange={e => setDiPriceInputStr(e.target.value)}
+                        onBlur={() => {
+                          const parsed = parseFloat(diPriceInputStr)
+                          if (!isNaN(parsed) && parsed > 0) {
+                            const newPct = Math.max(-15, Math.min(25, ((parsed / contractedPrice) - 1) * 100))
+                            setPriceAdjustPct(parseFloat(newPct.toFixed(1)))
+                            setDiPriceInputStr((contractedPrice * (1 + newPct / 100)).toFixed(2))
+                          } else {
+                            setDiPriceInputStr(currentPrice.toFixed(2))
+                          }
+                        }}
+                        onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+                        className="w-14 text-xs font-medium border-0 bg-transparent text-right focus:outline-none"
+                      />
+                      <span className="text-[9px] text-text-muted">/kg</span>
+                    </div>
+                    <span className={`text-[10px] font-semibold shrink-0 w-10 text-right ${
+                      priceAdjustPct < 0 ? 'text-zone-red' : priceAdjustPct > 0 ? 'text-zone-green' : 'text-text-primary'
+                    }`}>
+                      {priceAdjustPct >= 0 ? '+' : ''}{priceAdjustPct.toFixed(1)}%
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    {segmentFloor && (
+                      <button
+                        onClick={() => {
+                          const pct = Math.max(-15, Math.min(25, ((segmentFloor / contractedPrice) - 1) * 100))
+                          setPriceAdjustPct(parseFloat(pct.toFixed(1)))
+                          setDiPriceInputStr(segmentFloor.toFixed(2))
+                        }}
+                        className="text-[9px] px-1.5 py-0.5 rounded border border-zone-red/40 text-zone-red hover:bg-zone-red/10 transition-colors"
+                      >
+                        Floor
+                      </button>
+                    )}
+                    {segmentTarget && (
+                      <button
+                        onClick={() => {
+                          const pct = Math.max(-15, Math.min(25, ((segmentTarget / contractedPrice) - 1) * 100))
+                          setPriceAdjustPct(parseFloat(pct.toFixed(1)))
+                          setDiPriceInputStr(segmentTarget.toFixed(2))
+                        }}
+                        className="text-[9px] px-1.5 py-0.5 rounded border border-zone-green/40 text-zone-green hover:bg-zone-green/10 transition-colors"
+                      >
+                        Target
+                      </button>
+                    )}
+                    <button
+                      onClick={() => {
+                        const pct = Math.max(-15, Math.min(25, ((winLossData.optimalPrice / contractedPrice) - 1) * 100))
+                        setPriceAdjustPct(parseFloat(pct.toFixed(1)))
+                        setDiPriceInputStr(winLossData.optimalPrice.toFixed(2))
+                      }}
+                      className="text-[9px] px-1.5 py-0.5 rounded border border-pwc-orange/40 text-pwc-orange hover:bg-pwc-orange/10 transition-colors"
+                    >
+                      Optimal
+                    </button>
+                    <div className="ml-auto flex items-center gap-1">
+                      <span className="text-[9px] text-text-muted">Win rate:</span>
+                      <span className={`text-sm font-bold ${
+                        winZone === 'green' ? 'text-zone-green' :
+                        winZone === 'amber' ? 'text-zone-amber' :
+                        'text-zone-red'
+                      }`}>{winRateAtCurrent}%</span>
+                      {hasAdjustment && (
+                        <span className={`text-[9px] font-medium ${
+                          winRateAtCurrent > winRateAtContracted ? 'text-zone-green' :
+                          winRateAtCurrent < winRateAtContracted ? 'text-zone-red' :
+                          'text-text-muted'
+                        }`}>
+                          ({winRateAtCurrent > winRateAtContracted ? '+' : ''}{winRateAtCurrent - winRateAtContracted}pp)
+                        </span>
+                      )}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* SECTION 1 — Win Probability */}
+            {/* SECTION 1 - Win Probability */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Win Probability Analysis</span>
+                <span className="text-xs font-semibold text-text-secondary">Win probability analysis</span>
                 <div className="h-px flex-1 bg-border-default" />
               </div>
               <div className="flex gap-6" style={{ minHeight: 320 }}>
                 {/* Chart card (65%) */}
                 <div className="card flex-1 p-4" style={{ flexBasis: '65%' }}>
                   <h2 className="text-sm font-semibold text-text-primary mb-3">
-                    Win Probability — {products.find(p => p.id === productId)?.name ?? productId}
+                    Win Probability: {products.find(p => p.id === productId)?.name ?? productId}
                   </h2>
                   <div style={{ height: '280px' }}>
-                    <WinProbabilityCurve data={winLossData} currentPrice={currentPrice} quotedPrice={quotedPrice} />
+                    <WinProbabilityCurve data={winLossData} currentPrice={currentPrice} contractedPrice={contractedPrice} />
                   </div>
-                  <WinLossLegend optimalPrice={winLossData.optimalPrice} currentPrice={currentPrice} quotedPrice={quotedPrice} />
+                  <WinLossLegend optimalPrice={winLossData.optimalPrice} currentPrice={currentPrice} contractedPrice={contractedPrice} />
                 </div>
 
                 {/* Insight panel (35%) */}
-                <div className="card p-5 flex flex-col gap-4" style={{ flexBasis: '35%' }}>
-                  <h2 className="text-sm font-semibold text-text-primary">Price Intelligence</h2>
+                <div className="card p-5 flex flex-col" style={{ flexBasis: '35%' }}>
+                  <h2 className="text-sm font-semibold text-text-primary pb-3 mb-3 border-b border-border-default">Price Intelligence</h2>
 
-                  <div>
-                    <p className="text-xs text-text-muted mb-0.5">Optimal Price</p>
-                    <p className="text-xl font-bold text-zone-green">€{winLossData.optimalPrice.toFixed(2)}/kg</p>
-                    <p className="text-[10px] text-zone-green font-medium mt-0.5">{winRateAtOptimal}% win rate</p>
-                    <p className="text-[10px] text-text-muted mt-0.5 leading-relaxed">
-                      Highest price before win rate drops below the safe zone (≥65%)
-                    </p>
-                  </div>
-
-                  <div>
-                    <p className="text-xs text-text-muted mb-0.5">Gap to Optimal</p>
-                    <p className={`text-lg font-semibold ${gapToOptimal > 0 ? 'text-zone-amber' : 'text-zone-green'}`}>
-                      {gapToOptimal > 0 ? '+' : ''}€{gapToOptimal.toFixed(2)}/kg
-                    </p>
-                    <p className="text-xs text-text-muted mt-0.5">
-                      {gapToOptimal > 0 ? 'Current price below optimal — margin upside available' : 'Current price at or above optimal'}
-                    </p>
-                  </div>
-
-                  {(segmentFloor || segmentTarget) && (
+                  {/* Optimal + Gap */}
+                  <div className="grid grid-cols-2 gap-3 pb-3 mb-3 border-b border-border-default">
                     <div>
-                      <p className="text-xs text-text-muted mb-1">Segment Thresholds</p>
+                      <p className="text-[10px] text-text-muted font-medium mb-0.5">Optimal Price</p>
+                      <p className="text-lg font-bold text-zone-green">€{winLossData.optimalPrice.toFixed(2)}/kg</p>
+                      <p className="text-[10px] text-zone-green font-medium mt-0.5">{winRateAtOptimal}% win rate</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-text-muted font-medium mb-0.5">Gap to Optimal</p>
+                      <p className={`text-lg font-semibold ${gapToOptimal > 0 ? 'text-zone-amber' : 'text-zone-green'}`}>
+                        {gapToOptimal > 0 ? '+' : ''}€{gapToOptimal.toFixed(2)}/kg
+                      </p>
+                      <p className="text-[10px] text-text-muted mt-0.5">
+                        {gapToOptimal > 0 ? 'Margin upside available' : 'At or above optimal'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Segment thresholds */}
+                  {(segmentFloor || segmentTarget) && (
+                    <div className="pb-3 mb-3 border-b border-border-default">
+                      <p className="text-[10px] text-text-muted font-medium mb-2">Segment Thresholds</p>
                       {segmentFloor && (
-                        <div className="flex justify-between items-center text-[10px] mb-0.5">
+                        <div className="flex justify-between items-center text-[10px] mb-1">
                           <span className="text-text-muted">Floor</span>
                           <span className="font-semibold text-zone-red">€{segmentFloor.toFixed(2)}/kg</span>
                         </div>
@@ -278,53 +368,50 @@ function DealIntelligenceContent() {
                           <span className="font-semibold text-zone-amber">€{segmentTarget.toFixed(2)}/kg</span>
                         </div>
                       )}
-                      {segmentTarget && (
-                        <p className="text-[10px] text-text-muted mt-0.5 leading-relaxed">
-                          Above target = cliff risk for {account?.segment ?? 'this segment'}
-                        </p>
-                      )}
                     </div>
                   )}
 
-                  <div>
-                    <p className="text-xs text-text-muted mb-0.5">Cliff Zone</p>
-                    <p className="text-sm font-semibold text-zone-red">€{winLossData.cliffMin.toFixed(2)} – €{winLossData.cliffMax.toFixed(2)}/kg</p>
-                    <p className="text-xs text-text-muted mt-0.5">
-                      Win rate drops from ~54% → 28% above this range
-                    </p>
+                  {/* Cliff zone + current status */}
+                  <div className="grid grid-cols-2 gap-3 pb-3 mb-3 border-b border-border-default">
+                    <div>
+                      <p className="text-[10px] text-text-muted font-medium mb-0.5">Cliff Zone</p>
+                      <p className="text-sm font-semibold text-zone-red">€{winLossData.cliffMin.toFixed(2)} – €{winLossData.cliffMax.toFixed(2)}</p>
+                      <p className="text-[9px] text-text-muted mt-0.5">Win rate drops ~54% → 28%</p>
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-text-muted font-medium mb-0.5">{hasAdjustment ? 'Simulated' : 'Current'} Price</p>
+                      <p className={`text-sm font-bold ${
+                        winZone === 'green' ? 'text-zone-green' :
+                        winZone === 'amber' ? 'text-zone-amber' :
+                        'text-zone-red'
+                      }`}>{winRateAtCurrent}% win rate</p>
+                      <p className="text-[9px] text-text-muted mt-0.5">at €{currentPrice.toFixed(2)}/kg</p>
+                      <p className={`text-[9px] font-medium mt-0.5 ${
+                        winZone === 'green' ? 'text-zone-green' :
+                        winZone === 'amber' ? 'text-zone-amber' :
+                        'text-zone-red'
+                      }`}>{winZoneLabel}</p>
+                    </div>
                   </div>
 
-                  <div>
-                    <p className="text-xs text-text-muted mb-0.5">Win Rate — Contracted Price</p>
-                    <p className={`text-xl font-bold ${
-                      winZone === 'green' ? 'text-zone-green' :
-                      winZone === 'amber' ? 'text-zone-amber' :
-                      'text-zone-red'
-                    }`}>{winRateAtCurrent}%</p>
-                    <p className="text-xs text-text-muted mt-0.5">at €{currentPrice.toFixed(2)}/kg</p>
-                    <p className={`text-xs font-medium mt-1 ${
-                      winZone === 'green' ? 'text-zone-green' :
-                      winZone === 'amber' ? 'text-zone-amber' :
-                      'text-zone-red'
-                    }`}>{winZoneLabel}</p>
-                  </div>
-
-                  {quotedPrice && quotedPrice !== currentPrice && winRateAtQuoted !== undefined && (
-                    <div className="border border-blue-200 bg-blue-50 rounded-lg px-3 py-2.5">
-                      <p className="text-xs text-blue-600 font-medium mb-0.5">Win Rate — CPQ Quoted Price</p>
-                      <p className={`text-xl font-bold ${
+                  {/* CPQ quoted price */}
+                  {quotedPrice && quotedPrice !== contractedPrice && winRateAtQuoted !== undefined && (
+                    <div className="border border-blue-200 bg-blue-50 rounded-lg px-3 py-2 mb-3">
+                      <p className="text-[10px] text-blue-600 font-medium mb-0.5">CPQ quoted price</p>
+                      <p className={`text-sm font-bold ${
                         quotedZone === 'green' ? 'text-zone-green' :
                         quotedZone === 'amber' ? 'text-zone-amber' :
                         'text-zone-red'
-                      }`}>{winRateAtQuoted}%</p>
-                      <p className="text-xs text-blue-500 mt-0.5">at €{quotedPrice.toFixed(2)}/kg</p>
+                      }`}>{winRateAtQuoted}% win rate</p>
+                      <p className="text-[9px] text-blue-500 mt-0.5">at €{quotedPrice.toFixed(2)}/kg</p>
                     </div>
                   )}
 
-                  <div className="text-xs text-text-muted leading-relaxed">
-                    Based on {winLossData.historicalQuotes.length} historical quotes.{' '}
+                  {/* Data basis footer */}
+                  <div className="text-[9px] text-text-muted leading-relaxed bg-page-bg rounded px-3 py-2 mt-auto">
+                    {winLossData.historicalQuotes.length} historical quotes:{' '}
                     <span className="text-zone-green font-medium">{wonCount} won</span>,{' '}
-                    <span className="text-zone-red font-medium">{lostCount} lost</span>.
+                    <span className="text-zone-red font-medium">{lostCount} lost</span>
                   </div>
                 </div>
               </div>
@@ -333,21 +420,21 @@ function DealIntelligenceContent() {
             {/* DIVIDER */}
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-border-default" />
-              <span className="text-xs font-semibold text-pwc-orange uppercase tracking-wide px-2">Deal Closability</span>
+              <span className="text-xs font-semibold text-pwc-orange px-2">Deal closability</span>
               <div className="h-px flex-1 bg-border-default" />
             </div>
 
-            {/* SECTION 2 — Account Quality */}
+            {/* SECTION 2 - Account Quality */}
             <div>
               <div className="flex items-center gap-3 mb-3">
-                <span className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Account Quality</span>
+                <span className="text-xs font-semibold text-text-secondary">Account quality</span>
                 <div className="h-px flex-1 bg-border-default" />
               </div>
               <div className="flex gap-6">
                 {/* Left: composite score + dimension bars (45%) */}
                 <div className="flex flex-col gap-4" style={{ flexBasis: '45%' }}>
                   <div className="card p-5">
-                    <p className="text-xs text-text-muted mb-1">Account Quality Score</p>
+                    <p className="text-xs text-text-muted mb-1">Account quality score</p>
                     <div className="flex items-baseline gap-2">
                       <span className={`text-5xl font-bold ${
                         eorZone === 'green' ? 'text-zone-green' :
@@ -361,7 +448,7 @@ function DealIntelligenceContent() {
                       eorZone === 'amber' ? 'bg-zone-amber-bg text-zone-amber' :
                       'bg-zone-red-bg text-zone-red'
                     }`}>
-                      {eorCompositeScore >= 7 ? 'High Quality' : eorCompositeScore >= 5 ? 'Medium Quality' : 'Low Quality'}
+                      {eorCompositeScore >= 7 ? 'High quality' : eorCompositeScore >= 5 ? 'Medium quality' : 'Low quality'}
                     </span>
                     <p className="text-xs text-text-muted mt-2">
                       {accounts.find(a => a.id === accountId)?.name ?? accountId}
@@ -375,7 +462,7 @@ function DealIntelligenceContent() {
                   )}
 
                   <div className="card p-4">
-                    <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wide mb-4">Dimension Breakdown</h3>
+                    <h3 className="text-xs font-semibold text-text-secondary mb-4">Dimension breakdown</h3>
                     <EoRDimensions dimensions={eorData.dimensions} />
                   </div>
                 </div>
@@ -383,7 +470,7 @@ function DealIntelligenceContent() {
                 {/* Right: sortable account comparison table (55%) */}
                 <div className="card p-4 overflow-y-auto" style={{ flexBasis: '55%' }}>
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-xs font-semibold text-text-secondary uppercase tracking-wide">Account Comparison</h3>
+                    <h3 className="text-xs font-semibold text-text-secondary">Account comparison</h3>
                     <button
                       onClick={() => setSortAsc(v => !v)}
                       className="flex items-center gap-1 text-xs text-text-muted hover:text-text-primary"

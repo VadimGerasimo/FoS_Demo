@@ -18,7 +18,7 @@ export function EoRSignal({ accountId }: EoRSignalProps) {
   return (
     <div className="card px-4 py-3 flex items-center gap-4">
       <div className="shrink-0">
-        <p className="text-[10px] font-semibold text-text-secondary uppercase tracking-wide mb-0.5">Account Quality</p>
+        <p className="text-[10px] font-semibold text-text-secondary mb-0.5">Account quality</p>
         <div className="flex items-baseline gap-1">
           <span className={`text-3xl font-bold leading-none ${
             zone === 'green' ? 'text-zone-green' :

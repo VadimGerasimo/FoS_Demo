@@ -167,7 +167,7 @@ export default function SegmentationPage() {
             <div className="card flex-1 p-4 min-h-0">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-semibold text-text-primary">
-                  Segment Position — {products.find(p => p.id === productId)?.name ?? 'All Products'}
+                  Segment Position: {products.find(p => p.id === productId)?.name ?? 'All Products'}
                 </h2>
                 <div className="flex items-center gap-4 text-xs text-text-muted">
                   <span className="flex items-center gap-1.5"><span className="inline-block w-2 h-2 rounded-full bg-zone-red" />Below floor</span>

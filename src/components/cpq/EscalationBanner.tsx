@@ -16,21 +16,21 @@ const ESCALATION_CONFIG = {
     icon: AlertTriangle,
     bg: 'bg-zone-amber-bg border-zone-amber/30',
     text: 'text-zone-amber',
-    title: 'Manager awareness required',
-    message: 'Net price is below segment target — manager should be informed before submission.',
+    title: 'Manager will be notified',
+    message: 'Net price is between floor and target. The manager will be notified, but the deal can proceed.',
   },
   manager: {
     icon: Clock,
     bg: 'bg-orange-50 border-orange-200',
     text: 'text-orange-600',
-    title: 'Manager approval required — price below floor',
+    title: 'Manager approval required: price below floor',
     message: 'Net price has breached the segment floor. Formal manager sign-off required.',
   },
   director: {
     icon: ShieldAlert,
     bg: 'bg-zone-red-bg border-zone-red/30',
     text: 'text-zone-red',
-    title: 'Director sign-off required — critical margin breach',
+    title: 'Director sign-off required: critical margin breach',
     message: 'Net price is more than 5% below segment floor. Deal is on hold pending director approval.',
   },
 }
@@ -65,7 +65,7 @@ export function EscalationBanner({ level, discountPct: _discountPct }: Escalatio
         <p className={`text-sm font-semibold ${cfg.text}`}>{cfg.title}</p>
         <p className="text-xs text-text-secondary mt-0.5">
           {level === 'manager' && sending ? 'Sending approval request...' :
-           level === 'manager' && managerSent ? '✓ Request sent to manager — awaiting approval' :
+           level === 'manager' && managerSent ? '✓ Request sent to manager. Awaiting approval' :
            cfg.message}
         </p>
       </div>
