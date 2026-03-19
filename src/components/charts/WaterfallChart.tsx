@@ -208,7 +208,6 @@ export function WaterfallChart({ data }: WaterfallChartProps) {
             position="top"
             offset={4}
             content={(props) => {
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               const { x = 0, y = 0, width = 0, value = 0, index = 0 } = props as any
               const d = chartData[index]
               if (!d) return null
