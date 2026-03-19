@@ -14,6 +14,11 @@ import {
   useYAxisScale,
 } from 'recharts'
 import type { SegmentationPoint } from '@/lib/data'
+import { products as allProducts } from '@/lib/data'
+
+function productName(productId: string): string {
+  return allProducts.find(p => p.id === productId)?.name ?? productId
+}
 
 interface ProspectPoint {
   volume: number
@@ -47,7 +52,9 @@ interface CustomDotProps {
 function CustomDot({ cx = 0, cy = 0, payload, activeAccountId, floorPrice, targetPrice }: CustomDotProps) {
   if (!payload) return null
   const isActive = payload.accountId === activeAccountId
-  const liveZone = payload.price < floorPrice ? 'red' : payload.price < targetPrice ? 'amber' : 'green'
+  const floorAtVol = priceCurve(floorPrice, [payload.volume])[0].price
+  const targetAtVol = priceCurve(targetPrice, [payload.volume])[0].price
+  const liveZone = payload.price < floorAtVol ? 'red' : payload.price < targetAtVol ? 'amber' : 'green'
   const fill = ZONE_FILL[liveZone] ?? '#6d6e71'
   const r = isActive ? 9 : 6
   return (
@@ -61,14 +68,43 @@ function CustomDot({ cx = 0, cy = 0, payload, activeAccountId, floorPrice, targe
         strokeWidth={isActive ? 2.5 : 0}
         opacity={isActive ? 1 : 0.65}
       />
-      {isActive && (
-        <g>
-          <line x1={cx + r + 2} y1={cy} x2={cx + 20} y2={cy - 10} stroke={fill} strokeWidth={1} />
-          <text x={cx + 22} y={cy - 12} fontSize={11} fontWeight={600} fill={fill}>
-            {payload.accountName}
-          </text>
-        </g>
-      )}
+      {isActive && (() => {
+        const label1 = payload.accountName
+        const label2 = productName(payload.productId)
+        const padX = 10
+        const padY = 5
+        const lineH = 14
+        const gap = 2
+        const charW = 6.2
+        const textW = Math.max(label1.length, label2.length) * charW
+        const boxW = textW + padX * 2
+        const boxH = lineH * 2 + gap + padY * 2
+        const offsetY = 16
+        const labelX = cx - boxW / 2
+        const labelY = cy - r - offsetY - boxH
+        const arrowTipY = cy - r - 4
+        const arrowBaseY = labelY + boxH
+        return (
+          <g>
+            {/* Connector arrow */}
+            <line x1={cx} y1={arrowTipY} x2={cx} y2={arrowBaseY} stroke={fill} strokeWidth={1} opacity={0.5} />
+            {/* Drop shadow */}
+            <rect x={labelX + 1} y={labelY + 1} width={boxW} height={boxH} rx={6} fill="#000" opacity={0.08} />
+            {/* Background pill */}
+            <rect x={labelX} y={labelY} width={boxW} height={boxH} rx={6} fill="white" stroke={fill} strokeWidth={1.25} />
+            {/* Accent bar */}
+            <rect x={labelX} y={labelY} width={3.5} height={boxH} rx={2} fill={fill} />
+            {/* Account name */}
+            <text x={labelX + padX + 2} y={labelY + padY + lineH - 2} fontSize={11} fontWeight={700} fill="#2d2d2d">
+              {label1}
+            </text>
+            {/* Product name */}
+            <text x={labelX + padX + 2} y={labelY + padY + lineH + gap + lineH - 2} fontSize={10} fontWeight={500} fill={fill}>
+              {label2}
+            </text>
+          </g>
+        )
+      })()}
     </g>
   )
 }
@@ -84,6 +120,7 @@ function makeTooltip(floorPrice: number, targetPrice: number) {
     return (
       <div className="bg-white border border-border-default rounded-lg shadow-md px-3 py-2.5 text-xs">
         <p className="font-semibold text-text-primary mb-1">{d.accountName}</p>
+        <p className="text-text-secondary">Product: <span className="font-medium text-text-primary">{productName(d.productId)}</span></p>
         <p className="text-text-secondary">Price: <span className="font-medium text-text-primary">€{d.price.toFixed(2)}/kg</span></p>
         <p className="text-text-secondary">Volume: <span className="font-medium text-text-primary">{d.volume.toLocaleString()} kg/mo</span></p>
         <p className="text-text-secondary">Segment: <span className="font-medium text-text-primary">{d.segment}</span></p>
@@ -99,8 +136,9 @@ function makeTooltip(floorPrice: number, targetPrice: number) {
   }
 }
 
-const CURVE_VOLUMES = [150, 250, 400, 700, 1200, 5000, 15000, 50000]
-const FLATTEN_AT = 5000
+const ALL_X_TICKS = [150, 250, 400, 700, 1200, 1500, 2000, 5000, 10000, 20000, 50000]
+const CURVE_VOLUMES = [150, 250, 400, 700, 1200, 1500, 5000, 15000, 50000]
+const FLATTEN_AT = 700
 
 function priceCurve(base: number, volumes: number[]): { volume: number; price: number }[] {
   return volumes.map(v => ({ volume: v, price: parseFloat((base * Math.pow(Math.min(v, FLATTEN_AT) / 320, -0.04)).toFixed(3)) }))
@@ -112,9 +150,10 @@ interface ChartOverlayProps {
   floorPrice: number
   targetPrice: number
   hoveredPoint: SegmentationPoint | null
+  xLabelVol: number
 }
 
-function ChartOverlay({ floorCurve, targetCurve, floorPrice, targetPrice, hoveredPoint }: ChartOverlayProps) {
+function ChartOverlay({ floorCurve, targetCurve, floorPrice, targetPrice, hoveredPoint, xLabelVol }: ChartOverlayProps) {
   const xScale = useXAxisScale()
   const yScale = useYAxisScale()
   if (!xScale || !yScale) return null
@@ -122,10 +161,10 @@ function ChartOverlay({ floorCurve, targetCurve, floorPrice, targetPrice, hovere
   const topPoints = targetCurve.map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
   const bottomPoints = [...floorCurve].reverse().map(p => `${xScale(p.volume)},${yScale(p.price)}`).join(' ')
 
-  // Labels anchored at the start of the flat zone
-  const labelX = xScale(5000) ?? 0
-  const floorLabelY = yScale(priceCurve(floorPrice, [5000])[0].price) ?? 0
-  const targetLabelY = yScale(priceCurve(targetPrice, [5000])[0].price) ?? 0
+  // Labels anchored at the label volume (within visible domain)
+  const labelX = xScale(xLabelVol) ?? 0
+  const floorLabelY = yScale(priceCurve(floorPrice, [xLabelVol])[0].price) ?? 0
+  const targetLabelY = yScale(priceCurve(targetPrice, [xLabelVol])[0].price) ?? 0
 
   let connector = null
   if (hoveredPoint) {
@@ -165,8 +204,20 @@ export function SegmentationScatter({
   const yMin = parseFloat((Math.min(floorPrice * 0.87, ...points.map(p => p.price)) - 0.1).toFixed(2))
   const yMax = parseFloat((Math.max(targetPrice * 1.12, ...points.map(p => p.price)) + 0.1).toFixed(2))
 
-  const floorCurve = priceCurve(floorPrice, CURVE_VOLUMES)
-  const targetCurve = priceCurve(targetPrice, CURVE_VOLUMES)
+  // Dynamic x-axis: one tick below min volume, one tick above max volume
+  const volMin = points.length ? Math.min(...points.map(p => p.volume)) : 150
+  const volMax = points.length ? Math.max(...points.map(p => p.volume)) : 50000
+  const xMinIdx = Math.max(0, ALL_X_TICKS.findIndex(t => t > volMin * 0.8) - 1)
+  const rawMaxIdx = ALL_X_TICKS.findIndex(t => t >= Math.max(volMax * 1.3, 1500))
+  const xMaxIdx = rawMaxIdx === -1 ? ALL_X_TICKS.length - 1 : rawMaxIdx
+  const xMin = ALL_X_TICKS[xMinIdx]
+  const xMax = ALL_X_TICKS[xMaxIdx]
+  const visibleTicks = ALL_X_TICKS.slice(xMinIdx, xMaxIdx + 1)
+  const xLabelVol = visibleTicks[Math.max(0, visibleTicks.length - 2)]
+
+  const visibleCurveVols = CURVE_VOLUMES.filter(v => v >= xMin && v <= xMax)
+  const floorCurve = priceCurve(floorPrice, visibleCurveVols)
+  const targetCurve = priceCurve(targetPrice, visibleCurveVols)
 
   return (
     <ResponsiveContainer width="100%" height="100%">
@@ -176,8 +227,8 @@ export function SegmentationScatter({
           dataKey="volume"
           name="Volume"
           scale="log"
-          domain={[150, 50000]}
-          ticks={[150, 250, 400, 700, 2000, 10000, 50000]}
+          domain={[xMin, xMax]}
+          ticks={visibleTicks}
           allowDataOverflow={false}
           tickFormatter={(v) => v >= 1000 ? `${v / 1000}k` : String(v)}
           tick={{ fontSize: 11, fill: '#939598' }}
@@ -230,6 +281,7 @@ export function SegmentationScatter({
           floorPrice={floorPrice}
           targetPrice={targetPrice}
           hoveredPoint={hoveredPoint}
+          xLabelVol={xLabelVol}
         />
 
         {/* Hover markers — dots on floor/target curves (adding this Scatter triggers recharts to re-render Customized) */}

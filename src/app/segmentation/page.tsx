@@ -43,6 +43,9 @@ export default function SegmentationPage() {
   const points = activeAccount
     ? allPoints.filter(p => p.segment === activeAccount.segment)
     : allPoints
+  // Use the per-product price from segmentation data (accounts.json only stores the primary price)
+  const activeSegPoint = activeAccount ? allPoints.find(p => p.accountId === activeAccountId) : null
+  const activePrice = activeSegPoint?.price ?? activeAccount?.price ?? 0
 
   return (
     <div className="flex flex-col h-full">
@@ -89,16 +92,16 @@ export default function SegmentationPage() {
           <>
             {/* Stats row */}
             {activeAccount && (() => {
-              const vsFloorZone = activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green'
+              const vsFloorZone = activePrice < floorPrice ? 'red' : activePrice < targetPrice ? 'amber' : 'green'
               const sortedByPrice = [...points].sort((a, b) => a.price - b.price)
-              const accountRankIdx = sortedByPrice.findIndex(p => Math.abs(p.price - activeAccount.price) < 0.001)
+              const accountRankIdx = sortedByPrice.findIndex(p => Math.abs(p.price - activePrice) < 0.001)
               const accountPercentile = accountRankIdx >= 0
                 ? Math.round(((accountRankIdx + 1) / sortedByPrice.length) * 100)
                 : null
               const KPI_CONFIG = [
                 {
                   label: 'Current price',
-                  value: `€${activeAccount.price.toFixed(2)}/kg`,
+                  value: `€${activePrice.toFixed(2)}/kg`,
                   borderColor: 'border-l-blue-500',
                 },
                 {
@@ -113,10 +116,10 @@ export default function SegmentationPage() {
                 },
                 {
                   label: 'vs Floor',
-                  value: `${((activeAccount.price - floorPrice) / floorPrice * 100).toFixed(1)}%`,
+                  value: `${((activePrice - floorPrice) / floorPrice * 100).toFixed(1)}%`,
                   zone: vsFloorZone,
-                  borderColor: activeAccount.price < floorPrice ? 'border-l-zone-red' : 'border-l-zone-amber',
-                  dominant: activeAccount.price < floorPrice,
+                  borderColor: activePrice < floorPrice ? 'border-l-zone-red' : 'border-l-zone-amber',
+                  dominant: activePrice < floorPrice,
                 },
                 {
                   label: 'Segment rank',
@@ -191,14 +194,14 @@ export default function SegmentationPage() {
       {(() => {
         const keyMetrics = {
           accountName: activeAccount?.name,
-          currentPrice: activeAccount?.price,
+          currentPrice: activeAccount ? activePrice : undefined,
           floorPrice,
           targetPrice,
-          vsFloor: activeAccount ? ((activeAccount.price - floorPrice) / floorPrice * 100).toFixed(1) : null,
-          upliftToFloor: activeAccount && activeAccount.price < floorPrice
-            ? ((floorPrice - activeAccount.price) / activeAccount.price * 100).toFixed(1)
+          vsFloor: activeAccount ? ((activePrice - floorPrice) / floorPrice * 100).toFixed(1) : null,
+          upliftToFloor: activeAccount && activePrice < floorPrice
+            ? ((floorPrice - activePrice) / activePrice * 100).toFixed(1)
             : null,
-          zone: activeAccount ? (activeAccount.price < floorPrice ? 'red' : activeAccount.price < targetPrice ? 'amber' : 'green') : null,
+          zone: activeAccount ? (activePrice < floorPrice ? 'red' : activePrice < targetPrice ? 'amber' : 'green') : null,
         }
         const accountName = accounts.find(a => a.id === activeAccountId)?.name ?? null
         const productName = products.find(p => p.id === activeProductId)?.name ?? null

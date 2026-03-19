@@ -5,6 +5,11 @@ import { accounts as allAccounts, getSegmentationForProduct, getFloor, getTarget
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
 
+const FLATTEN_AT = 700
+function adjustedPrice(base: number, volume: number): number {
+  return base * Math.pow(Math.min(volume, FLATTEN_AT) / 320, -0.04)
+}
+
 interface ComparisonPanelProps {
   productId: string | null
 }
@@ -13,17 +18,20 @@ export function ComparisonPanel({ productId }: ComparisonPanelProps) {
   const [leftAccountId, setLeftAccountId] = useState<string>('baker-klaas')
   const [rightAccountId, setRightAccountId] = useState<string>('schoko-retail')
 
-  const points = productId ? getSegmentationForProduct(productId) : getSegmentationForProduct('milk-couverture')
+  const allPoints = productId ? getSegmentationForProduct(productId) : getSegmentationForProduct('milk-couverture')
 
   const leftAccount = allAccounts.find(a => a.id === leftAccountId)
   const rightAccount = allAccounts.find(a => a.id === rightAccountId)
 
+  const leftPoints = leftAccount ? allPoints.filter(p => p.segment === leftAccount.segment) : allPoints
+  const rightPoints = rightAccount ? allPoints.filter(p => p.segment === rightAccount.segment) : allPoints
+
   return (
     <div className="flex gap-4 flex-1 min-h-0">
       {[
-        { accountId: leftAccountId, setAccountId: setLeftAccountId, account: leftAccount },
-        { accountId: rightAccountId, setAccountId: setRightAccountId, account: rightAccount },
-      ].map(({ accountId, setAccountId, account }, i) => (
+        { accountId: leftAccountId, setAccountId: setLeftAccountId, account: leftAccount, points: leftPoints },
+        { accountId: rightAccountId, setAccountId: setRightAccountId, account: rightAccount, points: rightPoints },
+      ].map(({ accountId, setAccountId, account, points }, i) => (
         <div key={i} className="card flex-1 flex flex-col p-4 min-h-0">
           <div className="flex items-center gap-2 mb-3">
             <div className="relative">
@@ -53,15 +61,21 @@ export function ComparisonPanel({ productId }: ComparisonPanelProps) {
               isAnimationActive={false}
             />
           </div>
-          {account && (
-            <div className="mt-2 flex gap-4 text-xs text-text-muted border-t border-border-default pt-2">
-              <span>Price: <strong className="text-text-primary">€{account.price.toFixed(2)}/kg</strong></span>
-              <span>Vol: <strong className="text-text-primary">{account.volume.toLocaleString()} kg/mo</strong></span>
-              <span className={`font-semibold ${account.price < getFloor(account, productId ?? 'milk-couverture') ? 'text-zone-red' : account.price < getTarget(account, productId ?? 'milk-couverture') ? 'text-zone-amber' : 'text-zone-green'}`}>
-                {account.price < getFloor(account, productId ?? 'milk-couverture') ? 'Below floor' : account.price < getTarget(account, productId ?? 'milk-couverture') ? 'In-band' : 'Above target'}
-              </span>
-            </div>
-          )}
+          {account && (() => {
+            const pid = productId ?? 'milk-couverture'
+            const floorAdj = adjustedPrice(getFloor(account, pid), account.volume)
+            const targetAdj = adjustedPrice(getTarget(account, pid), account.volume)
+            const zone = account.price < floorAdj ? 'red' : account.price < targetAdj ? 'amber' : 'green'
+            return (
+              <div className="mt-2 flex gap-4 text-xs text-text-muted border-t border-border-default pt-2">
+                <span>Price: <strong className="text-text-primary">€{account.price.toFixed(2)}/kg</strong></span>
+                <span>Vol: <strong className="text-text-primary">{account.volume.toLocaleString()} kg/mo</strong></span>
+                <span className={`font-semibold ${zone === 'red' ? 'text-zone-red' : zone === 'amber' ? 'text-zone-amber' : 'text-zone-green'}`}>
+                  {zone === 'red' ? 'Below floor' : zone === 'amber' ? 'In-band' : 'Above target'}
+                </span>
+              </div>
+            )
+          })()}
         </div>
       ))}
     </div>

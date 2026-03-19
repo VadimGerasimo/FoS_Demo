@@ -32,7 +32,7 @@
     "volume": 38000,
     "price": 3.55,
     "floors": {
-      "milk-couverture": 3.40,
+      "milk-couverture": 3.45,
       "white-couverture": 3.63,
       "dark-couverture": 3.17,
       "dark-compound": 2.70,
@@ -40,7 +40,7 @@
       "hazelnut-praline": 4.34
     },
     "targets": {
-      "milk-couverture": 4.10,
+      "milk-couverture": 3.75,
       "white-couverture": 4.38,
       "dark-couverture": 3.82,
       "dark-compound": 3.25,
@@ -195,7 +195,7 @@
       "dark-couverture": 4.38,
       "dark-compound": 3.73,
       "cocoa-powder": 2.59,
-      "hazelnut-praline": 5.99
+      "hazelnut-praline": 5.90
     },
     "region": "Germany"
   },
@@ -207,7 +207,7 @@
     "volume": 22000,
     "price": 3.70,
     "floors": {
-      "milk-couverture": 3.40,
+      "milk-couverture": 3.45,
       "white-couverture": 3.63,
       "dark-couverture": 3.17,
       "dark-compound": 2.70,
@@ -215,7 +215,7 @@
       "hazelnut-praline": 4.34
     },
     "targets": {
-      "milk-couverture": 4.10,
+      "milk-couverture": 3.75,
       "white-couverture": 4.38,
       "dark-couverture": 3.82,
       "dark-compound": 3.25,
