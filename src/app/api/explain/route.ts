@@ -91,7 +91,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json()
     screen = body.screen ?? ''
-    const { accountId, productId, keyMetrics } = body
+    const { accountId, productId, accountName, productName, keyMetrics } = body
 
     if (!process.env.OPENAI_API_KEY || process.env.OPENAI_API_KEY === 'your_key_here') {
       const fallback = FALLBACK_RESPONSES[screen] ?? DEFAULT_FALLBACK
@@ -100,7 +100,7 @@ export async function POST(req: Request) {
 
     const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
-    const systemPrompt = `You are a commercial pricing analyst assistant for Equazion, PwC's pricing intelligence platform. You are looking at the "${screen}" screen for account "${accountId ?? 'unknown'}" and product "${productId ?? 'unknown'}".
+    const systemPrompt = `You are a commercial pricing analyst assistant for Equazion, PwC's pricing intelligence platform. You are looking at the "${screen}" screen for account "${accountName ?? accountId ?? 'unknown'}" and product "${productName ?? productId ?? 'unknown'}".
 
 Current screen metrics: ${JSON.stringify(keyMetrics, null, 2)}
 
