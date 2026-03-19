@@ -10,15 +10,15 @@ interface DealContextPanelProps {
   targetPrice: number
   currentPrice: number
   tierDiscountPct: number
+  actualCOGS: number
 }
 
 export function DealContextPanel({
   accountName, segment, volume, lastQuotedPrice,
-  listPrice, floorPrice, targetPrice, currentPrice, tierDiscountPct,
+  listPrice, floorPrice, targetPrice, tierDiscountPct, actualCOGS,
 }: DealContextPanelProps) {
   const segmentPosition = lastQuotedPrice < floorPrice ? 'Below floor' : lastQuotedPrice < targetPrice ? 'In-band' : 'Above target'
   const posZone = lastQuotedPrice < floorPrice ? 'red' : lastQuotedPrice < targetPrice ? 'amber' : 'green'
-  const cogsApprox = currentPrice * 0.75
 
   return (
     <div className="card overflow-hidden text-xs flex divide-x divide-border-default">
@@ -37,7 +37,7 @@ export function DealContextPanel({
           { label: 'Contract tier', value: `Tier ${tierDiscountPct >= 10 ? '3' : tierDiscountPct >= 5 ? '2' : '1'}` },
           { label: 'Strategic flag', value: volume >= 1000 ? '★ Key Account' : 'Standard' },
           { label: 'List price', value: `€${listPrice.toFixed(2)}/kg` },
-          { label: 'CoGS (approx)', value: `€${cogsApprox.toFixed(2)}/kg` },
+          { label: 'CoGS', value: `€${actualCOGS.toFixed(2)}/kg` },
         ].map(({ label, value }) => (
           <div key={label}>
             <p className="text-[10px] text-text-muted uppercase tracking-wide">{label}</p>

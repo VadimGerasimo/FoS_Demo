@@ -35,14 +35,18 @@ export interface SegmentationPoint {
   zone: 'green' | 'amber' | 'red'
 }
 
+export type WaterfallSection = 'price' | 'cogs' | 'sga'
+
 export interface WaterfallItem {
   accountId: string
   productId: string
   layers: {
     name: string
-    value: number    // negative = deduction
+    value: number           // negative = deduction; 0 = subtotal marker
     cumulative: number
     isHighlighted?: boolean
+    isSubtotal?: boolean    // draws as ground-up solid bar (subtotal milestone)
+    section?: WaterfallSection
   }[]
 }
 

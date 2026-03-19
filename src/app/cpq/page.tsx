@@ -49,8 +49,15 @@ export default function CPQPage() {
   const listPrice = product?.listPrice ?? 5.80
   const tierDiscountPct = (quoteBase?.tierDiscount as number | undefined) ?? 5
   const thresholds = product?.escalationThresholds ?? { rep: 5, manager: 10, director: 15 }
-  const contractedDiscountLayers = (getWaterfallForAccount(accountId, productId)?.layers ?? [])
-    .filter(l => l.value < 0)
+  const waterfallData = getWaterfallForAccount(accountId, productId) ?? getWaterfallForAccount('baker-klaas', 'milk-couverture')!
+  const contractedDiscountLayers = (waterfallData?.layers ?? [])
+    .filter(l => l.value < 0 && l.section === 'price' && !l.isSubtotal)
+
+  // Derive actual COGS from waterfall — fixed manufacturing cost, aligned with Waterfall screen
+  const nnpLayer = waterfallData?.layers.find(l => l.name === 'Net-Net Price')
+  const gmLayer  = waterfallData?.layers.find(l => l.name === 'Gross Margin')
+  const waterfallNNP  = nnpLayer?.cumulative ?? listPrice
+  const actualCOGS    = waterfallNNP - (gmLayer?.cumulative ?? 0)
 
   const basePrice = (quoteBase?.currentPrice as number | undefined) ?? account?.price ?? listPrice * (1 - tierDiscountPct / 100)
   const netPrice = useMemo(
@@ -63,11 +70,11 @@ export default function CPQPage() {
 
   const escalationLevel = getEscalationLevel(netPrice, floorPrice, targetPrice)
 
-  const approxGrossMarginPct = useMemo(() => {
-    if (dealDiscountPct <= -5) return 14.1
-    if (dealDiscountPct >= 4) return 19.8
-    return parseFloat((18.3 + ((dealDiscountPct / 4) * (19.8 - 18.3))).toFixed(1))
-  }, [dealDiscountPct])
+  // GM% is dynamic: COGS is fixed from waterfall, price moves with slider
+  const grossMarginPct = useMemo(
+    () => netPrice > 0 ? Math.max(0, (netPrice - actualCOGS) / netPrice * 100) : 0,
+    [netPrice, actualCOGS]
+  )
 
   // Floating slider value label position: ((value - min) / range) * 100
   const sliderLabelLeft = ((dealDiscountPct - (-10)) / 30) * 100
@@ -95,6 +102,7 @@ export default function CPQPage() {
             targetPrice={targetPrice}
             currentPrice={netPrice}
             tierDiscountPct={tierDiscountPct}
+            actualCOGS={actualCOGS}
           />
         )}
 
@@ -261,7 +269,8 @@ export default function CPQPage() {
             basePrice={basePrice}
             dealDiscountPct={dealDiscountPct}
             netPrice={netPrice}
-            grossMarginPct={approxGrossMarginPct}
+            grossMarginPct={grossMarginPct}
+            actualCOGS={actualCOGS}
           />
         </div>
       </div>
@@ -279,7 +288,7 @@ export default function CPQPage() {
           escalationLevel,
           floorPrice,
           targetPrice,
-          grossMarginPct: approxGrossMarginPct,
+          grossMarginPct: grossMarginPct,
         }
         return (
           <>

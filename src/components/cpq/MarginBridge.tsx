@@ -6,13 +6,14 @@ interface MarginBridgeProps {
   dealDiscountPct: number
   netPrice: number
   grossMarginPct: number
+  actualCOGS: number
 }
 
 const MAX_H = 128
 
-export function MarginBridge({ listPrice, basePrice, dealDiscountPct, netPrice, grossMarginPct }: MarginBridgeProps) {
-  const costBasis  = netPrice * (1 - grossMarginPct / 100)
-  const gmValue    = netPrice - costBasis
+export function MarginBridge({ listPrice, basePrice, dealDiscountPct, netPrice, actualCOGS }: MarginBridgeProps) {
+  const costBasis  = actualCOGS
+  const gmValue    = Math.max(0, netPrice - actualCOGS)
 
   // Convert a price value to pixels within MAX_H, anchored to listPrice as 100%
   const px = (v: number) => Math.max(0, (v / listPrice) * MAX_H)
@@ -71,7 +72,7 @@ export function MarginBridge({ listPrice, basePrice, dealDiscountPct, netPrice, 
       barPx: Math.max(3, px(gmValue)),
       bottomPx: 0,
       color: 'bg-zone-green',
-      valueLabel: `${grossMarginPct.toFixed(1)}%`,
+      valueLabel: netPrice > 0 ? `${(gmValue / netPrice * 100).toFixed(1)}%` : '—',
     },
   ]
 

@@ -20,7 +20,7 @@ export function buildContextualPrompt(
       return `Summarise the deal intelligence for ${acct} on ${prod}. Win rate: ${keyMetrics.winRateAtCurrentPrice ?? '?'}% at current price. Account Quality Score: ${keyMetrics.eorCompositeScore ?? '?'}/10. Deal Score: ${keyMetrics.dealScore ?? '?'}. Provide a clear verdict on whether to proceed with this deal.`
 
     case 'waterfall':
-      return `Summarise the price waterfall for ${acct} on ${prod}. Identify the largest deduction layer and compare it to segment norms. Recommend the most impactful lever to improve net-net realization.`
+      return `Summarise the commercial margin waterfall for ${acct} on ${prod}. Key metrics: Net-Net €${keyMetrics.netNetPrice ?? '?'}/kg (${keyMetrics.priceRealization ?? '?'} price realisation), Gross Margin ${keyMetrics.grossMarginPct ?? '?'} (€${keyMetrics.grossMargin ?? '?'}/kg), Net Margin ${keyMetrics.netMarginPct ?? '?'} (€${keyMetrics.netMargin ?? '?'}/kg). Identify the largest deduction in each section (pricing, COGS, SG&A) and state whether the margin profile is healthy or concerning for this account/segment. Recommend the most impactful commercial lever.`
 
     case 'pvm':
       return `Summarise the Price-Volume-Mix bridge for ${acct}. Identify whether revenue growth is healthy (price and mix positive) or masking erosion (price or mix negative). Provide a commercial interpretation in 3 sentences.`

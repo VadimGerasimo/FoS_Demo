@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { accounts, products, getWaterfallForAccount } from '@/lib/data'
+import { accounts, products, getWaterfallForAccount, getAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { WaterfallChart } from '@/components/charts/WaterfallChart'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
@@ -29,19 +29,61 @@ export default function WaterfallPage() {
   const waterfallData =
     getWaterfallForAccount(accountId, productId) ??
     getWaterfallForAccount('baker-klaas', 'milk-couverture')!
-  const isFallback = !getWaterfallForAccount(accountId, productId) && accountId !== 'baker-klaas'
+  const isFallback = !getWaterfallForAccount(accountId, productId)
 
-  const listPrice = waterfallData.layers[0]?.cumulative ?? 0
-  const netNetPrice = waterfallData.layers[waterfallData.layers.length - 1]?.cumulative ?? 0
-  const totalDeduction = listPrice - netNetPrice
+  const layers = waterfallData.layers
+  const listPrice      = layers[0]?.cumulative ?? 0
+  const netNetLayer    = layers.find(l => l.name === 'Net-Net Price')
+  const grossMarginLayer = layers.find(l => l.name === 'Gross Margin')
+  const netMarginLayer = layers.find(l => l.name === 'Net Margin')
+
+  const netNetPrice    = netNetLayer?.cumulative ?? 0
+  const grossMargin    = grossMarginLayer?.cumulative ?? 0
+  const netMargin      = netMarginLayer?.cumulative ?? 0
+
+  const totalDeduction   = listPrice - netNetPrice
   const priceRealization = listPrice > 0 ? (netNetPrice / listPrice) * 100 : 0
-  const highlightedLayer = waterfallData.layers.find(l => l.isHighlighted)
+  const grossMarginPct   = netNetPrice > 0 ? (grossMargin / netNetPrice) * 100 : 0
+  const netMarginPct     = netNetPrice > 0 ? (netMargin / netNetPrice) * 100 : 0
 
-  const stats = [
-    { label: 'List Price', value: `€${listPrice.toFixed(2)}/kg` },
-    { label: 'Net-Net Price', value: `€${netNetPrice.toFixed(2)}/kg`, zone: 'red' as const },
-    { label: 'Total Deduction', value: `€${totalDeduction.toFixed(2)}/kg (−${((totalDeduction / listPrice) * 100).toFixed(1)}%)` },
+  const highlightedLayer = layers.find(l => l.isHighlighted)
+
+  const account = getAccount(accountId)
+  const volume = account?.volume ?? 0
+
+  // Revenue leakage: full annual cost of deductions from list
+  const revenueLeakage = volume * totalDeduction * 12
+  const formatLeakage = (v: number) => {
+    if (v >= 1_000_000) return `€${(v / 1_000_000).toFixed(1)}M / yr`
+    if (v >= 10_000)    return `€${Math.round(v / 1_000)}k / yr`
+    return `€${(v / 1_000).toFixed(1)}k / yr`
+  }
+
+  // Rebate intensity: rebate as % of net invoice price (post invoice-discount)
+  const invoiceDiscountLayer = layers.find(l => l.name === 'Invoice Discount')
+  const netInvoicePrice = listPrice + (invoiceDiscountLayer?.value ?? 0)
+  const rebateLayer = layers.find(l => l.name === 'Rebate')
+  const rebateIntensity = netInvoicePrice > 0 && rebateLayer
+    ? (Math.abs(rebateLayer.value) / netInvoicePrice) * 100
+    : 0
+
+  // Dynamic alert banner
+  const rebatePct = listPrice > 0 && rebateLayer ? (Math.abs(rebateLayer.value) / listPrice) * 100 : 0
+  const showRebateAlert = highlightedLayer != null
+
+  const pricingStats = [
+    { label: 'List Price',        value: `€${listPrice.toFixed(2)}/kg` },
+    { label: 'Net-Net Price',     value: `€${netNetPrice.toFixed(2)}/kg`,   zone: 'red' as const },
+    { label: 'Total Deduction',   value: `€${totalDeduction.toFixed(2)}/kg (−${((totalDeduction / listPrice) * 100).toFixed(1)}%)` },
     { label: 'Price Realisation', value: `${priceRealization.toFixed(1)}%`, zone: priceRealization >= 80 ? 'green' as const : priceRealization >= 70 ? 'amber' as const : 'red' as const },
+  ]
+
+  const marginStats = [
+    { label: 'Gross Margin %',      value: `${grossMarginPct.toFixed(1)}%`,  zone: 'blue' as const },
+    { label: 'Net Margin %',        value: `${netMarginPct.toFixed(1)}%`,    zone: netMarginPct >= 18 ? 'green' as const : netMarginPct >= 12 ? 'amber' as const : 'red' as const },
+    { label: 'Revenue Leakage',     value: revenueLeakage > 0 ? formatLeakage(revenueLeakage) : '—',
+      zone: revenueLeakage > 500_000 ? 'red' as const : revenueLeakage > 100_000 ? 'amber' as const : undefined },
+    { label: 'Rebate Intensity',    value: `${rebateIntensity.toFixed(1)}%`, zone: rebateIntensity > 15 ? 'red' as const : rebateIntensity > 8 ? 'amber' as const : 'green' as const },
   ]
 
   const keyMetrics = {
@@ -51,7 +93,19 @@ export default function WaterfallPage() {
     netNetPrice,
     totalDeduction,
     priceRealization: priceRealization.toFixed(1) + '%',
+    grossMargin,
+    grossMarginPct: grossMarginPct.toFixed(1) + '%',
+    netMargin,
+    netMarginPct: netMarginPct.toFixed(1) + '%',
     highlightedLayerName: highlightedLayer?.name ?? null,
+  }
+
+  const statZoneClass = (zone?: string) => {
+    if (zone === 'red')   return 'text-zone-red'
+    if (zone === 'amber') return 'text-zone-amber'
+    if (zone === 'green') return 'text-zone-green'
+    if (zone === 'blue')  return 'text-blue-700'
+    return 'text-text-primary'
   }
 
   return (
@@ -62,18 +116,24 @@ export default function WaterfallPage() {
         <div className="flex-1 p-6"><ChartSkeleton rows={1} height="h-56" /></div>
       ) : (
       <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 flex flex-col min-h-0">
-      <div className="flex-1 flex flex-col p-6 gap-4 min-h-0">
-        {/* Stats row */}
-        <div className="flex gap-4">
-          {stats.map(({ label, value, zone }) => (
+      <div className="flex-1 flex flex-col p-6 gap-3 min-h-0">
+
+        {/* Pricing stats row */}
+        <div className="flex gap-3">
+          {pricingStats.map(({ label, value, zone }) => (
             <div key={label} className="card px-4 py-3 flex-1">
               <p className="text-xs text-text-muted mb-0.5">{label}</p>
-              <p className={`text-lg font-semibold ${
-                zone === 'red' ? 'text-zone-red' :
-                zone === 'amber' ? 'text-zone-amber' :
-                zone === 'green' ? 'text-zone-green' :
-                'text-text-primary'
-              }`}>{value}</p>
+              <p className={`text-lg font-semibold ${statZoneClass(zone)}`}>{value}</p>
+            </div>
+          ))}
+        </div>
+
+        {/* Margin stats row */}
+        <div className="flex gap-3">
+          {marginStats.map(({ label, value, zone }) => (
+            <div key={label} className="card px-4 py-3 flex-1">
+              <p className="text-xs text-text-muted mb-0.5">{label}</p>
+              <p className={`text-lg font-semibold ${statZoneClass(zone)}`}>{value}</p>
             </div>
           ))}
         </div>
@@ -81,7 +141,7 @@ export default function WaterfallPage() {
         {/* Chart card */}
         <div className="card flex-1 p-4 min-h-0">
           <h2 className="text-sm font-semibold text-text-primary mb-3">
-            Price Waterfall — {accounts.find(a => a.id === accountId)?.name ?? accountId} · {products.find(p => p.id === productId)?.name ?? productId}
+            Commercial Margin Waterfall — {accounts.find(a => a.id === accountId)?.name ?? accountId} · {products.find(p => p.id === productId)?.name ?? productId}
           </h2>
           <div style={{ height: 'calc(100% - 32px)' }}>
             <WaterfallChart data={waterfallData} />
@@ -95,11 +155,11 @@ export default function WaterfallPage() {
           </div>
         )}
 
-        {/* Highlighted layer banner */}
-        {highlightedLayer && (
+        {/* Dynamic alert banner */}
+        {showRebateAlert && (
           <div className="flex items-center gap-2 px-3 py-2 bg-zone-amber-bg border border-zone-amber/30 rounded-lg text-xs text-zone-amber">
             <AlertTriangle size={13} />
-            Rebate is 9.2% — 5.1pts above the Mid-Market Benelux norm of 4.1%
+            Rebate is {rebatePct.toFixed(1)}% of list price — {rebatePct > 8 ? `${(rebatePct - 4.1).toFixed(1)}pts above the Mid-Market Benelux norm of 4.1%` : 'within segment norms'}
           </div>
         )}
       </div>
