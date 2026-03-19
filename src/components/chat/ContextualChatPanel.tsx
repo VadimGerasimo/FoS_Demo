@@ -13,6 +13,7 @@ interface ContextualChatPanelProps {
   accountName: string | null
   productName: string | null
   keyMetrics: Record<string, unknown>
+  initialMessage?: string | null
 }
 
 interface ExplainData {
@@ -71,16 +72,43 @@ export function ContextualChatPanel({
   accountId,
   productId,
   keyMetrics,
+  initialMessage,
 }: ContextualChatPanelProps) {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const hasFiredRef = useRef(false)
   const bottomRef = useRef<HTMLDivElement>(null)
+  const initialMessageRef = useRef(initialMessage)
+
+  // Update ref when initialMessage changes so the effect picks it up fresh
+  initialMessageRef.current = initialMessage
 
   useEffect(() => {
     if (!isOpen || hasFiredRef.current) return
     hasFiredRef.current = true
+
+    // If there's a pre-seeded question from bucket panel, send it immediately
+    const seedMessage = initialMessageRef.current
+    if (seedMessage) {
+      setMessages([{ role: 'user', type: 'text', content: seedMessage }])
+      setLoading(true)
+      fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ question: seedMessage }),
+      })
+        .then(r => r.json())
+        .then(data => {
+          setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: data.response }])
+        })
+        .catch(() => {
+          setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: 'Sorry, I encountered an error.' }])
+        })
+        .finally(() => setLoading(false))
+      return
+    }
+
     setLoading(true)
     fetch('/api/explain', {
       method: 'POST',

@@ -1,9 +1,10 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { accounts, products, getPVMForAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { PVMBridge } from '@/components/charts/PVMBridge'
+import { BucketInsightPanel } from '@/components/charts/BucketInsightPanel'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
@@ -11,6 +12,7 @@ import { ChartSkeleton } from '@/components/shared/ChartSkeleton'
 import { FadeWrapper } from '@/components/shared/FadeWrapper'
 import { ContextualChatPanel } from '@/components/chat/ContextualChatPanel'
 import { MessageSquare } from 'lucide-react'
+import { getPVMInsight, type BucketKey } from '@/lib/pvmInsights'
 
 function fmt(v: number): string {
   return Math.abs(v) >= 1000
@@ -29,6 +31,10 @@ export default function PVMPage() {
   const [explainOpen, setExplainOpen] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [selectedBucket, setSelectedBucket] = useState<BucketKey | null>(null)
+  const [bucketPanelOpen, setBucketPanelOpen] = useState(false)
+  const aiPromptRef = useRef<string | null>(null)
+
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 350)
     return () => clearTimeout(t)
@@ -50,6 +56,24 @@ export default function PVMPage() {
   ]
   const primaryDriver = effects.reduce((a, b) => Math.abs(a.value) > Math.abs(b.value) ? a : b)
 
+  // Smart primary driver label
+  const primaryDriverLabel = (() => {
+    if (
+      primaryDriver.name === 'Volume' &&
+      pvmData.priceEffect < 0 &&
+      pvmData.mixEffect < 0
+    ) {
+      return 'Volume masking price erosion'
+    }
+    return `${primaryDriver.name} ${fmtSigned(primaryDriver.value)}`
+  })()
+
+  // Price Realization Rate
+  const priceRealizationRate = pvmData.priorRevenue > 0
+    ? ((pvmData.priceEffect / (pvmData.priorRevenue + pvmData.volumeEffect)) * 100).toFixed(1)
+    : '0.0'
+  const priceRealizationNum = Number(priceRealizationRate)
+
   type StatZone = 'green' | 'amber' | 'red' | undefined
   const stats: { label: string; value: string; zone?: StatZone }[] = [
     { label: 'Prior Revenue', value: fmt(pvmData.priorRevenue) },
@@ -65,8 +89,13 @@ export default function PVMPage() {
     },
     {
       label: 'Primary Driver',
-      value: `${primaryDriver.name} ${fmtSigned(primaryDriver.value)}`,
+      value: primaryDriverLabel,
       zone: primaryDriver.value >= 0 ? 'green' : 'red',
+    },
+    {
+      label: 'Price Realization',
+      value: `${priceRealizationNum >= 0 ? '+' : ''}${priceRealizationRate}%`,
+      zone: priceRealizationNum >= 0 ? 'green' : 'red',
     },
   ]
 
@@ -78,6 +107,26 @@ export default function PVMPage() {
     priceEffect: pvmData.priceEffect,
     mixEffect: pvmData.mixEffect,
     bothNegative: pvmData.priceEffect < 0 && pvmData.mixEffect < 0,
+    selectedBucket: selectedBucket ?? undefined,
+  }
+
+  function handleBarSelect(bar: BucketKey | null) {
+    if (bar === null) {
+      setBucketPanelOpen(false)
+      setSelectedBucket(null)
+    } else {
+      setSelectedBucket(bar)
+      setBucketPanelOpen(true)
+      setExplainOpen(false)
+      setChatOpen(false)
+    }
+  }
+
+  function handleAskAI(prompt: string) {
+    aiPromptRef.current = prompt
+    setBucketPanelOpen(false)
+    setSelectedBucket(null)
+    setChatOpen(true)
   }
 
   return (
@@ -90,11 +139,11 @@ export default function PVMPage() {
       <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}`} className="flex-1 overflow-y-auto">
       <div className="p-6 flex flex-col gap-4">
         {/* Stats row */}
-        <div className="flex gap-4">
+        <div className="grid grid-cols-5 gap-3">
           {stats.map(({ label, value, zone }) => (
-            <div key={label} className="card px-4 py-3 flex-1">
-              <p className="text-xs text-text-muted mb-0.5">{label}</p>
-              <p className={`text-lg font-semibold ${
+            <div key={label} className="card px-3 py-2.5">
+              <p className="text-[10px] text-text-muted mb-0.5 uppercase tracking-wide">{label}</p>
+              <p className={`text-sm font-bold leading-snug ${
                 zone === 'red' ? 'text-zone-red' :
                 zone === 'amber' ? 'text-zone-amber' :
                 zone === 'green' ? 'text-zone-green' :
@@ -113,10 +162,15 @@ export default function PVMPage() {
 
         {/* Chart + table card */}
         <div className="card p-4">
-          <h2 className="text-sm font-semibold text-text-primary mb-4">
+          <h2 className="text-sm font-semibold text-text-primary mb-1">
             Price / Volume / Mix Bridge — {accounts.find(a => a.id === (isFallback ? 'schoko-retail' : accountId))?.name ?? accountId}
           </h2>
-          <PVMBridge data={pvmData} />
+          <p className="text-xs text-text-muted mb-4">Click a bar to explore that effect in detail</p>
+          <PVMBridge
+            data={pvmData}
+            selectedBarName={selectedBucket}
+            onBarSelect={handleBarSelect}
+          />
         </div>
       </div>
       </FadeWrapper>
@@ -131,8 +185,20 @@ export default function PVMPage() {
         className="right-[124px]"
       />
       <ExplainPanel isOpen={explainOpen} onClose={() => setExplainOpen(false)} result={explainResult} />
+
+      <BucketInsightPanel
+        isOpen={bucketPanelOpen}
+        onClose={() => { setBucketPanelOpen(false); setSelectedBucket(null) }}
+        insight={selectedBucket ? getPVMInsight(accountId, selectedBucket) : null}
+        bucketKey={selectedBucket}
+        onAskAI={handleAskAI}
+      />
+
       <button
-        onClick={() => setChatOpen(true)}
+        onClick={() => {
+          aiPromptRef.current = null
+          setChatOpen(true)
+        }}
         className="fixed bottom-6 right-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-white border border-border-default text-text-primary rounded-full shadow-lg hover:bg-page-bg transition-colors text-sm font-medium"
       >
         <MessageSquare size={15} className="text-pwc-orange" />
@@ -140,13 +206,14 @@ export default function PVMPage() {
       </button>
       <ContextualChatPanel
         isOpen={chatOpen}
-        onClose={() => setChatOpen(false)}
+        onClose={() => { setChatOpen(false); aiPromptRef.current = null }}
         screen="pvm"
         accountId={activeAccountId}
         productId={null}
         accountName={accounts.find(a => a.id === activeAccountId)?.name ?? null}
         productName={null}
         keyMetrics={keyMetrics}
+        initialMessage={aiPromptRef.current}
       />
     </div>
   )

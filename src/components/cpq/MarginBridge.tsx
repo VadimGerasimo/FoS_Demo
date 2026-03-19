@@ -79,15 +79,8 @@ export function MarginBridge({ listPrice, basePrice, dealDiscountPct, netPrice, 
   return (
     <div className="w-full">
       <div className="flex gap-1.5" style={{ height: MAX_H }}>
-        {bars.map(({ label, barPx, bottomPx, color, valueLabel }) => (
+        {bars.map(({ label, barPx, bottomPx, color }) => (
           <div key={label} className="flex-1 relative" style={{ height: MAX_H }}>
-            {/* Value label floating just above the bar */}
-            <span
-              className="absolute w-full text-center text-[9px] text-text-muted font-medium leading-none"
-              style={{ bottom: Math.min(bottomPx + barPx + 3, MAX_H - 10) }}
-            >
-              {valueLabel}
-            </span>
             {/* The bar itself, positioned from the bottom */}
             <div
               className={`absolute w-full rounded-t transition-all duration-300 ${color}`}
@@ -96,10 +89,13 @@ export function MarginBridge({ listPrice, basePrice, dealDiscountPct, netPrice, 
           </div>
         ))}
       </div>
-      {/* X-axis labels */}
-      <div className="flex gap-1.5 mt-1.5 border-t border-border-default pt-1">
-        {bars.map(({ label }) => (
-          <span key={label} className="flex-1 text-center text-[9px] text-text-muted truncate">{label}</span>
+      {/* X-axis labels + value labels below */}
+      <div className="flex gap-1.5 mt-1.5 border-t border-border-default pt-1.5">
+        {bars.map(({ label, valueLabel }) => (
+          <div key={label} className="flex-1 flex flex-col items-center gap-0.5">
+            <span className="text-[9px] text-text-muted truncate w-full text-center">{label}</span>
+            <span className="text-[9px] font-semibold text-text-secondary truncate w-full text-center">{valueLabel}</span>
+          </div>
         ))}
       </div>
     </div>

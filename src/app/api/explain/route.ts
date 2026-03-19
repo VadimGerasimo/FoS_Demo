@@ -30,12 +30,12 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
     ],
   },
   pvm: {
-    whatISee: 'The PVM bridge decomposes revenue change into volume, price, and mix effects between periods.',
-    whyItMatters: 'Revenue growth driven only by volume while price and mix are negative signals deteriorating commercial quality.',
+    whatISee: 'The PVM bridge decomposes revenue change into volume, price, and mix effects — showing whether growth is commercially healthy or masking margin erosion.',
+    whyItMatters: 'Revenue growth driven only by volume while price and mix are negative signals deteriorating commercial quality — the account is growing by selling more at lower prices into a declining-margin basket.',
     recommendedActions: [
-      'Flag accounts with negative price AND mix effects to the commercial director',
-      'Investigate product mix shift drivers',
-      'Set mix improvement targets in next commercial planning cycle',
+      'Review accounts where both price AND mix are negative — this signals discounting-driven volume with deteriorating commercial quality',
+      'Investigate product mix shift: if a lower-margin SKU is growing faster than the premium line, set a mix recovery target in the next commercial planning cycle',
+      'For accounts with negative price effect, check whether discounts were tied to volume commitments — undocumented concessions compound over renewal cycles',
     ],
   },
   'win-loss': {

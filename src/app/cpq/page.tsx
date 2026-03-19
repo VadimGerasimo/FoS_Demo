@@ -89,7 +89,7 @@ export default function CPQPage() {
         </div>
       ) : (
       <FadeWrapper fadeKey={`${activeAccountId ?? 'none'}-${activeProductId ?? 'none'}`} className="flex-1 overflow-y-auto">
-      <div className="p-6 flex flex-col gap-5">
+      <div className="p-6 pb-20 flex flex-col gap-5">
         {/* Deal Context Panel */}
         {account && (
           <DealContextPanel
@@ -129,8 +129,8 @@ export default function CPQPage() {
           {/* Price stack */}
           <div className="space-y-2 mb-5">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-text-secondary">Contracted base price</span>
-              <span className="font-medium">€{basePrice.toFixed(2)}/kg</span>
+              <span className="text-text-secondary">List price</span>
+              <span className="font-medium">€{listPrice.toFixed(2)}/kg</span>
             </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-text-secondary">Contracted discounts vs list</span>
@@ -142,6 +142,10 @@ export default function CPQPage() {
                 <span className="text-text-muted">−€{Math.abs(layer.value).toFixed(2)}</span>
               </div>
             ))}
+            <div className="flex items-center justify-between text-sm pt-1 border-t border-border-default">
+              <span className="text-text-secondary font-medium">Contracted base price</span>
+              <span className="font-semibold">€{basePrice.toFixed(2)}/kg</span>
+            </div>
             <div className="flex items-center justify-between text-sm">
               <span className="text-text-secondary flex flex-col">
                 Rep adjustment

@@ -22,8 +22,12 @@ export function buildContextualPrompt(
     case 'waterfall':
       return `Summarise the commercial margin waterfall for ${acct} on ${prod}. Key metrics: Net-Net €${keyMetrics.netNetPrice ?? '?'}/kg (${keyMetrics.priceRealization ?? '?'} price realisation), Gross Margin ${keyMetrics.grossMarginPct ?? '?'} (€${keyMetrics.grossMargin ?? '?'}/kg), Net Margin ${keyMetrics.netMarginPct ?? '?'} (€${keyMetrics.netMargin ?? '?'}/kg). Identify the largest deduction in each section (pricing, COGS, SG&A) and state whether the margin profile is healthy or concerning for this account/segment. Recommend the most impactful commercial lever.`
 
-    case 'pvm':
-      return `Summarise the Price-Volume-Mix bridge for ${acct}. Identify whether revenue growth is healthy (price and mix positive) or masking erosion (price or mix negative). Provide a commercial interpretation in 3 sentences.`
+    case 'pvm': {
+      const bucketNote = keyMetrics.selectedBucket
+        ? ` The user is currently focused on the ${keyMetrics.selectedBucket} effect — focus your interpretation on that bucket specifically.`
+        : ''
+      return `Summarise the Price-Volume-Mix bridge for ${acct}. Identify whether revenue growth is healthy (price and mix positive) or masking erosion (price or mix negative). Provide a commercial interpretation in 3 sentences.${bucketNote}`
+    }
 
     default:
       return `Summarise what you see on the current screen for ${acct}.`
