@@ -80,14 +80,14 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
       heroValue: '+€3.4k',
       heroDirection: 'up',
       narrative:
-        'Baker Klaas is growing at +13.3% — above category average. Volume gains reflect successful penetration of the artisan and bakery segment. This account is in an early growth phase and pricing discipline remains intact.',
+        'Bakker Klaas is growing at +13.3% — above category average. Volume gains reflect successful penetration of the artisan and bakery segment. This account is in an early growth phase and pricing discipline remains intact.',
       topContributors: [{ name: 'Milk Couverture', value: 3360, formatted: fmtSigned(3360) }],
       formula: {
         expression: '(Curr Qty − Prior Qty) × Prior Unit Price',
         plain: 'Revenue change if only units sold changed, prices held constant.',
       },
       actionPrompt:
-        'Explain the Volume Effect for Baker Klaas and how to sustain this growth trajectory without eroding price.',
+        'Explain the Volume Effect for Bakker Klaas and how to sustain this growth trajectory without eroding price.',
     },
     price: {
       title: 'Price Effect',
@@ -101,21 +101,21 @@ const INSIGHTS: Record<string, Record<BucketKey, BucketInsight>> = {
         plain: 'Revenue change from rate changes on the same products, volume held constant.',
       },
       actionPrompt:
-        'Explain the Price Effect for Baker Klaas and whether the −€840 concession is a concern or within acceptable range.',
+        'Explain the Price Effect for Bakker Klaas and whether the −€840 concession is a concern or within acceptable range.',
     },
     mix: {
       title: 'Mix Effect',
       heroValue: '−€504',
       heroDirection: 'down',
       narrative:
-        'Minor mix headwind. Baker Klaas purchases are concentrated in a single SKU (Milk Couverture) so mix variance here reflects order size and frequency shifts rather than product substitution. Monitor as the account grows and additional SKUs are introduced.',
+        'Minor mix headwind. Bakker Klaas purchases are concentrated in a single SKU (Milk Couverture) so mix variance here reflects order size and frequency shifts rather than product substitution. Monitor as the account grows and additional SKUs are introduced.',
       topContributors: [{ name: 'Milk Couverture', value: -504, formatted: fmtSigned(-504) }],
       formula: {
         expression: 'Total Revenue − Prior Revenue − Volume Effect − Price Effect',
         plain: 'Residual: revenue change from portfolio composition shift and the price-volume interaction term.',
       },
       actionPrompt:
-        'Explain the Mix Effect for Baker Klaas and what it means for a single-SKU account.',
+        'Explain the Mix Effect for Bakker Klaas and what it means for a single-SKU account.',
     },
   },
 }
