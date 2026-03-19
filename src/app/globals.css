@@ -49,9 +49,29 @@
   .animate-fade-in-slow {
     animation: fadeIn 400ms ease-out both;
   }
+  .animate-slide-down {
+    animation: slideDown 350ms ease-out both;
+  }
+  .animate-message-in {
+    animation: fadeIn 180ms ease-out both;
+  }
+  /* Page transition — opacity only, NO transform, so position:fixed children stay viewport-anchored */
+  .animate-page-in {
+    animation: pageIn 200ms ease-out both;
+  }
+}
+
+@keyframes pageIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
 
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
   to   { opacity: 1; transform: translateY(0); }
 }

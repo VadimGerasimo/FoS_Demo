@@ -51,7 +51,9 @@ export function Sidebar() {
     >
       {/* Logo area */}
       <div className="flex items-center px-5 py-5 border-b border-white/10 min-h-[68px]">
-        {!collapsed && <EquazionLogo bg="rgb(50,51,54)" fontSize={28} />}
+        <div className={`overflow-hidden transition-[opacity,max-width] duration-150 ease-in-out ${collapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'}`}>
+          <EquazionLogo bg="rgb(50,51,54)" fontSize={28} />
+        </div>
       </div>
 
       {/* Toggle button — overlaps right edge */}
@@ -81,7 +83,9 @@ export function Sidebar() {
               )}
             >
               <Icon size={16} strokeWidth={isActive ? 2.5 : 1.8} />
-              {!collapsed && <span>{label}</span>}
+              <span className={`overflow-hidden transition-[opacity,max-width] duration-150 ease-in-out whitespace-nowrap ${collapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'}`}>
+                {label}
+              </span>
             </Link>
           )
         })}
@@ -90,7 +94,9 @@ export function Sidebar() {
       {/* PwC Footer */}
       <div className={clsx('flex items-center gap-2 px-5 py-4 border-t border-white/10', collapsed && 'justify-center px-2')}>
         <Image src="/pwc-logo-white.svg" alt="PwC" width={collapsed ? 24 : 36} height={18} className="opacity-60" />
-        {!collapsed && <span className="text-white/40 text-xs">Commercial Intelligence</span>}
+        <span className={`overflow-hidden transition-[opacity,max-width] duration-150 ease-in-out whitespace-nowrap text-white/40 text-xs ${collapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'}`}>
+          Commercial Intelligence
+        </span>
       </div>
     </aside>
   )

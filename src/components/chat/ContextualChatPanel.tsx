@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { X, MessageSquare, Send, Loader2 } from 'lucide-react'
 import type { ScreenId } from '@/lib/contextualPrompts'
 
@@ -56,11 +56,21 @@ function ExplainMessage({ data }: { data: ExplainData }) {
 
 function TextMessage({ content, isUser }: { content: string; isUser: boolean }) {
   if (isUser) return <span>{content}</span>
+  const lines = content.split('\n').filter(l => l.trim())
   return (
     <div className="flex flex-col gap-1.5 text-sm leading-relaxed">
-      {content.split('\n').map((line, i) =>
-        line.trim() ? <p key={i}>{line}</p> : null
-      )}
+      {lines.map((line, i) => {
+        const parts = line.split(/(\*\*[^*]+\*\*)/)
+        return (
+          <p key={i}>
+            {parts.map((part, j) =>
+              part.startsWith('**') && part.endsWith('**')
+                ? <strong key={j}>{part.slice(2, -2)}</strong>
+                : part
+            )}
+          </p>
+        )
+      })}
     </div>
   )
 }
@@ -77,9 +87,27 @@ export function ContextualChatPanel({
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [streamingContent, setStreamingContent] = useState<string | null>(null)
   const hasFiredRef = useRef(false)
   const bottomRef = useRef<HTMLDivElement>(null)
   const initialMessageRef = useRef(initialMessage)
+  const streamTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const streamText = useCallback((text: string) => {
+    if (streamTimerRef.current) clearInterval(streamTimerRef.current)
+    let i = 0
+    setStreamingContent('')
+    streamTimerRef.current = setInterval(() => {
+      i = Math.min(i + 4, text.length)
+      setStreamingContent(text.slice(0, i))
+      if (i >= text.length) {
+        clearInterval(streamTimerRef.current!)
+        streamTimerRef.current = null
+        setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: text }])
+        setStreamingContent(null)
+      }
+    }, 16)
+  }, [])
 
   // Update ref when initialMessage changes so the effect picks it up fresh
   initialMessageRef.current = initialMessage
@@ -100,12 +128,11 @@ export function ContextualChatPanel({
       })
         .then(r => r.json())
         .then(data => {
-          setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: data.response }])
+          setTimeout(() => { setLoading(false); streamText(data.response) }, 2500)
         })
         .catch(() => {
-          setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: 'Sorry, I encountered an error.' }])
+          setTimeout(() => { setLoading(false); streamText('Sorry, I encountered an error.') }, 2500)
         })
-        .finally(() => setLoading(false))
       return
     }
 
@@ -132,20 +159,25 @@ export function ContextualChatPanel({
 
   useEffect(() => {
     if (!isOpen) {
-      setMessages([])
-      setInput('')
-      setLoading(false)
-      hasFiredRef.current = false
+      const t = setTimeout(() => {
+        if (streamTimerRef.current) { clearInterval(streamTimerRef.current); streamTimerRef.current = null }
+        setMessages([])
+        setInput('')
+        setLoading(false)
+        setStreamingContent(null)
+        hasFiredRef.current = false
+      }, 300)
+      return () => clearTimeout(t)
     }
   }, [isOpen])
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages, loading])
+  }, [messages, loading, streamingContent])
 
   async function handleSubmit() {
     const q = input.trim()
-    if (!q || loading) return
+    if (!q || loading || streamingContent !== null) return
     setInput('')
     setMessages(prev => [...prev, { role: 'user', type: 'text', content: q }])
     setLoading(true)
@@ -156,15 +188,18 @@ export function ContextualChatPanel({
         body: JSON.stringify({ question: q }),
       })
       const data = await res.json()
-      setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: data.response }])
+      setTimeout(() => { setLoading(false); streamText(data.response) }, 2500)
     } catch {
-      setMessages(prev => [...prev, { role: 'assistant', type: 'text', content: 'Sorry, I encountered an error.' }])
-    } finally {
-      setLoading(false)
+      setTimeout(() => { setLoading(false); streamText('Sorry, I encountered an error.') }, 2500)
     }
   }
 
   return (
+    <>
+    <div
+      className={`fixed inset-0 z-40 bg-black/20 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+      onClick={onClose}
+    />
     <div className={`fixed top-0 right-0 h-full w-[380px] z-50 bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : 'translate-x-full'}`}>
       {/* Header */}
       <div className="flex items-center justify-between px-5 py-4 border-b border-border-default shrink-0">
@@ -186,7 +221,7 @@ export function ContextualChatPanel({
           </div>
         )}
         {messages.map((m, i) => (
-          <div key={i} className={m.role === 'user' ? 'self-end max-w-[85%]' : 'self-start w-full'}>
+          <div key={i} className={`animate-message-in ${m.role === 'user' ? 'self-end max-w-[85%]' : 'self-start w-full'}`}>
             <div className={`rounded-xl px-3.5 py-3 ${
               m.role === 'user'
                 ? 'bg-pwc-orange text-white text-sm'
@@ -199,10 +234,18 @@ export function ContextualChatPanel({
             </div>
           </div>
         ))}
-        {loading && messages.length > 0 && (
+        {loading && messages.length > 0 && streamingContent === null && (
           <div className="self-start">
             <div className="bg-white border border-border-default rounded-xl px-3.5 py-2.5">
               <Loader2 size={12} className="animate-spin text-text-muted" />
+            </div>
+          </div>
+        )}
+        {streamingContent !== null && (
+          <div className="self-start w-full animate-message-in">
+            <div className="bg-white border border-border-default rounded-xl px-3.5 py-3 text-text-primary">
+              <TextMessage content={streamingContent} isUser={false} />
+              <span className="inline-block w-0.5 h-3.5 bg-text-secondary ml-0.5 animate-pulse align-middle" />
             </div>
           </div>
         )}
@@ -218,12 +261,12 @@ export function ContextualChatPanel({
             onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit() } }}
             placeholder="Ask a follow-up question..."
             rows={2}
-            disabled={loading}
+            disabled={loading || streamingContent !== null}
             className="flex-1 text-sm border border-border-default rounded-xl px-3.5 py-2.5 resize-none focus:outline-none focus:border-pwc-orange transition-colors placeholder:text-text-muted disabled:opacity-50"
           />
           <button
             onClick={handleSubmit}
-            disabled={loading || !input.trim()}
+            disabled={loading || streamingContent !== null || !input.trim()}
             className="w-9 h-9 rounded-xl bg-pwc-orange text-white flex items-center justify-center hover:bg-pwc-orange-dark transition-colors disabled:opacity-40 shrink-0 mb-px"
           >
             <Send size={15} />
@@ -231,5 +274,6 @@ export function ContextualChatPanel({
         </div>
       </div>
     </div>
+    </>
   )
 }

@@ -59,7 +59,7 @@ export function EscalationBanner({ level, discountPct: _discountPct }: Escalatio
   const Icon = cfg.icon
 
   return (
-    <div className={`flex items-start gap-3 px-4 py-3 rounded-xl border ${cfg.bg} transition-all`}>
+    <div key={level} className={`animate-slide-down flex items-start gap-3 px-4 py-3 rounded-xl border ${cfg.bg} transition-all`}>
       <Icon size={16} className={`mt-0.5 shrink-0 ${cfg.text}`} />
       <div className="flex-1 min-w-0">
         <p className={`text-sm font-semibold ${cfg.text}`}>{cfg.title}</p>

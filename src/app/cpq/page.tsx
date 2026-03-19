@@ -117,7 +117,7 @@ export default function CPQPage() {
                 {account?.segment} · Vol {(account?.volume ?? 0).toLocaleString()} kg/mo
               </p>
             </div>
-            <div className={`px-3 py-1.5 rounded-lg text-sm font-bold ${
+            <div className={`px-3 py-1.5 rounded-lg text-sm font-bold transition-colors duration-300 ${
               escalationLevel === 'none' ? 'bg-zone-green-bg text-zone-green' :
               escalationLevel === 'rep' ? 'bg-zone-amber-bg text-zone-amber' :
               'bg-zone-red-bg text-zone-red'

@@ -33,9 +33,10 @@ export interface Message {
 interface ConversationThreadProps {
   messages: Message[]
   isLoading: boolean
+  streamingContent?: string | null
 }
 
-export function ConversationThread({ messages, isLoading }: ConversationThreadProps) {
+export function ConversationThread({ messages, isLoading, streamingContent }: ConversationThreadProps) {
   return (
     <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
       {messages.length === 0 && (
@@ -84,7 +85,7 @@ export function ConversationThread({ messages, isLoading }: ConversationThreadPr
         </div>
       ))}
 
-      {isLoading && (
+      {isLoading && !streamingContent && (
         <div className="flex gap-3">
           <div className="w-7 h-7 rounded-full shrink-0 overflow-hidden">
             <Image src="/equazion-q-icon-dark.svg" alt="Equazion" width={28} height={28} />
@@ -99,6 +100,18 @@ export function ConversationThread({ messages, isLoading }: ConversationThreadPr
                 />
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {streamingContent !== null && streamingContent !== undefined && (
+        <div className="flex gap-3">
+          <div className="w-7 h-7 rounded-full shrink-0 overflow-hidden">
+            <Image src="/equazion-q-icon-dark.svg" alt="Equazion" width={28} height={28} />
+          </div>
+          <div className="px-3.5 py-2.5 bg-white border border-border-default rounded-2xl rounded-tl-sm shadow-sm text-sm leading-relaxed text-text-primary max-w-[85%]">
+            <FormattedMessage content={streamingContent} />
+            <span className="inline-block w-0.5 h-3.5 bg-text-secondary ml-0.5 animate-pulse align-middle" />
           </div>
         </div>
       )}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { accounts, products } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { ConversationThread, type Message } from '@/components/chat/ConversationThread'
@@ -26,17 +26,35 @@ export default function AskYourDataPage() {
   const { setAccount, setProduct, activeAccountId, activeProductId } = useAppContext()
   const [messages, setMessages] = useState<Message[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [streamingContent, setStreamingContent] = useState<string | null>(null)
   const [rightPanel, setRightPanel] = useState<RightPanelState>({ visualType: null, dataKey: null })
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
   const threadRef = useRef<HTMLDivElement>(null)
+  const streamTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
-  // Scroll to bottom on new message
+  const streamText = useCallback((text: string, onComplete: () => void) => {
+    if (streamTimerRef.current) clearInterval(streamTimerRef.current)
+    let i = 0
+    setStreamingContent('')
+    streamTimerRef.current = setInterval(() => {
+      i = Math.min(i + 4, text.length)
+      setStreamingContent(text.slice(0, i))
+      if (i >= text.length) {
+        clearInterval(streamTimerRef.current!)
+        streamTimerRef.current = null
+        setStreamingContent(null)
+        onComplete()
+      }
+    }, 16)
+  }, [])
+
+  // Scroll to bottom on new message or streaming update
   useEffect(() => {
     if (threadRef.current) {
       threadRef.current.scrollTop = threadRef.current.scrollHeight
     }
-  }, [messages, isLoading])
+  }, [messages, isLoading, streamingContent])
 
   async function handleSubmit(question: string) {
     const userMsg: Message = {
@@ -56,16 +74,7 @@ export default function AskYourDataPage() {
       })
       const data = await res.json()
 
-      const aiMsg: Message = {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content: data.response,
-        suggestedAction: data.suggestedAction,
-        timestamp: new Date(),
-      }
-      setMessages(prev => [...prev, aiMsg])
-
-      // Update right panel
+      // Update right panel and context immediately (metadata, not content)
       if (data.visualType) {
         setRightPanel({
           visualType: data.visualType,
@@ -75,22 +84,33 @@ export default function AskYourDataPage() {
           productId: data.productId,
         })
       }
-
-      // Sync AppContext if response identifies an account
       if (data.accountId) setAccount(data.accountId)
       if (data.productId) setProduct(data.productId)
+
+      setTimeout(() => {
+        setIsLoading(false)
+        streamText(data.response, () => {
+          setMessages(prev => [...prev, {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: data.response,
+            suggestedAction: data.suggestedAction,
+            timestamp: new Date(),
+          }])
+        })
+      }, 2500)
     } catch {
-      setMessages(prev => [
-        ...prev,
-        {
-          id: crypto.randomUUID(),
-          role: 'assistant',
-          content: 'Sorry, I encountered an error. Please try again.',
-          timestamp: new Date(),
-        },
-      ])
-    } finally {
-      setIsLoading(false)
+      setTimeout(() => {
+        setIsLoading(false)
+        streamText('Sorry, I encountered an error. Please try again.', () => {
+          setMessages(prev => [...prev, {
+            id: crypto.randomUUID(),
+            role: 'assistant',
+            content: 'Sorry, I encountered an error. Please try again.',
+            timestamp: new Date(),
+          }])
+        })
+      }, 2500)
     }
   }
 
@@ -125,7 +145,7 @@ export default function AskYourDataPage() {
 
           {/* Thread */}
           <div ref={threadRef} className="flex-1 overflow-y-auto bg-page-bg">
-            <ConversationThread messages={messages} isLoading={isLoading} />
+            <ConversationThread messages={messages} isLoading={isLoading} streamingContent={streamingContent} />
           </div>
 
           {/* Suggested questions — only when thread is empty */}
@@ -134,7 +154,7 @@ export default function AskYourDataPage() {
           )}
 
           {/* Input */}
-          <MessageInput onSubmit={handleSubmit} disabled={isLoading} />
+          <MessageInput onSubmit={handleSubmit} disabled={isLoading || streamingContent !== null} />
         </div>
 
         {/* Right panel — 60% */}

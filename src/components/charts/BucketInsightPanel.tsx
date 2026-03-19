@@ -31,7 +31,7 @@ function ContributorBar({ name, value, formatted, maxAbs }: {
       </div>
       <div className="h-1.5 w-full bg-page-bg rounded-full overflow-hidden">
         <div
-          className={`h-full rounded-full ${isPositive ? 'bg-zone-green' : 'bg-zone-red'}`}
+          className={`h-full rounded-full transition-[width] duration-500 ease-out ${isPositive ? 'bg-zone-green' : 'bg-zone-red'}`}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -76,12 +76,10 @@ export function BucketInsightPanel({
   return (
     <>
       {/* Overlay */}
-      {isOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/20"
-          onClick={onClose}
-        />
-      )}
+      <div
+        className={`fixed inset-0 z-40 bg-black/20 transition-opacity duration-300 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
+        onClick={onClose}
+      />
 
       {/* Panel */}
       <div
@@ -161,14 +159,14 @@ export function BucketInsightPanel({
                     : <ChevronDown size={13} className="text-text-muted" />
                   }
                 </button>
-                {formulaOpen && (
+                <div className={`overflow-hidden transition-[max-height] duration-300 ease-in-out ${formulaOpen ? 'max-h-[500px]' : 'max-h-0'}`}>
                   <div className="px-4 pb-4 flex flex-col gap-2 border-t border-border-default pt-3">
                     <code className="font-mono text-xs bg-page-bg rounded-lg p-3 text-text-primary block leading-relaxed">
                       {insight.formula.expression}
                     </code>
                     <p className="text-xs text-text-muted leading-relaxed">{insight.formula.plain}</p>
                   </div>
-                )}
+                </div>
               </div>
 
               {/* Ask AI CTA */}

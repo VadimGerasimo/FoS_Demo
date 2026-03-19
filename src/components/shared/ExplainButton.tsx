@@ -46,7 +46,7 @@ export function ExplainButton({ screen, keyMetrics, accountId, productId, onResu
       <button
         disabled
         className={clsx(
-          'fixed bottom-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-full shadow-lg text-sm font-medium',
+          'fixed bottom-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-600 border border-red-200 rounded-full shadow-lg text-sm font-medium transition-colors duration-200',
           className ?? 'right-6'
         )}
       >
@@ -61,7 +61,7 @@ export function ExplainButton({ screen, keyMetrics, accountId, productId, onResu
       onClick={handleClick}
       disabled={loading}
       className={clsx(
-        'fixed bottom-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-sidebar-bg text-white rounded-full shadow-lg hover:bg-pwc-orange transition-colors text-sm font-medium disabled:opacity-60',
+        'fixed bottom-6 z-40 flex items-center gap-2 px-4 py-2.5 bg-sidebar-bg text-white rounded-full shadow-lg hover:bg-pwc-orange transition-colors active:scale-[0.97] text-sm font-medium disabled:opacity-60',
         className ?? 'right-6'
       )}
     >
