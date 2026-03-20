@@ -17,7 +17,7 @@ export function buildContextualPrompt(
       return `Summarise the CPQ pricing situation for ${acct} on ${prod}. Give a brief analysis of the three scenarios shown and recommend the best option. Be direct and use specific numbers if available. Use sentence case, never em-dashes.`
 
     case 'deal-intelligence':
-      return `Summarise the deal intelligence for ${acct} on ${prod}. Win rate: ${keyMetrics.winRateAtCurrentPrice ?? '?'}% at current price. Account quality score: ${keyMetrics.eorCompositeScore ?? '?'}/10. Deal score: ${keyMetrics.dealScore ?? '?'}. Provide a clear verdict on whether to proceed with this deal. Use sentence case, never em-dashes.`
+      return `Summarise the deal intelligence for ${acct} on ${prod}. Win rate: ${keyMetrics.winRateAtCurrentPrice ?? '?'}% at current price. Account Quality Score: ${keyMetrics.accountQualityScore ?? '?'}/10. Deal score: ${keyMetrics.dealScore ?? '?'}. Provide a clear verdict on whether to proceed with this deal. Use sentence case, never em-dashes.`
 
     case 'waterfall':
       return `Summarise the commercial margin waterfall for ${acct} on ${prod}. Key metrics: net-net €${keyMetrics.netNetPrice ?? '?'}/kg (${keyMetrics.priceRealization ?? '?'} price realisation), gross margin ${keyMetrics.grossMarginPct ?? '?'} (€${keyMetrics.grossMargin ?? '?'}/kg), net margin ${keyMetrics.netMarginPct ?? '?'} (€${keyMetrics.netMargin ?? '?'}/kg). Identify the largest deduction in each section (pricing, COGS, SG&A) and state whether the margin profile is healthy or concerning for this account/segment. Recommend the most impactful commercial lever. Use sentence case, never em-dashes.`

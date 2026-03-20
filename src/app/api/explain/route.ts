@@ -52,7 +52,7 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
     whyItMatters: 'A high list price is only valuable if the deal can be realised. The Account Quality Score flags operationally risky accounts that may not be worth aggressive discounting.',
     recommendedActions: [
       'Combine Account Quality Score with segment position to prioritise renewal effort',
-      'Accounts with low EoR and below-floor pricing are highest risk',
+      'Accounts with a low Account Quality Score and below-floor pricing are highest risk',
       'Use dimension notes to tailor the commercial conversation',
     ],
   },
@@ -67,10 +67,10 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
   },
   'deal-intelligence': {
     whatISee: 'The Deal Intelligence page combines win probability at the current quoted price with the Account Quality Score to produce a single Deal Score for this account and product.',
-    whyItMatters: 'A high win rate alone does not make a good deal. EoR flags whether the account can deliver the contracted value. The Deal Score synthesises both signals into one actionable verdict.',
+    whyItMatters: 'A high win rate alone does not make a good deal. The Account Quality Score flags whether the account can deliver the contracted value. The Deal Score synthesises both signals into one actionable verdict.',
     recommendedActions: [
       'Check the Deal Score before submitting any quote. Green (≥70) means proceed, amber (45–69) means attach conditions',
-      'If EoR is below 6.0, review the weakest dimension before agreeing to a price concession',
+      'If Account Quality Score is below 6.0, review the weakest dimension before agreeing to a price concession',
       'Use the cliff zone on the win curve to set the hard floor for this negotiation',
     ],
   },

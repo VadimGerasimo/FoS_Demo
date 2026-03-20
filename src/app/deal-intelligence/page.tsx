@@ -132,13 +132,13 @@ function DealIntelligenceContent() {
 
   const keyMetrics = {
     winRateAtCurrentPrice: winRateAtCurrent,
-    eorCompositeScore,
+    accountQualityScore: eorCompositeScore,
     dealScore,
     cliffMin: winLossData.cliffMin,
     cliffMax: winLossData.cliffMax,
     optimalPrice: winLossData.optimalPrice,
     currentPrice,
-    weakestEoRDimension: [...eorData.dimensions].sort((a, b) => a.score - b.score)[0]?.name,
+    weakestAccountQualityDimension: [...eorData.dimensions].sort((a, b) => a.score - b.score)[0]?.name,
   }
 
   const accountName = accounts.find(a => a.id === activeAccountId)?.name ?? null
@@ -457,7 +457,7 @@ function DealIntelligenceContent() {
 
                   {isFallback && (
                     <div className="px-3 py-2 bg-page-bg border border-border-default rounded-lg text-xs text-text-muted">
-                      Showing Bakker Klaas data (no EoR data for selected account)
+                      Showing Bakker Klaas data (no Account Quality data for selected account)
                     </div>
                   )}
 

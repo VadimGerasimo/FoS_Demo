@@ -1,6 +1,6 @@
 'use client'
 
-import { getSegmentationForProduct, getWaterfallForAccount, getPVMForAccount, getWinLossForProduct, getEoRForAccount, eorDataset } from '@/lib/data'
+import { getSegmentationForProduct, getWaterfallForAccount, getPVMForAccount, getWinLossForProduct, getEoRForAccount, eorDataset, getAccount, getFloor, getTarget } from '@/lib/data'
 import { SegmentationScatter } from '@/components/charts/SegmentationScatter'
 import { WaterfallChart } from '@/components/charts/WaterfallChart'
 import { PVMBridge } from '@/components/charts/PVMBridge'
@@ -77,14 +77,23 @@ export function DynamicRightPanel({ visualType, dataKey, tableData, accountId, p
   }
 
   if (visualType === 'scatter' && dataKey) {
-    const points = getSegmentationForProduct(dataKey)
+    const accId = accountId ?? 'baker-klaas'
+    const prodId = dataKey
+    const account = getAccount(accId)
+    const allPoints = getSegmentationForProduct(prodId)
+    // Filter to same segment as the active account, matching segmentation page behavior
+    const points = account
+      ? allPoints.filter(p => p.segment === account.segment)
+      : allPoints
+    const floorPrice = account ? getFloor(account, prodId) : 4.57
+    const targetPrice = account ? getTarget(account, prodId) : 4.85
     return (
       <div className="h-full">
         <SegmentationScatter
           points={points}
-          floorPrice={4.57}
-          targetPrice={4.85}
-          activeAccountId="baker-klaas"
+          floorPrice={floorPrice}
+          targetPrice={targetPrice}
+          activeAccountId={accId}
           isAnimationActive={false}
         />
       </div>

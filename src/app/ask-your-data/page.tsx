@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { accounts, products } from '@/lib/data'
+import { accounts, products, getAccount, getProduct } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 import { ConversationThread, type Message } from '@/components/chat/ConversationThread'
 import { MessageInput } from '@/components/chat/MessageInput'
@@ -30,8 +30,12 @@ export default function AskYourDataPage() {
   const [rightPanel, setRightPanel] = useState<RightPanelState>({ visualType: null, dataKey: null })
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
+  const [prefillValue, setPrefillValue] = useState<string | null>(null)
   const threadRef = useRef<HTMLDivElement>(null)
   const streamTimerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const activeAccount = getAccount(activeAccountId)
+  const activeProduct = getProduct(activeProductId)
 
   const streamText = useCallback((text: string, onComplete: () => void) => {
     if (streamTimerRef.current) clearInterval(streamTimerRef.current)
@@ -70,7 +74,7 @@ export default function AskYourDataPage() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ question }),
+        body: JSON.stringify({ question, activeAccountId, activeProductId }),
       })
       const data = await res.json()
 
@@ -150,11 +154,21 @@ export default function AskYourDataPage() {
 
           {/* Suggested questions — only when thread is empty */}
           {messages.length === 0 && (
-            <SuggestedQuestions onSelect={handleSubmit} />
+            <SuggestedQuestions
+              onSelect={handleSubmit}
+              onPrefill={setPrefillValue}
+              accountName={activeAccount?.name}
+              productName={activeProduct?.name}
+            />
           )}
 
           {/* Input */}
-          <MessageInput onSubmit={handleSubmit} disabled={isLoading || streamingContent !== null} />
+          <MessageInput
+            onSubmit={handleSubmit}
+            disabled={isLoading || streamingContent !== null}
+            prefill={prefillValue}
+            onPrefillConsumed={() => setPrefillValue(null)}
+          />
         </div>
 
         {/* Right panel — 60% */}

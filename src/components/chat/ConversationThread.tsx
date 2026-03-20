@@ -46,7 +46,7 @@ export function ConversationThread({ messages, isLoading, streamingContent }: Co
           </div>
           <p className="text-sm font-medium text-text-primary mb-1">Ask about any account or product</p>
           <p className="text-xs text-text-muted max-w-xs">
-            Try: <span className="italic">&quot;How does Bakker Klaas compare to similar bakers, and are there cross-sell opportunities?&quot;</span>
+            Use the suggested questions below or type your own question to get started.
           </p>
         </div>
       )}
