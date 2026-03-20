@@ -158,7 +158,7 @@ function DealIntelligenceContent() {
             <div className="card p-4">
               <div className="flex items-center gap-5">
                 {/* Deal score — left */}
-                <div className="shrink-0">
+                <div className="shrink-0 min-w-[145px]">
                   <p className="text-[10px] font-semibold text-text-secondary mb-1">Deal score</p>
                   <div className="flex items-baseline gap-1.5">
                     <span className={`text-4xl font-bold leading-none ${
