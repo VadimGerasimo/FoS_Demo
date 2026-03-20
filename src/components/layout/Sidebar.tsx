@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { clsx } from 'clsx'
-import { EquazionLogo } from '@/components/shared/EquazionLogo'
 import {
   MessageSquare,
   ScatterChart,
@@ -67,8 +66,8 @@ export function Sidebar() {
     >
       {/* Logo area */}
       <div className="flex items-center px-5 py-5 border-b border-white/10 min-h-[68px]">
-        <div className={`overflow-hidden transition-[opacity,max-width] duration-150 ease-in-out ${collapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'}`}>
-          <EquazionLogo bg="rgb(50,51,54)" fontSize={28} />
+        <div className={`overflow-hidden transition-[opacity,max-width] duration-300 ease-in-out ${collapsed ? 'max-w-0 opacity-0' : 'max-w-[200px] opacity-100'}`}>
+          <Image src="/equazion_logo.png" alt="eQUAZION" width={160} height={40} />
         </div>
       </div>
 

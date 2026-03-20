@@ -61,7 +61,7 @@ export function ConversationThread({ messages, isLoading, streamingContent }: Co
               ? 'bg-pwc-orange text-white'
               : ''
           }`}>
-            {msg.role === 'user' ? 'S' : <Image src="/equazion-q-icon-dark.svg" alt="Equazion" width={28} height={28} />}
+            {msg.role === 'user' ? 'M' : <Image src="/equazion-q-icon-dark.svg" alt="Equazion" width={28} height={28} />}
           </div>
 
           <div className={`flex flex-col gap-1.5 max-w-[85%] ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
