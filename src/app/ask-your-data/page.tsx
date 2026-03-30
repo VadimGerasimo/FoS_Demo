@@ -148,7 +148,7 @@ export default function AskYourDataPage() {
           </div>
 
           {/* Thread */}
-          <div ref={threadRef} className="flex-1 overflow-y-auto bg-page-bg">
+          <div ref={threadRef} className={`flex-1 bg-page-bg ${messages.length > 0 || isLoading || streamingContent !== null ? 'overflow-y-auto' : 'overflow-hidden'}`}>
             <ConversationThread messages={messages} isLoading={isLoading} streamingContent={streamingContent} />
           </div>
 

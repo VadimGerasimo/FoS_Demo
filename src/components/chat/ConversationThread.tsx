@@ -38,9 +38,9 @@ interface ConversationThreadProps {
 
 export function ConversationThread({ messages, isLoading, streamingContent }: ConversationThreadProps) {
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
+    <div className="flex-1 px-4 py-4 space-y-4">
       {messages.length === 0 && (
-        <div className="flex flex-col items-center justify-center h-full text-center py-12">
+        <div className="flex flex-col items-center justify-center text-center py-8">
           <div className="w-12 h-12 rounded-full overflow-hidden mb-3 shrink-0">
             <Image src="/equazion-q-icon-light.svg" alt="Equazion" width={48} height={48} />
           </div>

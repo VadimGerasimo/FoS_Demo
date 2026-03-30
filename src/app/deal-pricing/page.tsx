@@ -248,12 +248,13 @@ export default function DealPricingPage() {
                     </button>
                   </div>
                   {/* Headroom label — pushed right */}
-                  <span className={`text-[10px] ml-auto ${
-                    escalationLevel === 'rep' ? 'text-zone-amber font-medium' : 'text-text-muted'
+                  <span className={`text-[10px] ml-auto font-medium ${
+                    escalationLevel === 'manager' || escalationLevel === 'director' ? 'text-zone-red' :
+                    escalationLevel === 'rep' ? 'text-zone-amber' : 'text-text-muted'
                   }`}>
                     {escalationLevel === 'none' && netPrice < targetPrice * 1.15
                       ? `€${(netPrice - targetPrice).toFixed(2)} vs target`
-                      : escalationLevel === 'rep'
+                      : escalationLevel !== 'none'
                       ? `€${(netPrice - floorPrice).toFixed(2)} vs floor`
                       : '\u00A0'}
                   </span>

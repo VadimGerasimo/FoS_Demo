@@ -1742,7 +1742,7 @@ No automated tests — manual validation only (consistent with Phase 1 approach 
 10. Move slider to 12% → banner changes to "Request sent to manager" after 2s
 11. Navigate to `/chat` → ask "How does Baker Klaas compare to similar bakers, and are there any cross-sell opportunities?"
 12. AI response returns in < 1s (local phrase match) → peer comparison table appears in right panel
-13. Response mentions "bottom 15%", "€4.85/kg median", "White Couverture", "Cocoa Powder", "73%"
+13. Response mentions "bottom 20%", "€4.85/kg median", "White Couverture", "Cocoa Powder", "73%"
 14. Save button saves the conversation; browser alert confirms
 
 ---

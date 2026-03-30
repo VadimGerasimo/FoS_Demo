@@ -8,7 +8,7 @@ interface Props {
 const CHAT_QUESTIONS = [
   {
     q: 'How does Bakker Klaas compare to similar bakers?',
-    a: 'Bottom 15% of Mid-Market Benelux at €4.20/kg vs floor €4.57 and target €4.85. Gap to floor is €0.37/kg. → Scatter chart',
+    a: 'Bottom 20% of Mid-Market Benelux at €4.20/kg vs floor €4.57 and target €4.85. Gap to floor is €0.37/kg. → Scatter chart',
   },
   {
     q: 'Bakker Klaas rebate / Where is the margin going?',
@@ -69,7 +69,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-pwc-orange/10 text-pwc-orange text-xs font-bold flex items-center justify-center mt-0.5">1</div>
                 <div>
                   <p className="font-semibold text-text-primary mb-1">Segmentation</p>
-                  <p className="text-text-secondary leading-relaxed">Bakker Klaas is at <strong>€4.20/kg</strong>, <strong>8.1% below the floor of €4.57</strong> and in the bottom 15% of Mid-Market Benelux. Target is €4.85. Granting more discount widens the gap. Recommendation: staged correction over 2–3 renewal cycles.</p>
+                  <p className="text-text-secondary leading-relaxed">Bakker Klaas is at <strong>€4.20/kg</strong>, <strong>8.1% below the floor of €4.57</strong> and in the bottom 20% of Mid-Market Benelux. Target is €4.85. Granting more discount widens the gap. Recommendation: staged correction over 2–3 renewal cycles.</p>
                 </div>
               </div>
 
@@ -107,7 +107,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-pwc-orange/10 text-pwc-orange text-xs font-bold flex items-center justify-center mt-0.5">3</div>
                 <div>
                   <p className="font-semibold text-text-primary mb-1">Ask Your Data</p>
-                  <p className="text-text-secondary leading-relaxed">Ask <em>&ldquo;How does Bakker Klaas compare to similar bakers?&rdquo;</em> → bottom 15%, peers at €4.75–€5.10. Then ask <em>&ldquo;What else can I sell Bakker Klaas?&rdquo;</em> → White Couverture + Cocoa Powder, 80% co-purchase rate among peers.</p>
+                  <p className="text-text-secondary leading-relaxed">Ask <em>&ldquo;How does Bakker Klaas compare to similar bakers?&rdquo;</em> → bottom 20%, peers at €4.75–€5.10. Then ask <em>&ldquo;What else can I sell Bakker Klaas?&rdquo;</em> → White Couverture + Cocoa Powder, 80% co-purchase rate among peers.</p>
                 </div>
               </div>
 

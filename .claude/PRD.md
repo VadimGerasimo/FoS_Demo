@@ -124,7 +124,7 @@ The tool shows that even at +4%, Baker Klaas is still well below the segment med
 Sarah asks the AI agent: *"How does Baker Klaas compare to similar bakers, and are there any cross-sell opportunities?"*
 
 Within seconds she learns:
-- Baker Klaas is in the bottom 15% of the Mid-Market Benelux segment at €4.20/kg vs a median of €4.85/kg
+- Baker Klaas is in the bottom 20% of the Mid-Market Benelux segment at €4.20/kg vs a median of €4.85/kg
 - Baker Klaas does not currently buy White Couverture or Cocoa Powder
 - 73% of similar bakers in the segment co-purchase these two SKUs
 - Both are high-attach, high-margin products
@@ -463,7 +463,7 @@ Matches a free-text question to a pre-scripted scenario response using gpt-4o.
 ```json
 {
   "scenarioId": "baker-klaas-segment-comparison",
-  "response": "Baker Klaas is in the bottom 15% of the Mid-Market Benelux segment at €4.20/kg vs a segment median of €4.85/kg. They do not currently purchase White Couverture or Cocoa Powder — both have a 73% co-purchase rate among similar bakers in the segment and carry above-average margins.",
+  "response": "Baker Klaas is in the bottom 20% of the Mid-Market Benelux segment at €4.20/kg vs a segment median of €4.85/kg. They do not currently purchase White Couverture or Cocoa Powder — both have a 73% co-purchase rate among similar bakers in the segment and carry above-average margins.",
   "visualType": "table",
   "dataKey": "baker-klaas-peer-comparison",
   "suggestedAction": "Propose a trial bundle of White Couverture + Cocoa Powder at an introductory rate alongside the renewal"
@@ -679,7 +679,7 @@ Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk 
 | GM% at −5% (discount scenario) | 14.1% |
 | GM% at flat (hold scenario) | 18.3% |
 | GM% at +4% (recommended scenario) | 19.8% |
-| Baker Klaas segment percentile | Bottom 15% |
+| Baker Klaas segment percentile | Bottom 20% |
 | White Couverture co-purchase rate (peers) | 73% |
 | Cocoa Powder co-purchase rate (peers) | 73% |
 
