@@ -29,6 +29,7 @@ export default function DealPricingPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [dealDiscountPct, setDealDiscountPct] = useState(0)
   const [priceInputStr, setPriceInputStr] = useState('')
+  const [pctInputStr, setPctInputStr] = useState('')
   const [explainResult, setExplainResult] = useState<ExplainResult | null>(null)
   const [explainOpen, setExplainOpen] = useState(false)
   const [chatOpen, setChatOpen] = useState(false)
@@ -151,89 +152,112 @@ export default function DealPricingPage() {
                 Rep adjustment
                 <span className="text-[10px] text-text-muted">Allowed: −10% to +20%</span>
               </span>
-              <div className="flex flex-col items-end gap-1">
-                {/* Floating value above thumb */}
-                <div className="relative w-32 h-4">
-                  <span
-                    className={`absolute text-xs font-semibold -translate-x-1/2 transition-all duration-150 ${
-                      dealDiscountPct < 0 ? 'text-zone-red' : dealDiscountPct > 0 ? 'text-zone-green' : 'text-text-primary'
-                    }`}
-                    style={{ left: `${sliderLabelLeft}%` }}
-                  >
-                    {dealDiscountPct > 0 ? `+${dealDiscountPct}` : dealDiscountPct}%
+              <div className="flex flex-col gap-1.5">
+                {/* Slider row — matches Deal Intelligence layout */}
+                <div className="flex items-center gap-3 justify-end">
+                  <input
+                    type="range"
+                    min={-10}
+                    max={20}
+                    step={0.5}
+                    value={dealDiscountPct}
+                    onChange={e => {
+                      const pct = parseFloat(e.target.value)
+                      setDealDiscountPct(pct)
+                      setPriceInputStr((basePrice * (1 + pct / 100)).toFixed(2))
+                      setPctInputStr('')
+                    }}
+                    className="w-32 slider-slim"
+                  />
+                  <div className="flex items-center gap-0.5 border border-border-default rounded px-1.5 py-0.5 bg-page-bg shrink-0 focus-within:border-pwc-orange">
+                    <span className="text-[9px] text-text-muted">€</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={priceInputStr || netPrice.toFixed(2)}
+                      onChange={e => setPriceInputStr(e.target.value)}
+                      onBlur={() => {
+                        const parsed = parseFloat(priceInputStr)
+                        if (!isNaN(parsed) && parsed > 0) {
+                          const newPct = Math.max(-10, Math.min(20, ((parsed / basePrice) - 1) * 100))
+                          setDealDiscountPct(parseFloat(newPct.toFixed(1)))
+                          setPriceInputStr((basePrice * (1 + newPct / 100)).toFixed(2))
+                        } else {
+                          setPriceInputStr(netPrice.toFixed(2))
+                        }
+                      }}
+                      onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+                      className="w-14 text-xs font-medium border-0 bg-transparent text-right focus:outline-none"
+                    />
+                    <span className="text-[9px] text-text-muted">/kg</span>
+                  </div>
+                  <div className="flex items-center shrink-0 border border-border-default rounded px-1.5 py-0.5 bg-page-bg focus-within:border-pwc-orange">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={pctInputStr !== '' ? pctInputStr : (dealDiscountPct > 0 ? `+${dealDiscountPct}` : `${dealDiscountPct}`)}
+                      onFocus={e => {
+                        setPctInputStr(String(dealDiscountPct))
+                        requestAnimationFrame(() => e.target.select())
+                      }}
+                      onChange={e => {
+                        const v = e.target.value
+                        if (v === '' || v === '-' || v === '+' || /^[+-]?\d*\.?\d*$/.test(v)) {
+                          setPctInputStr(v)
+                        }
+                      }}
+                      onBlur={() => {
+                        const parsed = parseFloat(pctInputStr)
+                        if (!isNaN(parsed)) {
+                          const clamped = Math.max(-10, Math.min(20, parsed))
+                          setDealDiscountPct(parseFloat(clamped.toFixed(1)))
+                          setPriceInputStr((basePrice * (1 + clamped / 100)).toFixed(2))
+                        }
+                        setPctInputStr('')
+                      }}
+                      onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
+                      className={`w-10 text-xs font-semibold border-0 bg-transparent text-right focus:outline-none ${
+                        dealDiscountPct < 0 ? 'text-zone-red' : dealDiscountPct > 0 ? 'text-zone-green' : 'text-text-primary'
+                      }`}
+                    />
+                    <span className="text-[9px] text-text-muted">%</span>
+                  </div>
+                </div>
+                {/* Snap-to buttons + headroom — full width, buttons left, headroom right */}
+                <div className="flex items-center w-full">
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => {
+                        const pct = Math.max(-10, Math.min(20, ((floorPrice / basePrice) - 1) * 100))
+                        setDealDiscountPct(parseFloat(pct.toFixed(1)))
+                        setPriceInputStr(floorPrice.toFixed(2))
+                      }}
+                      className="text-[9px] px-1.5 py-0.5 rounded border border-zone-red/40 text-zone-red hover:bg-zone-red/10 transition-colors"
+                    >
+                      Floor
+                    </button>
+                    <button
+                      onClick={() => {
+                        const pct = Math.max(-10, Math.min(20, ((targetPrice / basePrice) - 1) * 100))
+                        setDealDiscountPct(parseFloat(pct.toFixed(1)))
+                        setPriceInputStr(targetPrice.toFixed(2))
+                      }}
+                      className="text-[9px] px-1.5 py-0.5 rounded border border-zone-green/40 text-zone-green hover:bg-zone-green/10 transition-colors"
+                    >
+                      Target
+                    </button>
+                  </div>
+                  {/* Headroom label — pushed right */}
+                  <span className={`text-[10px] ml-auto ${
+                    escalationLevel === 'rep' ? 'text-zone-amber font-medium' : 'text-text-muted'
+                  }`}>
+                    {escalationLevel === 'none' && netPrice < targetPrice * 1.15
+                      ? `€${(netPrice - targetPrice).toFixed(2)} vs target`
+                      : escalationLevel === 'rep'
+                      ? `€${(netPrice - floorPrice).toFixed(2)} vs floor`
+                      : '\u00A0'}
                   </span>
                 </div>
-                {/* Slider */}
-                <input
-                  type="range"
-                  min={-10}
-                  max={20}
-                  step={0.5}
-                  value={dealDiscountPct}
-                  onChange={e => {
-                    const pct = parseFloat(e.target.value)
-                    setDealDiscountPct(pct)
-                    setPriceInputStr((basePrice * (1 + pct / 100)).toFixed(2))
-                  }}
-                  className="w-32 accent-pwc-orange"
-                />
-                {/* Direct price input */}
-                <div className="flex items-center gap-1 w-32">
-                  <span className="text-[10px] text-text-muted">€</span>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={priceInputStr || netPrice.toFixed(2)}
-                    onChange={e => setPriceInputStr(e.target.value)}
-                    onBlur={() => {
-                      const parsed = parseFloat(priceInputStr)
-                      if (!isNaN(parsed) && parsed > 0) {
-                        const newPct = Math.max(-10, Math.min(20, ((parsed / basePrice) - 1) * 100))
-                        setDealDiscountPct(parseFloat(newPct.toFixed(1)))
-                        setPriceInputStr((basePrice * (1 + newPct / 100)).toFixed(2))
-                      } else {
-                        setPriceInputStr(netPrice.toFixed(2))
-                      }
-                    }}
-                    onKeyDown={e => { if (e.key === 'Enter') (e.target as HTMLInputElement).blur() }}
-                    className="w-full text-xs font-medium border border-border-default rounded px-1.5 py-0.5 text-right bg-page-bg focus:outline-none focus:border-pwc-orange"
-                  />
-                  <span className="text-[10px] text-text-muted">/kg</span>
-                </div>
-                {/* Snap-to buttons */}
-                <div className="flex gap-1 w-32">
-                  <button
-                    onClick={() => {
-                      const pct = Math.max(-10, Math.min(20, ((floorPrice / basePrice) - 1) * 100))
-                      setDealDiscountPct(parseFloat(pct.toFixed(1)))
-                      setPriceInputStr(floorPrice.toFixed(2))
-                    }}
-                    className="flex-1 text-[9px] px-1 py-0.5 rounded border border-zone-red/40 text-zone-red hover:bg-zone-red/10 transition-colors"
-                  >
-                    → Floor
-                  </button>
-                  <button
-                    onClick={() => {
-                      const pct = Math.max(-10, Math.min(20, ((targetPrice / basePrice) - 1) * 100))
-                      setDealDiscountPct(parseFloat(pct.toFixed(1)))
-                      setPriceInputStr(targetPrice.toFixed(2))
-                    }}
-                    className="flex-1 text-[9px] px-1 py-0.5 rounded border border-zone-green/40 text-zone-green hover:bg-zone-green/10 transition-colors"
-                  >
-                    → Target
-                  </button>
-                </div>
-                {/* Headroom label */}
-                {escalationLevel === 'none' && netPrice < targetPrice * 1.15 && (
-                  <p className="text-[10px] text-text-muted text-right w-32">
-                    €{(netPrice - targetPrice).toFixed(2)} vs target
-                  </p>
-                )}
-                {escalationLevel === 'rep' && (
-                  <p className="text-[10px] text-zone-amber text-right w-32">
-                    €{(netPrice - floorPrice).toFixed(2)} vs floor
-                  </p>
-                )}
               </div>
             </div>
           </div>

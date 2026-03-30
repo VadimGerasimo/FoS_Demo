@@ -52,24 +52,25 @@ export function EscalationBanner({ level, discountPct: _discountPct }: Escalatio
     }
   }, [level, managerSent])
 
-  if (level === 'none') return null
-
-  const cfg = ESCALATION_CONFIG[level]
-  if (!cfg) return null
-  const Icon = cfg.icon
+  const cfg = level !== 'none' ? ESCALATION_CONFIG[level] : null
+  const Icon = cfg?.icon
 
   return (
-    <div key={level} className={`animate-slide-down flex items-start gap-3 px-4 py-3 rounded-xl border ${cfg.bg} transition-all`}>
-      <Icon size={16} className={`mt-0.5 shrink-0 ${cfg.text}`} />
+    <div className={`flex items-start gap-3 px-4 py-3 rounded-xl border transition-all duration-200 ${
+      cfg ? `${cfg.bg}` : 'border-transparent bg-transparent'
+    }`}
+      style={{ minHeight: 64, opacity: cfg ? 1 : 0, visibility: cfg ? 'visible' : 'hidden' }}
+    >
+      {Icon && <Icon size={16} className={`mt-0.5 shrink-0 ${cfg!.text}`} />}
       <div className="flex-1 min-w-0">
-        <p className={`text-sm font-semibold ${cfg.text}`}>{cfg.title}</p>
+        <p className={`text-sm font-semibold ${cfg?.text ?? ''}`}>{cfg?.title ?? '\u00A0'}</p>
         <p className="text-xs text-text-secondary mt-0.5">
           {level === 'manager' && sending ? 'Sending approval request...' :
            level === 'manager' && managerSent ? '✓ Request sent to manager. Awaiting approval' :
-           cfg.message}
+           cfg?.message ?? '\u00A0'}
         </p>
       </div>
-      {(
+      {cfg && (
         <textarea
           placeholder="Add deal justification (required)..."
           rows={2}
