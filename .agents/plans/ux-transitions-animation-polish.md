@@ -26,7 +26,7 @@ All fixes use only Tailwind CSS utility classes and new `@keyframes` / `@layer u
 
 **Feature Type**: Enhancement / Polish
 **Estimated Complexity**: Low-Medium
-**Primary Systems Affected**: Layout, CPQ, Chat panels, Shared components, App layout
+**Primary Systems Affected**: Layout, Deal Pricing, Chat panels, Shared components, App layout
 **Dependencies**: None new — Tailwind CSS 3.4 (already installed), existing `globals.css` keyframes
 
 ---
@@ -42,9 +42,9 @@ All fixes use only Tailwind CSS utility classes and new `@keyframes` / `@layer u
 - `src/components/shared/ExplainPanel.tsx` (lines 12-80) — Why: Overlay uses `{isOpen && <div.../>}` — the exact anti-pattern to fix. Panel slide itself is correct.
 - `src/components/charts/BucketInsightPanel.tsx` (lines 76-191) — Why: Same overlay anti-pattern + formula accordion pop + ContributorBar width fix.
 - `src/components/chat/ContextualChatPanel.tsx` (lines 167-235) — Why: Missing overlay entirely + state reset happens synchronously during slide-out + messages need fade-in.
-- `src/components/cpq/EscalationBanner.tsx` (lines 38-81) — Why: `if (level === 'none') return null` kills transition. Most critical demo moment to fix.
+- `src/components/deal-pricing/EscalationBanner.tsx` (lines 38-81) — Why: `if (level === 'none') return null` kills transition. Most critical demo moment to fix.
 - `src/components/layout/Sidebar.tsx` (lines 45-97) — Why: Conditional `{!collapsed && ...}` for label/logo — needs opacity fade.
-- `src/app/cpq/page.tsx` (lines 120-125) — Why: Escalation zone badge needs `transition-colors` added.
+- `src/app/deal-pricing/page.tsx` (lines 120-125) — Why: Escalation zone badge needs `transition-colors` added.
 - `src/components/shared/ExplainButton.tsx` (lines 43-71) — Why: Error state switches instantly, button needs active press state.
 - `src/components/charts/BucketInsightPanel.tsx` (lines 15-39) — Why: ContributorBar inner div `style={{ width: pct% }}` needs `transition-[width]`.
 
@@ -166,7 +166,7 @@ Smaller but visible polish items.
 - ContributorBar width transition
 - Formula accordion height animation
 - Button active press state
-- Escalation zone badge transition-colors in CPQ page
+- Escalation zone badge transition-colors in Deal Pricing page
 - ExplainButton error state transition
 
 ---
@@ -238,7 +238,7 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
 
 ---
 
-### TASK 3 — UPDATE `src/components/cpq/EscalationBanner.tsx`
+### TASK 3 — UPDATE `src/components/deal-pricing/EscalationBanner.tsx`
 
 - **IMPLEMENT**: Replace `if (level === 'none') return null` (line 55) with a persistent wrapper that animates in/out. The outer container should always render, using `animate-slide-down` (from Task 1) when `level !== 'none'`, and `hidden` only when `level === 'none'`. Additionally, add a `key={level}` on the inner content div so changing between `rep`/`manager`/`director` also triggers a re-animate.
 - **PATTERN**: Use the `animate-slide-down` class added in Task 1. Use `key={level}` re-mount trick (same as FadeWrapper's `key={fadeKey}` pattern at FadeWrapper.tsx line 11).
@@ -259,7 +259,7 @@ IMPORTANT: Execute every task in order, top to bottom. Each task is atomic and i
   <div key={level} className={`animate-slide-down flex items-start gap-3 px-4 py-3 rounded-xl border ${cfg.bg} transition-all`}>
   ```
 - **GOTCHA**: `key` prop on a regular div triggers React re-mount, which re-runs the CSS animation. This is the correct approach. Do not add `key` to the outer fragment — add it to the `<div>` wrapper itself.
-- **VALIDATE**: `npx next lint src/components/cpq/EscalationBanner.tsx`
+- **VALIDATE**: `npx next lint src/components/deal-pricing/EscalationBanner.tsx`
 
 ---
 
@@ -477,7 +477,7 @@ Fix sidebar label and logo popping during collapse animation.
 
 ---
 
-### TASK 9 — UPDATE `src/app/cpq/page.tsx`
+### TASK 9 — UPDATE `src/app/deal-pricing/page.tsx`
 
 Add `transition-colors duration-300` to the escalation zone badge.
 
@@ -502,7 +502,7 @@ Add `transition-colors duration-300` to the escalation zone badge.
     €{netPrice.toFixed(2)}/kg
   </div>
   ```
-- **VALIDATE**: `npx next lint src/app/cpq/page.tsx`
+- **VALIDATE**: `npx next lint src/app/deal-pricing/page.tsx`
 
 ---
 
@@ -556,7 +556,7 @@ No automated test framework is present in this project (no Jest/Vitest config, n
 - Previously: panel snapped in/out instantly
 
 **EscalationBanner (Task 3)**
-- On CPQ page, drag slider to below floor price → banner slides down with 350ms ease-out ✓
+- On Deal Pricing page, drag slider to below floor price → banner slides down with 350ms ease-out ✓
 - Drag back above floor → banner disappears (instant exit is acceptable) ✓
 - Slide between `rep`/`manager`/`director` levels → banner re-animates each time ✓
 
@@ -574,7 +574,7 @@ No automated test framework is present in this project (no Jest/Vitest config, n
 - Click collapse toggle → labels/logo fade out during width collapse, no text clipping ✓
 - Click expand → labels/logo fade in after width expands ✓
 
-**CPQ badge (Task 9)**
+**Deal Pricing badge (Task 9)**
 - Drag slider across zone boundaries → badge color blends smoothly ✓
 
 **ExplainButton (Task 10)**
@@ -610,14 +610,14 @@ Must complete with zero errors. Watch for any CSS parsing errors from globals.cs
 ```bash
 npx next lint src/app/globals.css
 npx next lint src/components/layout/DemoGuidePanel.tsx
-npx next lint src/components/cpq/EscalationBanner.tsx
+npx next lint src/components/deal-pricing/EscalationBanner.tsx
 npx next lint src/app/layout.tsx
 npx next lint src/components/layout/PageTransitionWrapper.tsx
 npx next lint src/components/shared/ExplainPanel.tsx
 npx next lint src/components/charts/BucketInsightPanel.tsx
 npx next lint src/components/chat/ContextualChatPanel.tsx
 npx next lint src/components/layout/Sidebar.tsx
-npx next lint src/app/cpq/page.tsx
+npx next lint src/app/deal-pricing/page.tsx
 npx next lint src/components/shared/ExplainButton.tsx
 ```
 
@@ -641,7 +641,7 @@ Open http://localhost:3000 and manually run through the validation checklist abo
 - [ ] Sidebar labels and logo fade during collapse (no text clipping)
 - [ ] ContributorBar widths animate from 0% to value on panel open
 - [ ] Formula accordion expands/collapses with height animation
-- [ ] CPQ escalation zone badge color blends on slider zone crossing
+- [ ] Deal Pricing escalation zone badge color blends on slider zone crossing
 - [ ] ExplainButton shows press feedback on click
 - [ ] `npx next build` passes with zero errors
 - [ ] `npx next lint` passes with zero errors
@@ -660,7 +660,7 @@ Open http://localhost:3000 and manually run through the validation checklist abo
 - [ ] Task 6 (BucketInsightPanel): overlay + ContributorBar transition + accordion height
 - [ ] Task 7 (ContextualChatPanel): overlay + delayed reset + message fade
 - [ ] Task 8 (Sidebar): label/logo opacity fade during collapse
-- [ ] Task 9 (cpq/page.tsx): badge `transition-colors duration-300`
+- [ ] Task 9 (deal-pricing/page.tsx): badge `transition-colors duration-300`
 - [ ] Task 10 (ExplainButton): `active:scale-[0.97]` + error state transition
 - [ ] `npx next lint` — zero errors
 - [ ] `npx next build` — zero errors

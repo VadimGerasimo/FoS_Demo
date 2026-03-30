@@ -15,7 +15,7 @@ The tool is designed to be presented by a PwC consultant to an audience of comme
 
 **Primary Demo Scenario:** Scenario 1 — Baker Klaas Asks for More Discount. This is the core story the MVP must tell end-to-end without hesitation. Sarah, a sales rep, uses Equazion live on a call with Baker Klaas to hold the price, propose a smart uplift, and open a cross-sell conversation — all in under two minutes, with no spreadsheet and no manager.
 
-**MVP Goal:** Deliver a fully navigable Next.js web application where Scenario 1 runs flawlessly across Segmentation, CPQ, and Chat. All remaining screens are fully populated and navigable as supporting context. The tool is deployable to Vercel and ready for live client demonstrations.
+**MVP Goal:** Deliver a fully navigable Next.js web application where Scenario 1 runs flawlessly across Segmentation, Deal Pricing, and Chat. All remaining screens are fully populated and navigable as supporting context. The tool is deployable to Vercel and ready for live client demonstrations.
 
 ---
 
@@ -39,7 +39,7 @@ The tool is designed to be presented by a PwC consultant to an audience of comme
 
 | Persona | Role | Demo Context |
 |---|---|---|
-| Sarah (Sales Rep) | Account manager negotiating a deal live on a call | Primary actor in Scenario 1 — uses Segmentation, CPQ, Chat |
+| Sarah (Sales Rep) | Account manager negotiating a deal live on a call | Primary actor in Scenario 1 — uses Segmentation, Deal Pricing, Chat |
 | Pricing Manager | Reviews account profitability and rebate structures | Supporting viewer — interested in Waterfall and Segmentation |
 | Commercial Director | Evaluates portfolio performance and growth quality | Supporting viewer — interested in PVM and Chat queries |
 | New Sales Rep | Onboarding, learning why pricing differs by account | Asks "why" questions in Chat |
@@ -63,7 +63,7 @@ The tool is designed to be presented by a PwC consultant to an audience of comme
 ### Core Functionality
 - ✅ Chat with Your Data — conversational interface with dynamic right-panel visuals
 - ✅ Segmentation screen — scatter plot with floor/target curves, filter pane, comparison mode, prospect input
-- ✅ CPQ screen — live quoting with tier discount, escalation workflow, margin bridge, three-scenario modelling
+- ✅ Deal Pricing screen — live quoting with tier discount, escalation workflow, margin bridge, three-scenario modelling
 - ✅ Win/Loss Price Intelligence — win probability curve, standalone screen
 - ✅ Ease of Realization — composite score with dimension breakdown, standalone screen
 - ✅ Price Waterfall — full price decomposition waterfall
@@ -75,7 +75,7 @@ The tool is designed to be presented by a PwC consultant to an audience of comme
 - ✅ 8–10 mock accounts, 5–6 mock SKUs in all data tables
 - ✅ Animated prospect dot on Segmentation curve
 - ✅ Segmentation comparison mode (split panel toggle)
-- ✅ CPQ escalation simulation ("request sent to manager" state)
+- ✅ Deal Pricing escalation simulation ("request sent to manager" state)
 - ✅ Saveable conversations (localStorage)
 - ✅ Pin to shared library (visual affordance)
 
@@ -112,8 +112,8 @@ Sarah is on the phone with Baker Klaas — a mid-market bakery renewing their an
 **Step 1 — Segmentation: See where Baker Klaas stands**
 Sarah selects Baker Klaas + Milk Couverture in the filter pane. His dot appears visibly below the segment floor on the scatter plot. The AI tells her instantly: Baker Klaas is already 8% below the Mid-Market Benelux floor on this SKU. Granting more discount would widen the gap further — a 12% uplift would be needed just to return to fair pricing. The recommendation: staged correction over two to three renewal cycles.
 
-**Step 2 — CPQ: Model three scenarios side by side**
-Sarah opens CPQ with Baker Klaas + Milk Couverture pre-loaded from context. She models three options:
+**Step 2 — Deal Pricing: Model three scenarios side by side**
+Sarah opens Deal Pricing with Baker Klaas + Milk Couverture pre-loaded from context. She models three options:
 - Give the 5% discount → red zone, margin 14.1%, escalation fires
 - Hold flat (0%) → amber zone, margin 18.3%, still below segment target
 - Propose +4% uplift → still amber but moves toward in-band, margin 19.8%
@@ -143,7 +143,7 @@ Sarah goes back to the buyer with confidence:
 | # | Title | Primary Screens | Key Data Moment |
 |---|---|---|---|
 | 2 | Silent margin erosion on Baker Klaas | Waterfall → Chat | 9.2% flat rebate; €38,400 total leakage |
-| 3 | Schoko volume deal negotiation | Segmentation → CPQ → Chat | 45k kg at €3.70; €166,500 GM |
+| 3 | Schoko volume deal negotiation | Segmentation → Deal Pricing → Chat | 45k kg at €3.70; €166,500 GM |
 | 4 | Growing or getting squeezed? (Schoko PVM) | PVM → Chat | +€7k net, -€22k price, -€19k mix |
 | 5 | Why does Schoko pay less? | Segmentation (comparison) → Chat | Baker Klaas 18.3% vs Schoko 26.8% net-net |
 
@@ -156,7 +156,7 @@ All secondary scenario data is present in the JSON files and all screens are ful
 ### Primary Story — Sarah holds price and opens cross-sell (Scenario 1)
 > **As Sarah, a sales rep on a live call,** I want to instantly see where Baker Klaas sits relative to the segment floor, model three pricing options, and get AI-surfaced cross-sell intelligence, **so that** I can respond to a discount request with data, propose a defensible uplift, and expand the deal — all without putting the customer on hold.
 
-*Concrete flow:* Filter pane set to Baker Klaas + Milk Couverture → Segmentation shows red dot 8% below floor → CPQ shows three scenario comparison → Chat answers "How does Baker Klaas compare?" → Sarah quotes +4% with confidence.
+*Concrete flow:* Filter pane set to Baker Klaas + Milk Couverture → Segmentation shows red dot 8% below floor → Deal Pricing shows three scenario comparison → Chat answers "How does Baker Klaas compare?" → Sarah quotes +4% with confidence.
 
 ---
 
@@ -212,7 +212,7 @@ FoS_Demo/
 │   │   ├── page.tsx               # Redirect → /chat
 │   │   ├── chat/page.tsx
 │   │   ├── segmentation/page.tsx
-│   │   ├── cpq/page.tsx
+│   │   ├── deal-pricing/page.tsx
 │   │   ├── win-loss/page.tsx
 │   │   ├── ease-of-realization/page.tsx
 │   │   ├── waterfall/page.tsx
@@ -234,7 +234,7 @@ FoS_Demo/
 │   │   │   ├── PVMBridge.tsx
 │   │   │   ├── WinProbabilityCurve.tsx
 │   │   │   └── EoRDimensions.tsx
-│   │   ├── cpq/
+│   │   ├── deal-pricing/
 │   │   │   ├── PriceBand.tsx
 │   │   │   ├── MarginBridge.tsx
 │   │   │   ├── EscalationBanner.tsx
@@ -279,7 +279,7 @@ Every screen's data-driven components receive `accountId` and `productId` as pro
 
 **Visual routing in Chat:** The `/api/chat` response includes a `visualType` enum (`scatter | waterfall | pvm | winLoss | eor | table`) and a `dataKey` pointing to a pre-computed data slice in `chat-scenarios.json`. `DynamicRightPanel` switches on `visualType` to render the correct chart.
 
-**Escalation state machine:** CPQ tracks discount level as a derived value. Thresholds are defined in `products.json` per SKU. State: `none → rep → manager → director`.
+**Escalation state machine:** Deal Pricing tracks discount level as a derived value. Thresholds are defined in `products.json` per SKU. State: `none → rep → manager → director`.
 
 ---
 
@@ -317,7 +317,7 @@ Every screen renders `<FilterBar>` directly below the page title.
 
 ---
 
-### 8.3 CPQ
+### 8.3 Deal Pricing
 - **Filter bar:** `<FilterBar>` at top. Changing account or product resets the price calculation stack to the new combination's data.
 - **Customer + product selectors:** Also mirrored inline in the quote header (redundant with filter bar for visual clarity in this screen).
 - **Price calculation stack:**
@@ -515,7 +515,7 @@ Generates an AI explanation of the current screen state.
 ## 12. Success Criteria
 
 ### MVP Definition of Done
-Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk Couverture in the filter pane, the Segmentation screen shows his red dot below floor, CPQ shows the three-scenario comparison with escalation on the discount option, and Chat answers the peer comparison question with cross-sell intelligence. All other screens are fully populated and navigable. Accounts and products are defined in JSON files and can be switched on the fly via the filter pane.
+Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk Couverture in the filter pane, the Segmentation screen shows his red dot below floor, Deal Pricing shows the three-scenario comparison with escalation on the discount option, and Chat answers the peer comparison question with cross-sell intelligence. All other screens are fully populated and navigable. Accounts and products are defined in JSON files and can be switched on the fly via the filter pane.
 
 ### Functional Requirements
 - ✅ All seven screens render with populated data
@@ -524,8 +524,8 @@ Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk 
 - ✅ AppContext carries active account/product across all screens and stays in sync with filter bar
 - ✅ Chat accepts free-text, calls OpenAI, and renders the correct visual in the right panel
 - ✅ Chat sets AppContext when an account is identified in the response
-- ✅ CPQ three-scenario comparison panel works for Scenario 1
-- ✅ CPQ escalation fires at correct thresholds and simulates approval workflow
+- ✅ Deal Pricing three-scenario comparison panel works for Scenario 1
+- ✅ Deal Pricing escalation fires at correct thresholds and simulates approval workflow
 - ✅ Segmentation shows Baker Klaas red dot 8% below floor by default
 - ✅ Segmentation comparison mode splits into two panels
 - ✅ Prospect dot animates onto the segmentation curve
@@ -569,19 +569,19 @@ Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk 
 
 ---
 
-### Phase 2 — Scenario 1 Screens (Segmentation + CPQ + Chat)
+### Phase 2 — Scenario 1 Screens (Segmentation + Deal Pricing + Chat)
 **Goal:** Scenario 1 runs end-to-end.
 
 - ✅ Segmentation: scatter plot, Baker Klaas red dot, floor/target curves, filter-reactive re-render
 - ✅ Segmentation: comparison mode toggle, prospect input + animation
-- ✅ CPQ: price stack, live margin bridge, price band, filter-reactive re-render
-- ✅ CPQ: three-scenario comparison panel (give 5% / hold flat / +4% uplift)
-- ✅ CPQ: escalation state machine — amber at 5%, simulated approval at 10%
+- ✅ Deal Pricing: price stack, live margin bridge, price band, filter-reactive re-render
+- ✅ Deal Pricing: three-scenario comparison panel (give 5% / hold flat / +4% uplift)
+- ✅ Deal Pricing: escalation state machine — amber at 5%, simulated approval at 10%
 - ✅ Chat: left/right split, conversation thread, DynamicRightPanel
 - ✅ Chat: Scenario 1 pre-scripted Q&A (peer comparison + cross-sell)
 - ✅ Chat: sets AppContext on account identification
 
-**Validation:** Full Scenario 1 walkthrough: Segmentation → CPQ → Chat. All three steps land cleanly.
+**Validation:** Full Scenario 1 walkthrough: Segmentation → Deal Pricing → Chat. All three steps land cleanly.
 
 ---
 
@@ -594,7 +594,7 @@ Scenario 1 runs end-to-end without hesitation: Sarah selects Baker Klaas + Milk 
 - ✅ Ease of Realization: composite score, 7 dimension bars, account comparison table, filter-reactive
 - ✅ `/api/explain` route: screen-aware prompts for all seven screens
 - ✅ ExplainButton + ExplainPanel on all seven screens
-- ✅ Win Prob + EoR signals in CPQ with navigation links
+- ✅ Win Prob + EoR signals in Deal Pricing with navigation links
 - ✅ Saved conversations (localStorage): save, list, reload
 - ✅ Pin visual (visual affordance)
 

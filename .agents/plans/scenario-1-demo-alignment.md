@@ -6,17 +6,17 @@ Pay special attention to where `netPrice` is derived, which props flow to child 
 
 ## Feature Description
 
-Scenario 1 ("Baker Klaas Asks for More Discount") must be fully walkable as a demo story. Currently the CPQ screen computes `netPrice` from list price minus tier discount (yielding ~€5.51), so the slider produces wrong numbers (€5.23 / €5.51 / €5.73) instead of the scenario-correct values (€3.99 / €4.20 / €4.37). The DealContextPanel also shows wrong segment position ("Above target" instead of "Below floor"). Two minor Segmentation issues reduce narrative richness.
+Scenario 1 ("Baker Klaas Asks for More Discount") must be fully walkable as a demo story. Currently the Deal Pricing screen computes `netPrice` from list price minus tier discount (yielding ~€5.51), so the slider produces wrong numbers (€5.23 / €5.51 / €5.73) instead of the scenario-correct values (€3.99 / €4.20 / €4.37). The DealContextPanel also shows wrong segment position ("Above target" instead of "Below floor"). Two minor Segmentation issues reduce narrative richness.
 
 ## User Story
 
 As a PwC demo presenter running Scenario 1
-I want the CPQ slider to anchor to Baker Klaas's current deal price (€4.20)
+I want the Deal Pricing slider to anchor to Baker Klaas's current deal price (€4.20)
 So that the three slider positions produce €3.99 (−5%), €4.20 (flat), €4.37 (+4%) — matching the script and triggering the correct escalation colors
 
 ## Problem Statement
 
-1. `netPrice` in `cpq/page.tsx` is computed as `listPrice × (1 − tierDiscount%) × (1 + dealDiscount%)`, yielding €5.51 at 0% rep adjustment for Baker Klaas — wrong baseline.
+1. `netPrice` in `deal-pricing/page.tsx` is computed as `listPrice × (1 − tierDiscount%) × (1 + dealDiscount%)`, yielding €5.51 at 0% rep adjustment for Baker Klaas — wrong baseline.
 2. `DealContextPanel` derives "Segment position" from the slider `currentPrice` prop instead of `lastQuotedPrice`, showing "Above target" when Baker Klaas is actually "Below floor."
 3. Price stack display labels ("List price", "Tier discount", "Rep adjustment") are technically correct but misleading for a deal where the baseline is already the current deal price.
 4. Segmentation Explain `keyMetrics` is missing `accountName` and `upliftToFloor`, so GPT-4o cannot generate a fully account-specific narrative.
@@ -26,7 +26,7 @@ So that the three slider positions produce €3.99 (−5%), €4.20 (flat), €4
 
 - Anchor `netPrice` to `quoteBase.currentPrice` (the current deal price) plus the rep adjustment percentage. Remove the tier-discount subtraction from the live calculation — tier discount is already baked into the current price.
 - Fix `DealContextPanel` to derive segment position from `lastQuotedPrice`, not `currentPrice` (the slider value).
-- Update CPQ price stack labels to reflect the anchored baseline.
+- Update Deal Pricing price stack labels to reflect the anchored baseline.
 - Enrich Segmentation `keyMetrics` with `accountName` and `upliftToFloor`.
 - Add percentile rank badge to the Segmentation KPI row.
 
@@ -34,7 +34,7 @@ So that the three slider positions produce €3.99 (−5%), €4.20 (flat), €4
 
 **Feature Type**: Bug Fix + Enhancement
 **Estimated Complexity**: Low
-**Primary Systems Affected**: CPQ page, DealContextPanel, Segmentation page, SegmentHealthPanel
+**Primary Systems Affected**: Deal Pricing page, DealContextPanel, Segmentation page, SegmentHealthPanel
 **Dependencies**: None (all internal, data already in JSON files)
 
 ---
@@ -43,10 +43,10 @@ So that the three slider positions produce €3.99 (−5%), €4.20 (flat), €4
 
 ### Relevant Codebase Files — MUST READ BEFORE IMPLEMENTING
 
-- `src/app/cpq/page.tsx` (lines 37–67) — Current `netPrice` computation and slider state; this is the primary fix location
-- `src/app/cpq/page.tsx` (lines 80–93) — DealContextPanel prop pass; `currentPrice={netPrice}` vs `lastQuotedPrice` must be understood
-- `src/app/cpq/page.tsx` (lines 115–181) — Price stack labels and combined discount line
-- `src/components/cpq/DealContextPanel.tsx` (lines 19–20) — Bug: segment position uses `currentPrice` instead of `lastQuotedPrice`
+- `src/app/deal-pricing/page.tsx` (lines 37–67) — Current `netPrice` computation and slider state; this is the primary fix location
+- `src/app/deal-pricing/page.tsx` (lines 80–93) — DealContextPanel prop pass; `currentPrice={netPrice}` vs `lastQuotedPrice` must be understood
+- `src/app/deal-pricing/page.tsx` (lines 115–181) — Price stack labels and combined discount line
+- `src/components/deal-pricing/DealContextPanel.tsx` (lines 19–20) — Bug: segment position uses `currentPrice` instead of `lastQuotedPrice`
 - `src/app/segmentation/page.tsx` (lines 183–191) — Explain `keyMetrics` object; fields to add
 - `src/app/segmentation/page.tsx` (lines 89–138) — KPI cards array; add percentile card here
 - `src/components/segmentation/SegmentHealthPanel.tsx` (lines 13–24) — Where percentile rank can be computed from `points` array
@@ -87,11 +87,11 @@ keyMetrics={{
 
 ## IMPLEMENTATION PLAN
 
-### Phase 1: Fix CPQ netPrice baseline (Critical)
+### Phase 1: Fix Deal Pricing netPrice baseline (Critical)
 
 Change `netPrice` to anchor from `quoteBase.currentPrice` instead of computing from `listPrice × (1 − tierDiscount%)`.
 
-### Phase 2: Fix CPQ price stack display (Critical — follows Phase 1)
+### Phase 2: Fix Deal Pricing price stack display (Critical — follows Phase 1)
 
 Update the price stack labels so the UI reflects the new anchored-baseline logic. The "Tier discount" row becomes informational-only; the slider row label stays "Rep adjustment."
 
@@ -111,7 +111,7 @@ Compute the account's price rank within the segment's point array and add a KPI 
 
 ## STEP-BY-STEP TASKS
 
-### TASK 1 — UPDATE `src/app/cpq/page.tsx`: Fix netPrice baseline
+### TASK 1 — UPDATE `src/app/deal-pricing/page.tsx`: Fix netPrice baseline
 
 - **IMPLEMENT**: Replace the `netPrice` useMemo so it anchors to `quoteBase.currentPrice` (the actual current deal price), not list-price-minus-tier.
 - **PATTERN**: `quoteBase?.currentPrice` is already read on line 86 for `lastQuotedPrice`; reuse the same source.
@@ -135,7 +135,7 @@ Compute the account's price rank within the segment's point array and add a KPI 
 - **GOTCHA**: `basePrice` is derived from `quoteBase` which can be `undefined` for account/product combos with no entry; the fallback chain handles that gracefully.
 - **VALIDATE**: With Baker Klaas / Milk Couverture at 0% rep adjustment → netPrice should equal exactly `4.20`. At −5% → `3.99`. At +4% → `4.37`.
 
-### TASK 2 — UPDATE `src/app/cpq/page.tsx`: Fix price stack labels
+### TASK 2 — UPDATE `src/app/deal-pricing/page.tsx`: Fix price stack labels
 
 - **IMPLEMENT**: Update the price stack section (lines 115–181) so the row labels reflect the anchored-baseline model:
   - **Row 1**: Change label from `"List price"` → `"Current deal price"`, value from `€{listPrice.toFixed(2)}/kg` → `€{basePrice.toFixed(2)}/kg`
@@ -145,7 +145,7 @@ Compute the account's price rank within the segment's point array and add a KPI 
 - **GOTCHA**: The `sliderLabelLeft` calculation on line 67 uses the same `dealDiscountPct` range (−10 to +20) and does not change.
 - **VALIDATE**: UI shows "Current deal price €4.20/kg" at top of price stack; tier row is visually secondary; combined line shows only rep adjustment.
 
-### TASK 3 — UPDATE `src/components/cpq/DealContextPanel.tsx`: Fix segment position
+### TASK 3 — UPDATE `src/components/deal-pricing/DealContextPanel.tsx`: Fix segment position
 
 - **IMPLEMENT**: Line 19 — change `currentPrice` to `lastQuotedPrice` in the `segmentPosition` ternary.
 - **BEFORE** (line 19):
@@ -224,12 +224,12 @@ Compute the account's price rank within the segment's point array and add a KPI 
 
 Walk the full Scenario 1 script after implementing all tasks:
 
-1. Navigate to CPQ → select Baker Klaas / Milk Couverture
+1. Navigate to Deal Pricing → select Baker Klaas / Milk Couverture
 2. At 0% rep adjustment: price shows €4.20, "Segment position" in DealContextPanel shows **Below floor** (red)
 3. Drag slider to −5%: price shows **€3.99**, EscalationBanner shows **red / director** level
 4. Drag slider to 0%: price shows **€4.20**, banner shows **manager** (below floor but within 5%)
 5. Drag slider to +4%: price shows **€4.37**, banner shows **manager** (still below floor — €4.37 < €4.57)
-6. Click AI Explain on CPQ — verify contextual numbers appear
+6. Click AI Explain on Deal Pricing — verify contextual numbers appear
 7. Navigate to Segmentation → select Baker Klaas / Milk Couverture
 8. Verify 5 KPI cards; "Segment rank" card shows "Bottom X%" in red
 9. Click AI Explain on Segmentation — verify response mentions Baker Klaas by name and references the 8.8% uplift to floor
@@ -237,7 +237,7 @@ Walk the full Scenario 1 script after implementing all tasks:
 
 ### Regression Check
 
-- Switch to a different account (e.g., Callebaut Direct) — verify CPQ slider still anchors to that account's `currentPrice` from quotes.json
+- Switch to a different account (e.g., Callebaut Direct) — verify Deal Pricing slider still anchors to that account's `currentPrice` from quotes.json
 - If no quotes.json entry exists for a combo, fallback chain (`account?.price ?? listPrice * (1 - tierDiscount/100)`) must not crash
 
 ---
@@ -253,7 +253,7 @@ cd "C:\Users\Vadim Gerasimov\POCs\FoS_Demo" && npx tsc --noEmit
 ```bash
 cd "C:\Users\Vadim Gerasimov\POCs\FoS_Demo" && npm run dev
 ```
-Then open `http://localhost:3000/cpq` and verify no console errors.
+Then open `http://localhost:3000/deal-pricing` and verify no console errors.
 
 ### Level 3: Manual scenario walkthrough
 Follow the 10-step manual validation above in the Chrome browser.
@@ -262,11 +262,11 @@ Follow the 10-step manual validation above in the Chrome browser.
 
 ## ACCEPTANCE CRITERIA
 
-- [ ] CPQ at 0% rep adjustment shows **€4.20/kg** for Baker Klaas (not €5.51)
-- [ ] CPQ at −5% shows **€3.99/kg** and EscalationBanner is **red (director)**
-- [ ] CPQ at +4% shows **€4.37/kg**
+- [ ] Deal Pricing at 0% rep adjustment shows **€4.20/kg** for Baker Klaas (not €5.51)
+- [ ] Deal Pricing at −5% shows **€3.99/kg** and EscalationBanner is **red (director)**
+- [ ] Deal Pricing at +4% shows **€4.37/kg**
 - [ ] DealContextPanel "Segment position" shows **Below floor** (red) for Baker Klaas at any slider position below €4.57
-- [ ] CPQ price stack row 1 label reads **"Current deal price"** with value €4.20/kg
+- [ ] Deal Pricing price stack row 1 label reads **"Current deal price"** with value €4.20/kg
 - [ ] Segmentation KPI row has **5 cards** including "Segment rank — Bottom X%"
 - [ ] Segmentation Explain API request body contains `accountName: "Baker Klaas"` and `upliftToFloor: "8.8"`
 - [ ] No TypeScript errors (`tsc --noEmit` passes)

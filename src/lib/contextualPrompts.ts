@@ -1,4 +1,4 @@
-export type ScreenId = 'segmentation' | 'cpq' | 'deal-intelligence' | 'waterfall' | 'pvm'
+export type ScreenId = 'segmentation' | 'deal-pricing' | 'deal-intelligence' | 'waterfall' | 'pvm'
 
 export function buildContextualPrompt(
   screen: ScreenId,
@@ -13,8 +13,8 @@ export function buildContextualPrompt(
     case 'segmentation':
       return `Summarise what you see on the segmentation screen for ${acct} on ${prod}. Current price: €${keyMetrics.currentPrice ?? '?'}/kg. Floor: €${keyMetrics.floorPrice ?? '?'}/kg. Target: €${keyMetrics.targetPrice ?? '?'}/kg. Zone: ${keyMetrics.zone ?? 'unknown'}. Be specific, analytical, and concise. 3 sentences max. Use sentence case, never em-dashes.`
 
-    case 'cpq':
-      return `Summarise the CPQ pricing situation for ${acct} on ${prod}. Give a brief analysis of the three scenarios shown and recommend the best option. Be direct and use specific numbers if available. Use sentence case, never em-dashes.`
+    case 'deal-pricing':
+      return `Summarise the deal pricing situation for ${acct} on ${prod}. Give a brief analysis of the three scenarios shown and recommend the best option. Be direct and use specific numbers if available. Use sentence case, never em-dashes.`
 
     case 'deal-intelligence':
       return `Summarise the deal intelligence for ${acct} on ${prod}. Win rate: ${keyMetrics.winRateAtCurrentPrice ?? '?'}% at current price. Account Quality Score: ${keyMetrics.accountQualityScore ?? '?'}/10. Deal score: ${keyMetrics.dealScore ?? '?'}. Provide a clear verdict on whether to proceed with this deal. Use sentence case, never em-dashes.`

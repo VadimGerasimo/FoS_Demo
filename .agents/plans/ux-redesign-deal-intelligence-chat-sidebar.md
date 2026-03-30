@@ -47,14 +47,14 @@ Merge Win/Loss + EoR into a single Deal Intelligence page with a computed Deal S
 - `src/components/shared/ChartSkeleton.tsx` — Loading skeleton pattern used in every page.
 - `src/app/api/explain/route.ts` (lines 1–125) — `FALLBACK_RESPONSES` object keyed by screen name. Add `"deal-intelligence"` and `"ask-your-data"` entries.
 - `src/app/api/chat/route.ts` (lines 1–101) — OpenAI semantic routing, returns `scenarioId`, `response`, `visualType`, `dataKey`. Used by ContextualChatPanel too.
-- `src/components/cpq/WinProbSignal.tsx` (line 47) — Link to `/win-loss` → must update to `/deal-intelligence`.
-- `src/components/cpq/EoRSignal.tsx` (line 42) — Link to `/ease-of-realization` → must update to `/deal-intelligence`.
+- `src/components/deal-pricing/WinProbSignal.tsx` (line 47) — Link to `/win-loss` → must update to `/deal-intelligence`.
+- `src/components/deal-pricing/EoRSignal.tsx` (line 42) — Link to `/ease-of-realization` → must update to `/deal-intelligence`.
 - `data/accounts.json` — `"name": "Baker Klaas"` on `baker-klaas` entry. Display name only.
 - `data/chat-scenarios.json` — All response text strings with "Baker Klaas" to rename. 2 new scenarios to add.
 - `src/app/segmentation/page.tsx` — Reference for how pages wire ExplainButton. Will receive ContextualChatPanel.
 - `src/app/waterfall/page.tsx` — Has "Baker Klaas" fallback text. Will receive ContextualChatPanel.
 - `src/app/pvm/page.tsx` — Will receive ContextualChatPanel.
-- `src/app/cpq/page.tsx` — Will receive ContextualChatPanel.
+- `src/app/deal-pricing/page.tsx` — Will receive ContextualChatPanel.
 - `next.config.mjs` — Add redirects here for old routes.
 
 ### New Files to Create
@@ -163,7 +163,7 @@ export function interpolateWinRate(curve: { price: number; winRate: number }[], 
   return lower.winRate + t * (upper.winRate - lower.winRate)
 }
 ```
-- **REMOVE** the duplicate `interpolateWinRate` function bodies from: `src/app/win-loss/page.tsx`, `src/components/charts/WinProbabilityCurve.tsx`, `src/components/cpq/WinProbSignal.tsx`
+- **REMOVE** the duplicate `interpolateWinRate` function bodies from: `src/app/win-loss/page.tsx`, `src/components/charts/WinProbabilityCurve.tsx`, `src/components/deal-pricing/WinProbSignal.tsx`
 - **ADD** `import { interpolateWinRate } from '@/lib/interpolateWinRate'` to each of those three files
 - **GOTCHA**: Do not change anything else in those files during this task
 - **VALIDATE**: `npm run build` — zero TypeScript errors
@@ -287,12 +287,12 @@ export function interpolateWinRate(curve: { price: number; winRate: number }[], 
 
 ---
 
-### TASK 8 — UPDATE CPQ signals — link targets
+### TASK 8 — UPDATE Deal Pricing signals — link targets
 
-**UPDATE** `src/components/cpq/WinProbSignal.tsx` line 47
+**UPDATE** `src/components/deal-pricing/WinProbSignal.tsx` line 47
 - Change `href="/win-loss"` → `href="/deal-intelligence"`
 
-**UPDATE** `src/components/cpq/EoRSignal.tsx` line 42
+**UPDATE** `src/components/deal-pricing/EoRSignal.tsx` line 42
 - Change `href="/ease-of-realization"` → `href="/deal-intelligence"`
 
 - **VALIDATE**: `npm run build`
@@ -549,7 +549,7 @@ import { MessageSquare, ScatterChart, Calculator, Target, Layers, GitBranch } fr
 const NAV_ITEMS = [
   { href: '/ask-your-data', label: 'Ask Your Data', icon: MessageSquare },
   { href: '/segmentation', label: 'Segmentation', icon: ScatterChart },
-  { href: '/cpq', label: 'CPQ', icon: Calculator },
+  { href: '/deal-pricing', label: 'Deal Pricing', icon: Calculator },
   { href: '/deal-intelligence', label: 'Deal Intelligence', icon: Target },
   { href: '/waterfall', label: 'Price Waterfall', icon: Layers },
   { href: '/pvm', label: 'Price-Volume-Mix', icon: GitBranch },
@@ -690,7 +690,7 @@ export function SuggestedQuestions({ onSelect }: SuggestedQuestionsProps) {
 This file contains per-screen prompt builders for the ContextualChatPanel auto-summary.
 
 ```ts
-export type ScreenId = 'segmentation' | 'cpq' | 'deal-intelligence' | 'waterfall' | 'pvm'
+export type ScreenId = 'segmentation' | 'deal-pricing' | 'deal-intelligence' | 'waterfall' | 'pvm'
 
 export function buildContextualPrompt(
   screen: ScreenId,
@@ -705,8 +705,8 @@ export function buildContextualPrompt(
     case 'segmentation':
       return `Summarise what you see on the segmentation screen for ${acct} on ${prod}. Current price: €${keyMetrics.currentPrice ?? '?'}/kg. Floor: €${keyMetrics.floorPrice ?? '?'}/kg. Target: €${keyMetrics.targetPrice ?? '?'}/kg. Zone: ${keyMetrics.zone ?? 'unknown'}. Be specific, analytical, and concise — 3 sentences max.`
 
-    case 'cpq':
-      return `Summarise the CPQ pricing situation for ${acct} on ${prod}. Give a brief analysis of the three scenarios shown and recommend the best option. Be direct and use specific numbers if available.`
+    case 'deal-pricing':
+      return `Summarise the Deal Pricing pricing situation for ${acct} on ${prod}. Give a brief analysis of the three scenarios shown and recommend the best option. Be direct and use specific numbers if available.`
 
     case 'deal-intelligence':
       return `Summarise the deal intelligence for ${acct} on ${prod}. Win rate: ${keyMetrics.winRateAtCurrentPrice ?? '?'}% at current price. EoR score: ${keyMetrics.eorCompositeScore ?? '?'}/10. Deal Score: ${keyMetrics.dealScore ?? '?'}. Provide a clear verdict on whether to proceed with this deal.`
@@ -901,7 +901,7 @@ import { buildContextualPrompt, type ScreenId } from '@/lib/contextualPrompts'
 
 ### TASK 18 — ADD ContextualChatPanel trigger + FAB to all 5 analytical pages
 
-Do this for: `segmentation/page.tsx`, `cpq/page.tsx`, `deal-intelligence/page.tsx` (already being created), `waterfall/page.tsx`, `pvm/page.tsx`.
+Do this for: `segmentation/page.tsx`, `deal-pricing/page.tsx`, `deal-intelligence/page.tsx` (already being created), `waterfall/page.tsx`, `pvm/page.tsx`.
 
 **Pattern for each page — add to existing page component:**
 
@@ -943,7 +943,7 @@ const productName = products.find(p => p.id === activeProductId)?.name ?? null
 
 **Screen IDs per page:**
 - `segmentation/page.tsx` → `screen="segmentation"`
-- `cpq/page.tsx` → `screen="cpq"`
+- `deal-pricing/page.tsx` → `screen="deal-pricing"`
 - `deal-intelligence/page.tsx` → `screen="deal-intelligence"`
 - `waterfall/page.tsx` → `screen="waterfall"`
 - `pvm/page.tsx` → `screen="pvm"`
@@ -968,14 +968,14 @@ const productName = products.find(p => p.id === activeProductId)?.name ?? null
 
 ### Manual Validation Steps (no automated test suite in project)
 
-1. **Full Scenario 1 walkthrough**: Log in as Maxime → Segmentation (Bakker Klaas / Milk Couverture, red dot) → CPQ (three scenarios) → Ask Your Data (click "How does Bakker Klaas compare..." chip → response + table) → Deal Intelligence (Deal Score 74, Win Probability 82%, EoR 6.2)
+1. **Full Scenario 1 walkthrough**: Log in as Maxime → Segmentation (Bakker Klaas / Milk Couverture, red dot) → Deal Pricing (three scenarios) → Ask Your Data (click "How does Bakker Klaas compare..." chip → response + table) → Deal Intelligence (Deal Score 74, Win Probability 82%, EoR 6.2)
 2. **Sidebar collapse**: Click collapse toggle → labels disappear, icons remain → reload page → collapsed state restored → expand → labels back
 3. **Deal Intelligence**: Both sections visible without scrolling on 1440px display. Deal Score tile shows 74 for Bakker Klaas / Milk Couverture. Divider "Deal Closability" chip visible.
 4. **Win/Loss legend**: All 6 legend items visible below chart. Labels match colors in chart.
 5. **Contextual chat**: Open chat panel on each of 5 analytical pages → auto-summary loads → follow-up question works → close → reopen → fresh summary
 6. **Name consistency**: Search UI for "Baker Klaas" (old spelling) — should return zero results. "Bakker Klaas" should appear in: accounts dropdown, chat responses, EoR table, waterfall fallback notice, Deal Intelligence EoR section.
 7. **Redirects**: `/win-loss` → `/deal-intelligence`, `/ease-of-realization` → `/deal-intelligence`, `/chat` → `/ask-your-data`
-8. **CPQ signals**: WinProbSignal "See full analysis →" and EoRSignal "See detail →" both navigate to `/deal-intelligence`
+8. **Deal Pricing signals**: WinProbSignal "See full analysis →" and EoRSignal "See detail →" both navigate to `/deal-intelligence`
 
 ---
 
@@ -1047,12 +1047,12 @@ Start dev server (`npm run dev`) and verify:
 - [ ] Suggested question chips appear on Ask Your Data page when thread is empty
 - [ ] All 4 chips auto-submit on click (no manual Send required)
 - [ ] Chips disappear after first message is sent
-- [ ] "Ask" FAB visible on all 5 analytical pages (Segmentation, CPQ, Deal Intelligence, Waterfall, PVM)
+- [ ] "Ask" FAB visible on all 5 analytical pages (Segmentation, Deal Pricing, Deal Intelligence, Waterfall, PVM)
 - [ ] ExplainButton moves to `right-[124px]` on pages with the Ask FAB
 - [ ] ContextualChatPanel opens, auto-summary loads, follow-up questions work
 - [ ] ContextualChatPanel has no backdrop overlay (chart remains visible)
 - [ ] Panel resets (fresh conversation) on close + reopen
-- [ ] CPQ WinProbSignal and EoRSignal links both point to `/deal-intelligence`
+- [ ] Deal Pricing WinProbSignal and EoRSignal links both point to `/deal-intelligence`
 - [ ] `npm run build` passes with zero errors
 - [ ] `npm run lint` passes with zero errors
 
@@ -1067,7 +1067,7 @@ Start dev server (`npm run dev`) and verify:
 - [ ] Task 5 — chat/route.ts comment updated
 - [ ] Task 6 — explain/route.ts updated with deal-intelligence entry
 - [ ] Task 7 — waterfall page fallback notice updated
-- [ ] Task 8 — CPQ signal links updated
+- [ ] Task 8 — Deal Pricing signal links updated
 - [ ] Task 9 — deal-intelligence/page.tsx created
 - [ ] Task 10 — WinLossLegend created and placed
 - [ ] Task 11 — next.config.mjs redirects added, old pages converted to redirect stubs

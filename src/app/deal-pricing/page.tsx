@@ -3,12 +3,12 @@
 import { useState, useMemo, useEffect } from 'react'
 import { accounts, products, getFloor, getTarget, getWaterfallForAccount } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
-import { PriceBand } from '@/components/cpq/PriceBand'
-import { MarginBridge } from '@/components/cpq/MarginBridge'
-import { EscalationBanner, type EscalationLevel } from '@/components/cpq/EscalationBanner'
-import { WinProbSignal } from '@/components/cpq/WinProbSignal'
-import { EoRSignal } from '@/components/cpq/EoRSignal'
-import { DealContextPanel } from '@/components/cpq/DealContextPanel'
+import { PriceBand } from '@/components/deal-pricing/PriceBand'
+import { MarginBridge } from '@/components/deal-pricing/MarginBridge'
+import { EscalationBanner, type EscalationLevel } from '@/components/deal-pricing/EscalationBanner'
+import { WinProbSignal } from '@/components/deal-pricing/WinProbSignal'
+import { EoRSignal } from '@/components/deal-pricing/EoRSignal'
+import { DealContextPanel } from '@/components/deal-pricing/DealContextPanel'
 import { ExplainButton, type ExplainResult } from '@/components/shared/ExplainButton'
 import { ExplainPanel } from '@/components/shared/ExplainPanel'
 import { useAppContext } from '@/context/AppContext'
@@ -25,7 +25,7 @@ function getEscalationLevel(netPrice: number, floorPrice: number, targetPrice: n
   return 'none'
 }
 
-export default function CPQPage() {
+export default function DealPricingPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [dealDiscountPct, setDealDiscountPct] = useState(0)
   const [priceInputStr, setPriceInputStr] = useState('')
@@ -297,7 +297,7 @@ export default function CPQPage() {
         return (
           <>
             <ExplainButton
-              screen="cpq"
+              screen="deal-pricing"
               accountId={activeAccountId}
               productId={activeProductId}
               keyMetrics={keyMetrics}
@@ -315,7 +315,7 @@ export default function CPQPage() {
             <ContextualChatPanel
               isOpen={chatOpen}
               onClose={() => setChatOpen(false)}
-              screen="cpq"
+              screen="deal-pricing"
               accountId={activeAccountId}
               productId={activeProductId}
               accountName={accounts.find(a => a.id === activeAccountId)?.name ?? null}

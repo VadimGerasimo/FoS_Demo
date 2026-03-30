@@ -83,7 +83,7 @@ function DealIntelligenceContent() {
     setDiPriceInputStr('')
   }, [activeAccountId, activeProductId])
 
-  // Initialize from CPQ quoted price if present
+  // Initialize from Deal Pricing quoted price if present
   useEffect(() => {
     if (quotedPrice && quotedPrice !== contractedPrice) {
       const pct = ((quotedPrice / contractedPrice) - 1) * 100
@@ -394,10 +394,10 @@ function DealIntelligenceContent() {
                     </div>
                   </div>
 
-                  {/* CPQ quoted price */}
+                  {/* Deal Pricing quoted price */}
                   {quotedPrice && quotedPrice !== contractedPrice && winRateAtQuoted !== undefined && (
                     <div className="border border-blue-200 bg-blue-50 rounded-lg px-3 py-2 mb-3">
-                      <p className="text-[10px] text-blue-600 font-medium mb-0.5">CPQ quoted price</p>
+                      <p className="text-[10px] text-blue-600 font-medium mb-0.5">Deal Pricing quoted price</p>
                       <p className={`text-sm font-bold ${
                         quotedZone === 'green' ? 'text-zone-green' :
                         quotedZone === 'amber' ? 'text-zone-amber' :

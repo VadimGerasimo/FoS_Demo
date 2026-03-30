@@ -76,7 +76,7 @@ export function DemoGuidePanel({ isOpen, onClose }: Props) {
               <div className="flex gap-3">
                 <div className="flex-shrink-0 w-6 h-6 rounded-full bg-pwc-orange/10 text-pwc-orange text-xs font-bold flex items-center justify-center mt-0.5">2</div>
                 <div>
-                  <p className="font-semibold text-text-primary mb-1">CPQ: Three scenarios</p>
+                  <p className="font-semibold text-text-primary mb-1">Deal Pricing: Three scenarios</p>
                   <div className="text-text-secondary leading-relaxed space-y-1">
                     <div className="grid grid-cols-3 gap-2 mt-2 text-xs">
                       <div className="bg-zone-red-bg rounded p-2 text-center">

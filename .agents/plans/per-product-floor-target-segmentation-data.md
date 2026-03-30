@@ -23,14 +23,14 @@ So that a meaningful scatter chart appears with correct floor/target benchmarks 
 
 1. Replace `floor: number` / `target: number` on the `Account` interface with `floors: Record<string, number>` / `targets: Record<string, number>`
 2. Add `getFloor(account, productId)` and `getTarget(account, productId)` helpers in `data.ts`
-3. Update 3 consumers: `segmentation/page.tsx`, `ComparisonPanel.tsx`, `cpq/page.tsx`
+3. Update 3 consumers: `segmentation/page.tsx`, `ComparisonPanel.tsx`, `deal-pricing/page.tsx`
 4. Populate `segmentation.json` with entries for all 5 missing/sparse products
 
 ## Feature Metadata
 
 **Feature Type**: Enhancement
 **Estimated Complexity**: Medium
-**Primary Systems Affected**: `data/accounts.json`, `data/segmentation.json`, `src/lib/data.ts`, `src/app/segmentation/page.tsx`, `src/components/segmentation/ComparisonPanel.tsx`, `src/app/cpq/page.tsx`
+**Primary Systems Affected**: `data/accounts.json`, `data/segmentation.json`, `src/lib/data.ts`, `src/app/segmentation/page.tsx`, `src/components/segmentation/ComparisonPanel.tsx`, `src/app/deal-pricing/page.tsx`
 **Dependencies**: None (data-only + type change)
 
 ---
@@ -44,7 +44,7 @@ So that a meaningful scatter chart appears with correct floor/target benchmarks 
 - `src/lib/data.ts` (lines 1–49) — `Account` interface definition; add helpers after line 148
 - `src/app/segmentation/page.tsx` (lines 35–44) — `floorPrice`/`targetPrice` derivation to update
 - `src/components/segmentation/ComparisonPanel.tsx` (lines 48–62) — two `.floor`/`.target` usages
-- `src/app/cpq/page.tsx` (lines 55–56) — `floorPrice`/`targetPrice` derivation to update
+- `src/app/deal-pricing/page.tsx` (lines 55–56) — `floorPrice`/`targetPrice` derivation to update
 
 ### New Files to Create
 
@@ -1813,7 +1813,7 @@ account.price < getFloor(account, productId ?? 'milk-couverture') ? 'Below floor
 
 ---
 
-### TASK 7 — UPDATE `src/app/cpq/page.tsx`
+### TASK 7 — UPDATE `src/app/deal-pricing/page.tsx`
 
 **IMPLEMENT:** Add helper imports, replace lines 55–56.
 
@@ -1871,7 +1871,7 @@ Navigate to `http://localhost:3000/segmentation`, select each product in the dro
 | Choco Artisan BV / Milk Couverture: price €5.20 (was broken at €4.90) | Select CA + MC |
 | Segment rank shows a number (not "—") for all 10 selectable accounts on MC | Cycle accounts |
 | ComparisonPanel floor lines differ when switching products | Enable Compare mode |
-| CPQ floor/target updates when switching from MC to WC | Navigate to CPQ |
+| Deal Pricing floor/target updates when switching from MC to WC | Navigate to Deal Pricing |
 
 ---
 
@@ -1881,7 +1881,7 @@ Navigate to `http://localhost:3000/segmentation`, select each product in the dro
 - [ ] Baker Klaas is in the RED zone (below floor) for all 6 products
 - [ ] "Segment rank" KPI shows a percentage (not "—") for all 10 selectable accounts on Milk Couverture
 - [ ] "Current price" KPI matches the highlighted dot Y-position for all accounts (no more €4.90 vs €5.20 gap)
-- [ ] CPQ floor and target values update correctly when product is switched
+- [ ] Deal Pricing floor and target values update correctly when product is switched
 - [ ] ComparisonPanel floor/target lines use the correct product-specific values
 - [ ] `npx tsc --noEmit` passes with 0 errors
 - [ ] `segmentation.json` has 122 entries with unique IDs

@@ -1,10 +1,10 @@
 # Feature: Phase 3 — Remaining Screens + Full AI Explain
 
-The following plan is complete and self-contained. Read every referenced file before implementing. Pay close attention to existing Tailwind token names, the AppContext shape, Recharts patterns from SegmentationScatter, and the component structure in CPQ.
+The following plan is complete and self-contained. Read every referenced file before implementing. Pay close attention to existing Tailwind token names, the AppContext shape, Recharts patterns from SegmentationScatter, and the component structure in Deal Pricing.
 
 ## Feature Description
 
-Phase 3 completes the four placeholder screens (Waterfall, PVM, Win/Loss, Ease of Realization), adds the global "Explain what I see" AI feature across all seven screens, adds Win Probability and EoR signal cards to the CPQ page, and wires up the remaining visual types in DynamicRightPanel for Chat. After Phase 3, every screen is fully functional and every page has AI explain capability.
+Phase 3 completes the four placeholder screens (Waterfall, PVM, Win/Loss, Ease of Realization), adds the global "Explain what I see" AI feature across all seven screens, adds Win Probability and EoR signal cards to the Deal Pricing page, and wires up the remaining visual types in DynamicRightPanel for Chat. After Phase 3, every screen is fully functional and every page has AI explain capability.
 
 ## User Story
 
@@ -14,17 +14,17 @@ So that the full demo is navigable in any direction, secondary scenarios are cre
 
 ## Problem Statement
 
-Four screens currently render placeholder text. The Chat right panel falls back to "Full chart view available in Phase 3" for waterfall/pvm/winLoss/eor. There is no `/api/explain` route. There are no ExplainButton or ExplainPanel components. CPQ lacks Win Probability and EoR signal cards.
+Four screens currently render placeholder text. The Chat right panel falls back to "Full chart view available in Phase 3" for waterfall/pvm/winLoss/eor. There is no `/api/explain` route. There are no ExplainButton or ExplainPanel components. Deal Pricing lacks Win Probability and EoR signal cards.
 
 ## Solution Statement
 
-Build four chart components (WaterfallChart, PVMBridge, WinProbabilityCurve, EoRDimensions), replace the four placeholder pages with full implementations, create the `/api/explain` API route, build ExplainButton + ExplainPanel shared components and mount them on all seven pages, add WinProbSignal + EoRSignal to CPQ, and update DynamicRightPanel to render the new chart types.
+Build four chart components (WaterfallChart, PVMBridge, WinProbabilityCurve, EoRDimensions), replace the four placeholder pages with full implementations, create the `/api/explain` API route, build ExplainButton + ExplainPanel shared components and mount them on all seven pages, add WinProbSignal + EoRSignal to Deal Pricing, and update DynamicRightPanel to render the new chart types.
 
 ## Feature Metadata
 
 **Feature Type**: New Capability
 **Estimated Complexity**: High
-**Primary Systems Affected**: 4 screen pages, 4 chart components, 2 shared components, 2 CPQ components, 1 API route, DynamicRightPanel, ChatPage
+**Primary Systems Affected**: 4 screen pages, 4 chart components, 2 shared components, 2 Deal Pricing components, 1 API route, DynamicRightPanel, ChatPage
 **Dependencies**: recharts (already installed), openai (already installed), lucide-react (already installed)
 
 ---
@@ -34,12 +34,12 @@ Build four chart components (WaterfallChart, PVMBridge, WinProbabilityCurve, EoR
 ### Relevant Codebase Files — YOU MUST READ THESE BEFORE IMPLEMENTING
 
 - `src/components/charts/SegmentationScatter.tsx` — **The Recharts pattern for all new chart components.** 'use client', ResponsiveContainer wrapper, typed props interface, custom tooltip pattern, Cell colouring.
-- `src/components/cpq/MarginBridge.tsx` — **Waterfall-style bar rendering pattern** (stacked bars with spacer concept, height proportional to maxVal, Tailwind zone color classes).
-- `src/components/cpq/ScenarioComparison.tsx` — Card + badge + zone style pattern for new signal cards.
-- `src/components/cpq/EscalationBanner.tsx` — State-animated component pattern; shows how `useEffect` is used for timed state transitions.
+- `src/components/deal-pricing/MarginBridge.tsx` — **Waterfall-style bar rendering pattern** (stacked bars with spacer concept, height proportional to maxVal, Tailwind zone color classes).
+- `src/components/deal-pricing/ScenarioComparison.tsx` — Card + badge + zone style pattern for new signal cards.
+- `src/components/deal-pricing/EscalationBanner.tsx` — State-animated component pattern; shows how `useEffect` is used for timed state transitions.
 - `src/app/chat/page.tsx` — Shows RightPanelState shape and how DynamicRightPanel receives data. **Must update** to also pass `accountId` and `productId` in RightPanelState.
 - `src/components/chat/DynamicRightPanel.tsx` (lines 62–97) — The switch block that needs new cases for waterfall/pvm/winLoss/eor.
-- `src/app/cpq/page.tsx` — Full CPQ page structure. WinProbSignal and EoRSignal cards go after the ScenarioComparison card.
+- `src/app/deal-pricing/page.tsx` — Full Deal Pricing page structure. WinProbSignal and EoRSignal cards go after the ScenarioComparison card.
 - `src/app/segmentation/page.tsx` — Reference for how a fully implemented screen page is structured: 'use client', useAppContext, inline stats row, .card wrapper around chart, toolbar row.
 - `src/lib/data.ts` — **All types and data helpers.** Use these types and getters — do NOT reimport JSON directly in page files. Key getters: `getWaterfallForAccount(accountId, productId)`, `getPVMForAccount(accountId)`, `getWinLossForProduct(productId)`, `getEoRForAccount(accountId)`. Full dataset exports: `accounts`, `eorDataset`.
 - `src/context/AppContext.tsx` — AppContext shape: `{ activeAccountId, activeProductId, activeVolume, setAccount, setProduct, setVolume }`.
@@ -60,8 +60,8 @@ Build four chart components (WaterfallChart, PVMBridge, WinProbabilityCurve, EoR
 - `src/components/charts/EoRDimensions.tsx` — Custom HTML/Tailwind dimension bars for EoR page and DynamicRightPanel
 - `src/components/shared/ExplainButton.tsx` — Floating bottom-right sparkle button that triggers the explain flow
 - `src/components/shared/ExplainPanel.tsx` — Slide-over right panel showing whatISee / whyItMatters / recommendedActions
-- `src/components/cpq/WinProbSignal.tsx` — Compact win probability card for CPQ page
-- `src/components/cpq/EoRSignal.tsx` — Compact EoR score card for CPQ page
+- `src/components/deal-pricing/WinProbSignal.tsx` — Compact win probability card for Deal Pricing page
+- `src/components/deal-pricing/EoRSignal.tsx` — Compact EoR score card for Deal Pricing page
 - `src/app/api/explain/route.ts` — POST endpoint that calls gpt-4o with screen-aware system prompt
 
 ### Files to Update
@@ -70,7 +70,7 @@ Build four chart components (WaterfallChart, PVMBridge, WinProbabilityCurve, EoR
 - `src/app/pvm/page.tsx` — Replace placeholder with full PVM Bridge implementation
 - `src/app/win-loss/page.tsx` — Replace placeholder with full Win/Loss implementation
 - `src/app/ease-of-realization/page.tsx` — Replace placeholder with full EoR implementation
-- `src/app/cpq/page.tsx` — Add WinProbSignal + EoRSignal cards + ExplainButton
+- `src/app/deal-pricing/page.tsx` — Add WinProbSignal + EoRSignal cards + ExplainButton
 - `src/app/chat/page.tsx` — Add `accountId`/`productId` to RightPanelState; pass to DynamicRightPanel; add ExplainButton
 - `src/app/segmentation/page.tsx` — Add ExplainButton
 - `src/components/chat/DynamicRightPanel.tsx` — Add waterfall/pvm/winLoss/eor visual type cases; accept new `accountId`/`productId` props
@@ -352,7 +352,7 @@ Build all chart primitives first, with no page or routing dependencies.
 
 Build `/api/explain`, `ExplainButton`, and `ExplainPanel`. No page dependencies.
 
-### Phase C — CPQ Signal Components
+### Phase C — Deal Pricing Signal Components
 
 Build `WinProbSignal` and `EoRSignal`. Depend on data helpers only.
 
@@ -362,7 +362,7 @@ Replace the four placeholder pages. Depend on chart components + ExplainButton/P
 
 ### Phase E — Integration Updates
 
-Update CPQ page, ChatPage, DynamicRightPanel. Add ExplainButton to Segmentation and Chat pages.
+Update Deal Pricing page, ChatPage, DynamicRightPanel. Add ExplainButton to Segmentation and Chat pages.
 
 ---
 
@@ -699,8 +699,8 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
     whyItMatters: 'Accounts below the floor represent pricing risk and potential margin erosion.',
     recommendedActions: ['Review accounts below the floor line', 'Plan staged corrections over 2–3 renewal cycles', 'Use the comparison mode to benchmark against peers'],
   },
-  cpq: {
-    whatISee: 'The CPQ screen shows the live price stack, margin bridge, and three scenario comparison for the selected account and product.',
+  deal-pricing: {
+    whatISee: 'The Deal Pricing screen shows the live price stack, margin bridge, and three scenario comparison for the selected account and product.',
     whyItMatters: 'Each scenario shows the margin impact and escalation status of different discount strategies.',
     recommendedActions: ['Compare all three scenarios before committing to a discount', 'Check if escalation approval is needed', 'Review win probability before submitting the quote'],
   },
@@ -865,9 +865,9 @@ Three sections, each in a card-like container:
 
 ---
 
-### TASK 8: CREATE `src/components/cpq/WinProbSignal.tsx`
+### TASK 8: CREATE `src/components/deal-pricing/WinProbSignal.tsx`
 
-**IMPLEMENT**: Compact win probability signal card for CPQ. Shows win probability at the current net price, with "See full analysis →" link.
+**IMPLEMENT**: Compact win probability signal card for Deal Pricing. Shows win probability at the current net price, with "See full analysis →" link.
 
 Win rate interpolation: reuse the same `interpolateWinRate` function (copy it — it's a small pure utility).
 
@@ -898,9 +898,9 @@ Navigation link: `<Link href="/win-loss" className="text-xs text-pwc-orange hove
 
 ---
 
-### TASK 9: CREATE `src/components/cpq/EoRSignal.tsx`
+### TASK 9: CREATE `src/components/deal-pricing/EoRSignal.tsx`
 
-**IMPLEMENT**: Compact EoR score badge card for CPQ. Shows composite score and lowest-scoring dimension as top risk flag.
+**IMPLEMENT**: Compact EoR score badge card for Deal Pricing. Shows composite score and lowest-scoring dimension as top risk flag.
 
 ```typescript
 interface EoRSignalProps {
@@ -1092,9 +1092,9 @@ const eorData = getEoRForAccount(accountId) ?? eorDataset[0]
 
 ---
 
-### TASK 14: UPDATE `src/app/cpq/page.tsx`
+### TASK 14: UPDATE `src/app/deal-pricing/page.tsx`
 
-**ADD** WinProbSignal + EoRSignal cards and ExplainButton to the CPQ page.
+**ADD** WinProbSignal + EoRSignal cards and ExplainButton to the Deal Pricing page.
 
 **Location**: Add after the ScenarioComparison card, before the closing `</div>` of the scrollable content area.
 
@@ -1106,7 +1106,7 @@ const eorData = getEoRForAccount(accountId) ?? eorDataset[0]
 </div>
 ```
 
-**Add ExplainButton + ExplainPanel** with CPQ key metrics:
+**Add ExplainButton + ExplainPanel** with Deal Pricing key metrics:
 ```tsx
 const keyMetrics = {
   accountId,
@@ -1121,9 +1121,9 @@ const keyMetrics = {
 }
 ```
 
-**IMPORTS**: Add `WinProbSignal` from `@/components/cpq/WinProbSignal`; `EoRSignal` from `@/components/cpq/EoRSignal`; `ExplainButton, ExplainResult` from `@/components/shared/ExplainButton`; `ExplainPanel` from `@/components/shared/ExplainPanel`; `useState` is already imported.
+**IMPORTS**: Add `WinProbSignal` from `@/components/deal-pricing/WinProbSignal`; `EoRSignal` from `@/components/deal-pricing/EoRSignal`; `ExplainButton, ExplainResult` from `@/components/shared/ExplainButton`; `ExplainPanel` from `@/components/shared/ExplainPanel`; `useState` is already imported.
 
-**VALIDATE**: CPQ page loads with two new compact cards visible below ScenarioComparison. Explain button floats bottom-right.
+**VALIDATE**: Deal Pricing page loads with two new compact cards visible below ScenarioComparison. Explain button floats bottom-right.
 
 ---
 
@@ -1311,7 +1311,7 @@ Navigate manually to each of these routes and confirm no runtime errors in the b
 - `/pvm` — PVM bridge renders, per-product table visible, amber warning banner fires for Schoko
 - `/win-loss` — win probability curve renders, cliff zone shaded, historical quote dots visible
 - `/ease-of-realization` — composite score 6.2 for Baker Klaas, all 7 dimension bars visible
-- `/cpq` — WinProbSignal and EoRSignal cards visible below ScenarioComparison
+- `/deal-pricing` — WinProbSignal and EoRSignal cards visible below ScenarioComparison
 - `/chat` — type "Baker Klaas waterfall" → waterfall chart appears in right panel
 
 ### Level 4: Explain Flow
@@ -1335,8 +1335,8 @@ curl -s -X POST http://localhost:3000/api/explain \
 - [ ] `/pvm` renders bridge chart + per-product table; amber warning fires when price AND mix are both negative
 - [ ] `/win-loss` renders win probability curve, cliff zone shaded, historical quote dots colour-coded (won=green, lost=red)
 - [ ] `/ease-of-realization` renders 7 dimension bars + account comparison table; Baker Klaas composite score = 6.2
-- [ ] CPQ page shows WinProbSignal and EoRSignal cards below ScenarioComparison
-- [ ] Explain button present on all 7 screens (segmentation, cpq, waterfall, pvm, win-loss, ease-of-realization, chat)
+- [ ] Deal Pricing page shows WinProbSignal and EoRSignal cards below ScenarioComparison
+- [ ] Explain button present on all 7 screens (segmentation, deal-pricing, waterfall, pvm, win-loss, ease-of-realization, chat)
 - [ ] Explain panel slides in from right, shows three sections, closes cleanly
 - [ ] `/api/explain` returns valid JSON with `whatISee`, `whyItMatters`, `recommendedActions[]`
 - [ ] DynamicRightPanel renders WaterfallChart when Chat responds with `visualType: "waterfall"`
@@ -1344,7 +1344,7 @@ curl -s -X POST http://localhost:3000/api/explain \
 - [ ] All charts use the correct Tailwind colour tokens (no hardcoded hex except inside SVG elements)
 - [ ] `npx tsc --noEmit` passes with zero errors
 - [ ] `npm run build` completes successfully
-- [ ] Full Scenario 1 walkthrough still works: Segmentation → CPQ → Chat
+- [ ] Full Scenario 1 walkthrough still works: Segmentation → Deal Pricing → Chat
 
 ---
 

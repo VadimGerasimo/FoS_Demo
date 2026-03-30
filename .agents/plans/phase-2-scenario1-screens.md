@@ -1,10 +1,10 @@
-# Feature: Phase 2 — Scenario 1 Screens (Segmentation + CPQ + Chat)
+# Feature: Phase 2 — Scenario 1 Screens (Segmentation + Deal Pricing + Chat)
 
 The following plan is complete and self-contained. Read every referenced file before implementing. Pay close attention to existing Tailwind token names, the AppContext shape, and how FilterBar receives props from Server Components.
 
 ## Feature Description
 
-Implement the three screens that make up Scenario 1 — the primary demo flow. Segmentation shows Baker Klaas's pricing position relative to his segment. CPQ models three pricing scenarios side-by-side with live escalation. Chat accepts natural language questions and returns AI responses paired with dynamic right-panel visuals. All three screens are filter-reactive: changing account/product in FilterBar instantly updates every visual.
+Implement the three screens that make up Scenario 1 — the primary demo flow. Segmentation shows Baker Klaas's pricing position relative to his segment. Deal Pricing models three pricing scenarios side-by-side with live escalation. Chat accepts natural language questions and returns AI responses paired with dynamic right-panel visuals. All three screens are filter-reactive: changing account/product in FilterBar instantly updates every visual.
 
 ## User Story
 
@@ -18,13 +18,13 @@ The three Phase 2 screens currently render placeholder text. Phase 2 must replac
 
 ## Solution Statement
 
-Build Segmentation (Recharts ScatterChart + reference lines + comparison mode + prospect input), CPQ (derived price stack + three-scenario panel + escalation state machine), and Chat (split-panel layout + OpenAI /api/chat route + DynamicRightPanel). All components are Client Components. Pages remain Server Components that pass pre-loaded data as props.
+Build Segmentation (Recharts ScatterChart + reference lines + comparison mode + prospect input), Deal Pricing (derived price stack + three-scenario panel + escalation state machine), and Chat (split-panel layout + OpenAI /api/chat route + DynamicRightPanel). All components are Client Components. Pages remain Server Components that pass pre-loaded data as props.
 
 ## Feature Metadata
 
 **Feature Type**: New Capability
 **Estimated Complexity**: High
-**Primary Systems Affected**: Segmentation screen, CPQ screen, Chat screen, /api/chat route
+**Primary Systems Affected**: Segmentation screen, Deal Pricing screen, Chat screen, /api/chat route
 **Dependencies**: recharts ^3.8.0 (already installed), openai ^6.29.0 (already installed)
 
 ---
@@ -41,7 +41,7 @@ Build Segmentation (Recharts ScatterChart + reference lines + comparison mode + 
 - `src/app/globals.css` — utility classes: `.card`, `.zone-badge-red/amber/green`, `.page-container`, `.page-title`. Use these classes throughout.
 - `data/accounts.json` — baker-klaas floor is currently 4.05 — **must be corrected to 4.57** (see Data Fix note below).
 - `data/segmentation.json` — 12 data points; baker-klaas zone is "red". Filter by `productId` for each chart render.
-- `data/quotes.json` — CPQ baseline: `currentPrice`, `tierDiscount`, `dealDiscount`, `grossMarginPct`, `scenarios.grantDiscount/holdFlat/proposeUplift`.
+- `data/quotes.json` — Deal Pricing baseline: `currentPrice`, `tierDiscount`, `dealDiscount`, `grossMarginPct`, `scenarios.grantDiscount/holdFlat/proposeUplift`.
 - `data/chat-scenarios.json` — 5 scenarios; `matchPhrases[]` used by /api/chat for matching; `tableData` present on baker-klaas-segment-comparison.
 
 ### New Files to Create
@@ -54,7 +54,7 @@ src/
 │   ├── segmentation/
 │   │   ├── ComparisonPanel.tsx           # Two-panel split layout for comparison mode
 │   │   └── ProspectInput.tsx             # Volume input + animated ghost dot
-│   ├── cpq/
+│   ├── deal-pricing/
 │   │   ├── PriceBand.tsx                 # Horizontal zone bar with live price indicator
 │   │   ├── MarginBridge.tsx              # Mini waterfall: list → tier → deal → net
 │   │   ├── EscalationBanner.tsx          # Amber/orange/red escalation state banner
@@ -66,7 +66,7 @@ src/
 │       └── SavedConversations.tsx        # localStorage drawer
 ├── app/
 │   ├── segmentation/page.tsx             # REPLACE placeholder — client wrapper + FilterBar
-│   ├── cpq/page.tsx                      # REPLACE placeholder — client wrapper + FilterBar
+│   ├── deal-pricing/page.tsx                      # REPLACE placeholder — client wrapper + FilterBar
 │   ├── chat/page.tsx                     # REPLACE placeholder — split layout
 │   └── api/
 │       └── chat/
@@ -77,7 +77,7 @@ src/
 
 - `data/accounts.json` — fix baker-klaas floor: 4.05 → 4.57
 - `src/app/segmentation/page.tsx` — replace placeholder
-- `src/app/cpq/page.tsx` — replace placeholder
+- `src/app/deal-pricing/page.tsx` — replace placeholder
 - `src/app/chat/page.tsx` — replace placeholder
 
 ### Relevant Documentation
@@ -176,7 +176,7 @@ function getEscalationLevel(discountPct: number, thresholds): EscalationLevel {
 
 Fix the data inconsistency, then build the full Segmentation screen.
 
-### Phase B: CPQ Screen
+### Phase B: Deal Pricing Screen
 
 Build the price stack, three-scenario panel, escalation banner, and margin bridge.
 
@@ -649,7 +649,7 @@ export default function SegmentationPage() {
 
 ---
 
-### TASK 6 — CREATE src/components/cpq/PriceBand.tsx
+### TASK 6 — CREATE src/components/deal-pricing/PriceBand.tsx
 
 ```tsx
 'use client'
@@ -737,7 +737,7 @@ export function PriceBand({ listPrice, floorPrice, targetPrice, netPrice }: Pric
 
 ---
 
-### TASK 7 — CREATE src/components/cpq/MarginBridge.tsx
+### TASK 7 — CREATE src/components/deal-pricing/MarginBridge.tsx
 
 ```tsx
 'use client'
@@ -807,7 +807,7 @@ export function MarginBridge({ listPrice, tierDiscountPct, dealDiscountPct, netP
 
 ---
 
-### TASK 8 — CREATE src/components/cpq/EscalationBanner.tsx
+### TASK 8 — CREATE src/components/deal-pricing/EscalationBanner.tsx
 
 ```tsx
 'use client'
@@ -897,7 +897,7 @@ export function EscalationBanner({ level, discountPct }: EscalationBannerProps) 
 
 ---
 
-### TASK 9 — CREATE src/components/cpq/ScenarioComparison.tsx
+### TASK 9 — CREATE src/components/deal-pricing/ScenarioComparison.tsx
 
 ```tsx
 'use client'
@@ -974,7 +974,7 @@ export function ScenarioComparison({ scenarios, activeDiscountPct }: ScenarioCom
 
 ---
 
-### TASK 10 — REPLACE src/app/cpq/page.tsx
+### TASK 10 — REPLACE src/app/deal-pricing/page.tsx
 
 ```tsx
 'use client'
@@ -982,10 +982,10 @@ export function ScenarioComparison({ scenarios, activeDiscountPct }: ScenarioCom
 import { useState, useMemo } from 'react'
 import { accounts, products } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
-import { PriceBand } from '@/components/cpq/PriceBand'
-import { MarginBridge } from '@/components/cpq/MarginBridge'
-import { EscalationBanner, type EscalationLevel } from '@/components/cpq/EscalationBanner'
-import { ScenarioComparison } from '@/components/cpq/ScenarioComparison'
+import { PriceBand } from '@/components/deal-pricing/PriceBand'
+import { MarginBridge } from '@/components/deal-pricing/MarginBridge'
+import { EscalationBanner, type EscalationLevel } from '@/components/deal-pricing/EscalationBanner'
+import { ScenarioComparison } from '@/components/deal-pricing/ScenarioComparison'
 import { useAppContext } from '@/context/AppContext'
 import quotesData from '../../../data/quotes.json'
 
@@ -996,7 +996,7 @@ function getEscalationLevel(discountPct: number, thresholds: { rep: number; mana
   return 'none'
 }
 
-export default function CPQPage() {
+export default function DealPricingPage() {
   const { activeAccountId, activeProductId } = useAppContext()
   const [dealDiscountPct, setDealDiscountPct] = useState(0)
 
@@ -1157,7 +1157,7 @@ export default function CPQPage() {
 
 - **GOTCHA**: `dealDiscountPct > 0` means a discount (reduces price), `< 0` means an uplift. The slider range is −10 (uplift) to +20 (discount).
 - **GOTCHA**: JSON import in a client component requires the path `'../../../data/quotes.json'` relative to the file location. TypeScript must have `resolveJsonModule: true` (already set by create-next-app).
-- **VALIDATE**: Navigate to `/cpq`. Slider moves price indicator. At >5% discount, escalation banner appears. Three scenarios show correct prices for Baker Klaas.
+- **VALIDATE**: Navigate to `/deal-pricing`. Slider moves price indicator. At >5% discount, escalation banner appears. Three scenarios show correct prices for Baker Klaas.
 
 ---
 
@@ -1736,7 +1736,7 @@ No automated tests — manual validation only (consistent with Phase 1 approach 
 4. Hover Baker Klaas dot → tooltip shows "−8.x% vs floor"
 5. Toggle comparison mode → two panels appear with independent account selectors
 6. Enter 500 in prospect input → amber ghost dot appears on chart
-7. Navigate to `/cpq` → Baker Klaas + Milk Couverture loaded, all three scenario columns visible
+7. Navigate to `/deal-pricing` → Baker Klaas + Milk Couverture loaded, all three scenario columns visible
 8. Move slider to 0% → "Hold flat" column highlighted, margin bridge shows 18.3%
 9. Move slider to 8% discount → escalation banner appears ("Manager approval required")
 10. Move slider to 12% → banner changes to "Request sent to manager" after 2s
@@ -1784,7 +1784,7 @@ Follow the 14-step walkthrough above. Zero broken visuals, zero console errors.
 - [ ] Hovering Baker Klaas dot shows tooltip with "~−8% vs floor"
 - [ ] Comparison mode toggle shows two independent scatter panels
 - [ ] Prospect input adds animated amber ghost dot to the chart
-- [ ] CPQ loads Baker Klaas + Milk Couverture by default with three scenario columns
+- [ ] Deal Pricing loads Baker Klaas + Milk Couverture by default with three scenario columns
 - [ ] Price band indicator slides as the discount slider moves
 - [ ] Escalation banner appears at 5% discount (rep), changes at 10% (manager → "Sending..." → "Request sent")
 - [ ] Three-scenario columns show: 3.99 / 4.20 / 4.37 for Baker Klaas + Milk Couverture
@@ -1808,7 +1808,7 @@ Follow the 14-step walkthrough above. Zero broken visuals, zero console errors.
 - [ ] Task 7: MarginBridge.tsx created
 - [ ] Task 8: EscalationBanner.tsx created
 - [ ] Task 9: ScenarioComparison.tsx created
-- [ ] Task 10: cpq/page.tsx replaced
+- [ ] Task 10: deal-pricing/page.tsx replaced
 - [ ] Task 11: api/chat/route.ts created
 - [ ] Task 12: ConversationThread.tsx created
 - [ ] Task 13: MessageInput.tsx created
@@ -1822,11 +1822,11 @@ Follow the 14-step walkthrough above. Zero broken visuals, zero console errors.
 
 ## NOTES
 
-**Why pages are Client Components in Phase 2:** Segmentation and CPQ pages need local state (comparison mode toggle, discount slider). Making them `'use client'` is the correct pattern — they still import JSON data synchronously from `@/lib/data`, just client-side.
+**Why pages are Client Components in Phase 2:** Segmentation and Deal Pricing pages need local state (comparison mode toggle, discount slider). Making them `'use client'` is the correct pattern — they still import JSON data synchronously from `@/lib/data`, just client-side.
 
 **Recharts log scale X-axis:** The `scale="log"` prop on XAxis requires `domain` to be set explicitly (no zeros). Use `domain={[100, 100000]}` to keep the axis readable.
 
-**CPQ slider polarity:** `dealDiscountPct > 0` = discount (price goes down), `dealDiscountPct < 0` = uplift (price goes up). The slider range is `min={-10} max={20}` so the rep can slide left to propose an uplift or right to grant a discount.
+**Deal Pricing slider polarity:** `dealDiscountPct > 0` = discount (price goes down), `dealDiscountPct < 0` = uplift (price goes up). The slider range is `min={-10} max={20}` so the rep can slide left to propose an uplift or right to grant a discount.
 
 **Escalation at negative values:** The escalation state machine only fires on positive `dealDiscountPct` (discounts). Uplifts never trigger escalation.
 

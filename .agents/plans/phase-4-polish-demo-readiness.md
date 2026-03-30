@@ -43,9 +43,9 @@ Enable initial-mount Recharts animations (disabled only on filter re-renders), a
 - `src/components/charts/EoRDimensions.tsx` (line 20) — `transition-all duration-500` already on progress bars; do not double-animate
 - `src/components/shared/ExplainButton.tsx` (lines 25–48) — Silent catch block to fix; existing loading + icon pattern to follow
 - `src/components/shared/FilterBar.tsx` (lines 55–70) — Active context pill; source of filter switch events
-- `src/components/cpq/EscalationBanner.tsx` (lines 43–62) — Already has `transition-all duration-300` pattern to reference
+- `src/components/deal-pricing/EscalationBanner.tsx` (lines 43–62) — Already has `transition-all duration-300` pattern to reference
 - `src/app/segmentation/page.tsx` — Wraps SegmentationScatter; where to add fade wrapper
-- `src/app/cpq/page.tsx` — Largest page; add skeleton and fade wrapper here
+- `src/app/deal-pricing/page.tsx` — Largest page; add skeleton and fade wrapper here
 - `src/app/waterfall/page.tsx` — Add skeleton
 - `src/app/pvm/page.tsx` — Add skeleton
 - `src/app/win-loss/page.tsx` — Add skeleton
@@ -210,7 +210,7 @@ export function ChartSkeleton({ rows = 1, showTitle = true, height = 'h-48' }: C
 }
 ```
 
-- **VALIDATE**: Import in any page and check it renders without errors: `npm run dev` → navigate to `/cpq`
+- **VALIDATE**: Import in any page and check it renders without errors: `npm run dev` → navigate to `/deal-pricing`
 
 ---
 
@@ -321,14 +321,14 @@ export function FadeWrapper({ fadeKey, children, className }: FadeWrapperProps) 
 
 ---
 
-### Task 9 — UPDATE `src/app/cpq/page.tsx`
+### Task 9 — UPDATE `src/app/deal-pricing/page.tsx`
 
 - **IMPLEMENT**: Same skeleton + FadeWrapper pattern as Task 8
-- **READ** the full page first — CPQ has multiple sections (price stack, scenario comparison, signals)
+- **READ** the full page first — Deal Pricing has multiple sections (price stack, scenario comparison, signals)
 - **WRAP** the main content sections (below FilterBar) in `FadeWrapper`
 - **USE** `fadeKey={`${activeAccountId}-${activeProductId}`}`
 - **ADD** `mounted` gate with `ChartSkeleton rows={3} height="h-32"`
-- **VALIDATE**: `npm run dev` → `/cpq` — skeleton on load, fade on filter change
+- **VALIDATE**: `npm run dev` → `/deal-pricing` — skeleton on load, fade on filter change
 
 ---
 
@@ -412,8 +412,8 @@ These tasks must run before the AI validation tasks. All data issues were found 
 | D2 | `waterfall.json` | Only 3 entries (baker-klaas/milk-couverture, schoko-retail/milk-couverture, schoko-retail/dark-compound). All other accounts silently show baker-klaas waterfall with no disclaimer | Waterfall page shows wrong account's data without any warning |
 | D3 | `ease-of-realization.json` | Only 3 accounts have EoR data (baker-klaas, schoko-retail, confiserie-lambert). Other 7 fall back to baker-klaas silently | EoR page shows wrong account's data without any warning |
 | D4 | `chat-scenarios.json` | `baker-klaas-waterfall` response: "9.2% flat rebate — €38,400 total annual leakage". Rebate in `waterfall.json` is €0.77/kg. At 320 kg/month: 320 × 12 × 0.77 = **€2,957/year**, not €38,400. The figure is ~13× too high. | A sharp audience member will catch this if they do mental math |
-| D5 | `cpq/page.tsx` | Scenario comparison "Propose +4% uplift" computes `netPrice: listPrice × (1-tier) × 0.96` (i.e. applies 4% *discount*). For baker-klaas the override corrects this to €4.37, but other accounts see a wrong uplift price in the scenario card | Non-baker-klaas CPQ scenario comparison shows incorrect uplift net price |
-| D6 | `cpq/page.tsx` | `ExplainButton` keyMetrics doesn't include `grossMarginPct` | AI explain for CPQ can't reference margin impact by number |
+| D5 | `deal-pricing/page.tsx` | Scenario comparison "Propose +4% uplift" computes `netPrice: listPrice × (1-tier) × 0.96` (i.e. applies 4% *discount*). For baker-klaas the override corrects this to €4.37, but other accounts see a wrong uplift price in the scenario card | Non-baker-klaas Deal Pricing scenario comparison shows incorrect uplift net price |
+| D6 | `deal-pricing/page.tsx` | `ExplainButton` keyMetrics doesn't include `grossMarginPct` | AI explain for Deal Pricing can't reference margin impact by number |
 
 ---
 
@@ -476,10 +476,10 @@ These tasks must run before the AI validation tasks. All data issues were found 
 
 ---
 
-### Task D5 — UPDATE `src/app/cpq/page.tsx`
+### Task D5 — UPDATE `src/app/deal-pricing/page.tsx`
 
 - **FIX**: The "Propose +4% uplift" scenario uses `× 0.96` (a discount) instead of `× 1.04` (an uplift). The baker-klaas override corrects it for that account, but other accounts show a wrong net price.
-- **READ** lines 53–87 of `cpq/page.tsx` carefully before editing.
+- **READ** lines 53–87 of `deal-pricing/page.tsx` carefully before editing.
 - **CHANGE** `scenarios[2]` `netPrice` formula from:
   ```tsx
   netPrice: listPrice * (1 - tierDiscountPct / 100) * 0.96,
@@ -492,14 +492,14 @@ These tasks must run before the AI validation tasks. All data issues were found 
 - **VERIFY** the baker-klaas override still produces €4.37 after this fix:
   - afterTier = 5.80 × (1 - tier/100) = 4.20 (if tier=27.586%) → 4.20 × 1.04 = 4.368 ≈ €4.37 ✓
   - The override `scenarios[2].netPrice = 4.37` can be kept for precision, but the formula will now be correct for other accounts too.
-- **VALIDATE**: `npm run dev` → select Schoko Retail on CPQ → scenario comparison "Propose +4% uplift" should show a price HIGHER than the "Hold flat" price, not lower
+- **VALIDATE**: `npm run dev` → select Schoko Retail on Deal Pricing → scenario comparison "Propose +4% uplift" should show a price HIGHER than the "Hold flat" price, not lower
 
 ---
 
-### Task D6 — UPDATE `src/app/cpq/page.tsx` (ExplainButton keyMetrics)
+### Task D6 — UPDATE `src/app/deal-pricing/page.tsx` (ExplainButton keyMetrics)
 
 - **FIX**: Add `grossMarginPct` to the keyMetrics sent to ExplainButton so the AI can reference it
-- **READ** lines 186–201 (ExplainButton usage) in `cpq/page.tsx`
+- **READ** lines 186–201 (ExplainButton usage) in `deal-pricing/page.tsx`
 - **DERIVE** grossMarginPct from the scenarios: when `dealDiscountPct === 0`, the margin is ~18.3% (from `scenarios[1].grossMarginPct`). Build a live computed value:
   ```tsx
   const approxGrossMarginPct = useMemo(() => {
@@ -510,7 +510,7 @@ These tasks must run before the AI validation tasks. All data issues were found 
   }, [dealDiscountPct])
   ```
 - **ADD** `grossMarginPct: approxGrossMarginPct` to the `keyMetrics` object at line ~195
-- **VALIDATE**: Click Explain on CPQ with Baker Klaas selected → AI response should mention a specific margin percentage
+- **VALIDATE**: Click Explain on Deal Pricing with Baker Klaas selected → AI response should mention a specific margin percentage
 
 ---
 
@@ -566,7 +566,7 @@ Test an off-script question that won't phrase-match:
 
 ---
 
-### Task A4 — TEST Explain on CPQ screen
+### Task A4 — TEST Explain on Deal Pricing screen
 
 - **SETUP**: Select Baker Klaas + Milk Couverture, leave discount slider at 0 (flat)
 - **ACTION**: Click "Explain what I see"
@@ -637,7 +637,7 @@ Test an off-script question that won't phrase-match:
 - **RUN**: `npm run dev` — full Scenario 1 walkthrough:
   1. Land on `/chat`, type the Baker Klaas peer comparison question → visual renders in right panel
   2. Navigate to `/segmentation` → skeleton flashes → chart fades in with Baker Klaas red dot → switch account → fade crossfade triggers
-  3. Navigate to `/cpq` → skeleton → CPQ loads → slide discount slider past 5% → escalation banner fires
+  3. Navigate to `/deal-pricing` → skeleton → Deal Pricing loads → slide discount slider past 5% → escalation banner fires
   4. Click "Explain what I see" on `/segmentation` → spinner → panel slides in from right
   5. Navigate to `/waterfall`, `/pvm`, `/win-loss`, `/ease-of-realization` — all load with skeleton then chart
 - **CHECK**: No console errors during full walkthrough
@@ -659,8 +659,8 @@ This project has no automated test suite. Validation is manual visual QA.
 | ExplainButton loading | Spinner visible during API call | All screens |
 | ExplainButton error | "Try again" in red for 3s then resets | All screens |
 | ExplainPanel | Slides in from right with transition | All screens |
-| Escalation banner | Smooth transition between states | /cpq |
-| Scenario 1 full flow | No visual glitches, no console errors | Chat → Segmentation → CPQ |
+| Escalation banner | Smooth transition between states | /deal-pricing |
+| Scenario 1 full flow | No visual glitches, no console errors | Chat → Segmentation → Deal Pricing |
 
 ### Edge Cases
 
@@ -704,20 +704,20 @@ See Task 15 checklist above.
 - [ ] Waterfall page shows a fallback notice for accounts without waterfall data
 - [ ] EoR page shows a fallback notice for accounts without EoR data
 - [ ] Chat "baker klaas rebate" scenario response references correct figures (€0.77/kg, ~€2,960/year)
-- [ ] CPQ "Propose +4% uplift" scenario shows a net price HIGHER than "Hold flat" for all accounts
-- [ ] CPQ Explain response references a gross margin percentage
+- [ ] Deal Pricing "Propose +4% uplift" scenario shows a net price HIGHER than "Hold flat" for all accounts
+- [ ] Deal Pricing Explain response references a gross margin percentage
 
 **AI Functionality**
 - [ ] All 4 scripted chat scenarios phrase-match correctly and show the right visual
 - [ ] Off-script questions return graceful fallback (no crashes, no raw JSON)
 - [ ] Explain on Segmentation references actual €/kg values and % vs floor
-- [ ] Explain on CPQ references the current net price and escalation state
+- [ ] Explain on Deal Pricing references the current net price and escalation state
 - [ ] Explain on Waterfall references net-net price and highlighted rebate layer
 - [ ] Explain on PVM references the signed effects (volume/price/mix) by value
 - [ ] Explain panel renders on all 7 screens without console errors
 
 **Overall**
-- [ ] Full Scenario 1 walkthrough (Chat → Segmentation → CPQ) runs with zero console errors and zero visual glitches
+- [ ] Full Scenario 1 walkthrough (Chat → Segmentation → Deal Pricing) runs with zero console errors and zero visual glitches
 - [ ] All screens render correctly at 1440×900 viewport
 
 ---
@@ -733,7 +733,7 @@ See Task 15 checklist above.
 - [ ] Task 6 — WinProbabilityCurve animated on mount
 - [ ] Task 7 — SegmentationScatter mount animation verified
 - [ ] Task 8 — Segmentation page skeleton + fade
-- [ ] Task 9 — CPQ page skeleton + fade
+- [ ] Task 9 — Deal Pricing page skeleton + fade
 - [ ] Task 10 — Waterfall page skeleton + fade
 - [ ] Task 11 — PVM page skeleton + fade
 - [ ] Task 12 — Win/Loss page skeleton + fade
@@ -745,14 +745,14 @@ See Task 15 checklist above.
 - [ ] Task D2 — Waterfall page fallback notice added
 - [ ] Task D3 — EoR page fallback notice added
 - [ ] Task D4 — Chat waterfall scenario figures corrected
-- [ ] Task D5 — CPQ uplift scenario formula fixed
-- [ ] Task D6 — CPQ ExplainButton keyMetrics includes grossMarginPct
+- [ ] Task D5 — Deal Pricing uplift scenario formula fixed
+- [ ] Task D6 — Deal Pricing ExplainButton keyMetrics includes grossMarginPct
 
 **AI Validation**
 - [ ] Task A1 — All 4 scripted chat scenarios phrase-match correctly
 - [ ] Task A2 — Off-script questions return graceful fallback
 - [ ] Task A3 — Explain on Segmentation references specific metrics
-- [ ] Task A4 — Explain on CPQ reflects current slider state
+- [ ] Task A4 — Explain on Deal Pricing reflects current slider state
 - [ ] Task A5 — Explain on Waterfall references waterfall figures
 - [ ] Task A6 — Explain on PVM references signed effects
 - [ ] Task A7 — Explain on Win/Loss references cliff zone

@@ -31,7 +31,7 @@ type NavItem = {
 const NAV_ITEMS: NavItem[] = [
   { href: '/ask-your-data',      label: 'Ask Your Data',       icon: MessageSquare },
   { href: '/segmentation',       label: 'Segmentation',        icon: ScatterChart },
-  { href: '/cpq',                label: 'CPQ',                 icon: Calculator },
+  { href: '/deal-pricing',       label: 'Deal Pricing',        icon: Calculator },
   { href: '/deal-intelligence',  label: 'Deal Intelligence',   icon: Target },
   { href: '/waterfall',          label: 'Price Waterfall',     icon: Layers },
   { href: '/pvm',                label: 'Price-Volume-Mix',    icon: GitBranch },

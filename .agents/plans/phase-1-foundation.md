@@ -86,7 +86,7 @@ FoS_Demo/
 │   │   ├── globals.css
 │   │   ├── chat/page.tsx
 │   │   ├── segmentation/page.tsx
-│   │   ├── cpq/page.tsx
+│   │   ├── deal-pricing/page.tsx
 │   │   ├── win-loss/page.tsx
 │   │   ├── ease-of-realization/page.tsx
 │   │   ├── waterfall/page.tsx
@@ -372,7 +372,7 @@ import {
 const NAV_ITEMS = [
   { href: '/chat', label: 'Chat with Your Data', icon: MessageSquare },
   { href: '/segmentation', label: 'Segmentation', icon: ScatterChart },
-  { href: '/cpq', label: 'CPQ', icon: Calculator },
+  { href: '/deal-pricing', label: 'Deal Pricing', icon: Calculator },
   { href: '/win-loss', label: 'Win / Loss', icon: TrendingUp },
   { href: '/ease-of-realization', label: 'Ease of Realization', icon: BarChart2 },
   { href: '/waterfall', label: 'Price Waterfall', icon: Layers },
@@ -455,7 +455,7 @@ import { Bell } from 'lucide-react'
 const SCREEN_TITLES: Record<string, string> = {
   '/chat': 'Chat with Your Data',
   '/segmentation': 'Segmentation',
-  '/cpq': 'CPQ',
+  '/deal-pricing': 'Deal Pricing',
   '/win-loss': 'Win / Loss Price Intelligence',
   '/ease-of-realization': 'Ease of Realization',
   '/waterfall': 'Price Waterfall',
@@ -1363,7 +1363,7 @@ export function getEoRForAccount(accountId: string): EoRData | undefined {
 
 ### TASK 20 — Create data/quotes.json
 
-**CREATE** `data/quotes.json` (CPQ baseline data):
+**CREATE** `data/quotes.json` (Deal Pricing baseline data):
 
 ```json
 [
@@ -1574,18 +1574,18 @@ export default function SegmentationPage() {
 }
 ```
 
-**CREATE** `src/app/cpq/page.tsx`:
+**CREATE** `src/app/deal-pricing/page.tsx`:
 
 ```tsx
 import { accounts, products } from '@/lib/data'
 import { FilterBar } from '@/components/shared/FilterBar'
 
-export default function CPQPage() {
+export default function DealPricingPage() {
   return (
     <div className="flex flex-col h-full">
       <FilterBar accounts={accounts} products={products} />
       <div className="flex-1 flex items-center justify-center text-text-muted text-sm">
-        CPQ — coming in Phase 2
+        Deal Pricing — coming in Phase 2
       </div>
     </div>
   )

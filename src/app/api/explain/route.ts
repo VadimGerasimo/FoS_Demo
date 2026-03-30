@@ -11,8 +11,8 @@ const FALLBACK_RESPONSES: Record<string, { whatISee: string; whyItMatters: strin
       'Use the comparison mode to benchmark against peers',
     ],
   },
-  cpq: {
-    whatISee: 'The CPQ screen shows the live price stack, margin bridge, and three scenario comparison for the selected account and product.',
+  'deal-pricing': {
+    whatISee: 'The Deal Pricing screen shows the live price stack, margin bridge, and three scenario comparison for the selected account and product.',
     whyItMatters: 'Each scenario shows the margin impact and escalation status of different discount strategies.',
     recommendedActions: [
       'Compare all three scenarios before committing to a discount',

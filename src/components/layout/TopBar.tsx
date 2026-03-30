@@ -8,7 +8,7 @@ import { DemoGuidePanel } from './DemoGuidePanel'
 const SCREEN_TITLES: Record<string, string> = {
   '/ask-your-data': 'Ask Your Data',
   '/segmentation': 'Segmentation',
-  '/cpq': 'CPQ',
+  '/deal-pricing': 'Deal Pricing',
   '/deal-intelligence': 'Deal Intelligence',
   '/waterfall': 'Price Waterfall',
   '/pvm': 'Price-Volume-Mix',

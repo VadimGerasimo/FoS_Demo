@@ -1,4 +1,4 @@
-# Feature: Segmentation & CPQ Visual Redesign
+# Feature: Segmentation & Deal Pricing Visual Redesign
 
 The following plan should be complete, but validate codebase patterns before implementing.
 Pay special attention to Tailwind class names — they are custom tokens defined in `tailwind.config.ts`.
@@ -8,14 +8,14 @@ Import from the exact file paths listed; do not invent new data utilities.
 
 ## Feature Description
 
-A visual redesign of the Segmentation and CPQ screens to increase information density, fix misleading
+A visual redesign of the Segmentation and Deal Pricing screens to increase information density, fix misleading
 visualizations, and make critical pricing signals (zone breaches, escalation risk, win probability)
 immediately readable by a sales rep during a live customer negotiation.
 
 ## User Story
 
 As a sales rep preparing or negotiating a deal,
-I want the Segmentation and CPQ screens to surface critical pricing signals at a glance,
+I want the Segmentation and Deal Pricing screens to surface critical pricing signals at a glance,
 So that I can make defensible pricing decisions without scrolling or mentally decoding raw numbers.
 
 ## Problem Statement
@@ -27,14 +27,14 @@ render visibly, and the escalation/scenario section requires extensive scrolling
 ## Solution Statement
 
 Apply targeted visual upgrades per the spec: colored card borders, a new segment health panel,
-chart axis/curve improvements, a redesigned CPQ price band with escalation labels, a fixed margin
+chart axis/curve improvements, a redesigned Deal Pricing price band with escalation labels, a fixed margin
 bridge, per-card adjustable scenarios with Apply buttons, and a repositioned Win Prob / EoR section.
 
 ## Feature Metadata
 
 **Feature Type**: Enhancement
 **Estimated Complexity**: High
-**Primary Systems Affected**: Segmentation page, CPQ page, 8 existing components, 2 new components
+**Primary Systems Affected**: Segmentation page, Deal Pricing page, 8 existing components, 2 new components
 **Dependencies**: recharts (already installed), clsx (already installed), lucide-react (already installed)
 
 ---
@@ -46,13 +46,13 @@ bridge, per-card adjustable scenarios with Apply buttons, and a repositioned Win
 - `src/app/segmentation/page.tsx` (lines 82–103) — KPI strip map; add `borderLeft` style and vs-Floor dominant logic
 - `src/components/charts/SegmentationScatter.tsx` (full file) — all chart changes go here; uses recharts ScatterChart
 - `src/components/segmentation/ComparisonPanel.tsx` — reference for how account data is accessed
-- `src/app/cpq/page.tsx` (lines 19–24, 49–53, 66–99, 111–203) — escalation fn, netPrice formula (ALREADY FIXED to `1 + dealDiscountPct/100`), scenarios array, layout order
-- `src/components/cpq/PriceBand.tsx` (full file) — direction already fixed; needs marker + zone labels
-- `src/components/cpq/MarginBridge.tsx` (full file) — internal `afterDeal` formula still uses OLD sign (line 10); bars are h-20 container with `heightPct` of listPrice — scale issue causes invisible bars
-- `src/components/cpq/EscalationBanner.tsx` (lines 59–64) — justification textarea currently only at `rep` level
-- `src/components/cpq/ScenarioComparison.tsx` (full file) — needs per-card state + Apply button
-- `src/components/cpq/WinProbSignal.tsx` — needs larger number display
-- `src/components/cpq/EoRSignal.tsx` — needs larger number + risk bar
+- `src/app/deal-pricing/page.tsx` (lines 19–24, 49–53, 66–99, 111–203) — escalation fn, netPrice formula (ALREADY FIXED to `1 + dealDiscountPct/100`), scenarios array, layout order
+- `src/components/deal-pricing/PriceBand.tsx` (full file) — direction already fixed; needs marker + zone labels
+- `src/components/deal-pricing/MarginBridge.tsx` (full file) — internal `afterDeal` formula still uses OLD sign (line 10); bars are h-20 container with `heightPct` of listPrice — scale issue causes invisible bars
+- `src/components/deal-pricing/EscalationBanner.tsx` (lines 59–64) — justification textarea currently only at `rep` level
+- `src/components/deal-pricing/ScenarioComparison.tsx` (full file) — needs per-card state + Apply button
+- `src/components/deal-pricing/WinProbSignal.tsx` — needs larger number display
+- `src/components/deal-pricing/EoRSignal.tsx` — needs larger number + risk bar
 - `data/segmentation.json` — 12 points; `zone` field is stale (pre-computed, may not reflect current floor); always recompute zone at render time
 - `data/accounts.json` — has `floor`, `target`, `volume`, `price`, `segment`, `segmentId` per account
 - `data/quotes.json` — has `tierDiscount`, `currentPrice`, scenarios; use for DealContextPanel
@@ -61,7 +61,7 @@ bridge, per-card adjustable scenarios with Apply buttons, and a repositioned Win
 ### New Files to Create
 
 - `src/components/segmentation/SegmentHealthPanel.tsx` — segment health summary panel (count, volume, avg margin, distribution bar)
-- `src/components/cpq/DealContextPanel.tsx` — compact account + SKU context row
+- `src/components/deal-pricing/DealContextPanel.tsx` — compact account + SKU context row
 
 ### Patterns to Follow
 
@@ -109,23 +109,23 @@ Foundational chart and KPI improvements on the segmentation screen.
 
 New component inserted between KPI strip and chart.
 
-### Phase 3 — CPQ: PriceBand, Marker & Escalation Zone Labels
+### Phase 3 — Deal Pricing: PriceBand, Marker & Escalation Zone Labels
 
 Visual upgrades to the price band component.
 
-### Phase 4 — CPQ: Discount Section Overhaul
+### Phase 4 — Deal Pricing: Discount Section Overhaul
 
 Slider improvements, combined discount readout, headroom label.
 
-### Phase 5 — CPQ: Margin Bridge Fix
+### Phase 5 — Deal Pricing: Margin Bridge Fix
 
 Fix formula, bar scale, add CoGS bar.
 
-### Phase 6 — CPQ: Scenario Comparison Upgrade
+### Phase 6 — Deal Pricing: Scenario Comparison Upgrade
 
 Per-card state, Apply buttons, dynamic recommended, chip verdicts.
 
-### Phase 7 — CPQ: Context Panel + Layout Reorder
+### Phase 7 — Deal Pricing: Context Panel + Layout Reorder
 
 New DealContextPanel, reposition Win Prob / EoR above scenarios.
 
@@ -478,7 +478,7 @@ export function SegmentHealthPanel({ segmentId: _segmentId, segmentName, points,
 
 ---
 
-### TASK 7 — UPDATE `src/components/cpq/PriceBand.tsx` — Prominent net price marker + escalation zone labels
+### TASK 7 — UPDATE `src/components/deal-pricing/PriceBand.tsx` — Prominent net price marker + escalation zone labels
 
 **IMPLEMENT:**
 
@@ -564,7 +564,7 @@ Inside the band container (after zone divs, before ticks):
 
 ---
 
-### TASK 8 — UPDATE `src/app/cpq/page.tsx` — Discount section overhaul
+### TASK 8 — UPDATE `src/app/deal-pricing/page.tsx` — Discount section overhaul
 
 **IMPLEMENT:**
 
@@ -658,7 +658,7 @@ Tier 2 — auto-applied at −{tierDiscountPct}%
 
 ---
 
-### TASK 9 — UPDATE `src/components/cpq/EscalationBanner.tsx` — Justification textarea on all levels
+### TASK 9 — UPDATE `src/components/deal-pricing/EscalationBanner.tsx` — Justification textarea on all levels
 
 **IMPLEMENT:**
 
@@ -684,7 +684,7 @@ Move the `<textarea>` outside the `{level === 'rep' && ...}` guard — add it to
 
 ---
 
-### TASK 10 — UPDATE `src/components/cpq/MarginBridge.tsx` — Fix formula + bar scale + CoGS bar + GM label
+### TASK 10 — UPDATE `src/components/deal-pricing/MarginBridge.tsx` — Fix formula + bar scale + CoGS bar + GM label
 
 **IMPLEMENT:**
 
@@ -749,7 +749,7 @@ Modify the bar render to check `isFinal` and add a centered label:
 
 ---
 
-### TASK 11 — UPDATE `src/components/cpq/ScenarioComparison.tsx` — Per-card state, Apply button, dynamic recommended, red chip
+### TASK 11 — UPDATE `src/components/deal-pricing/ScenarioComparison.tsx` — Per-card state, Apply button, dynamic recommended, red chip
 
 **IMPLEMENT:**
 
@@ -772,7 +772,7 @@ For each card, compute effective values using the override if present:
 ```tsx
 const effectivePct = cardOverrides[s.label] ?? s.discountPct
 // Recompute netPrice and GM from effectivePct for cards that have overrides
-// Use a simple linear approximation consistent with cpq/page.tsx
+// Use a simple linear approximation consistent with deal-pricing/page.tsx
 ```
 
 Actually, for simplicity (and to avoid prop-drilling the full price calculation), pass a `baseAfterTier` prop from the parent so cards can compute their own net prices:
@@ -847,7 +847,7 @@ return (
 )
 ```
 
-**UPDATE `src/app/cpq/page.tsx`** — Pass new props to `ScenarioComparison`:
+**UPDATE `src/app/deal-pricing/page.tsx`** — Pass new props to `ScenarioComparison`:
 ```tsx
 const baseAfterTier = useMemo(() => listPrice * (1 - tierDiscountPct / 100), [listPrice, tierDiscountPct])
 
@@ -863,7 +863,7 @@ const baseAfterTier = useMemo(() => listPrice * (1 - tierDiscountPct / 100), [li
 
 ---
 
-### TASK 12 — UPDATE `src/components/cpq/WinProbSignal.tsx` + `EoRSignal.tsx` — Larger display
+### TASK 12 — UPDATE `src/components/deal-pricing/WinProbSignal.tsx` + `EoRSignal.tsx` — Larger display
 
 **IMPLEMENT:**
 
@@ -897,7 +897,7 @@ Also add a mini risk score bar below the top risk note in `EoRSignal`:
 
 ---
 
-### TASK 13 — UPDATE `src/app/cpq/page.tsx` — Reposition Win Prob + EoR above Scenario Comparison
+### TASK 13 — UPDATE `src/app/deal-pricing/page.tsx` — Reposition Win Prob + EoR above Scenario Comparison
 
 **IMPLEMENT:**
 
@@ -926,7 +926,7 @@ In the page layout (lines 192–203), move the `grid grid-cols-2` Win Prob + EoR
 
 ---
 
-### TASK 14 — CREATE `src/components/cpq/DealContextPanel.tsx` — Account + SKU context
+### TASK 14 — CREATE `src/components/deal-pricing/DealContextPanel.tsx` — Account + SKU context
 
 **IMPLEMENT:**
 
@@ -996,10 +996,10 @@ export function DealContextPanel({
 }
 ```
 
-**UPDATE `src/app/cpq/page.tsx`** — Insert `<DealContextPanel>` between `<FilterBar>` and the quote card:
+**UPDATE `src/app/deal-pricing/page.tsx`** — Insert `<DealContextPanel>` between `<FilterBar>` and the quote card:
 
 ```tsx
-import { DealContextPanel } from '@/components/cpq/DealContextPanel'
+import { DealContextPanel } from '@/components/deal-pricing/DealContextPanel'
 
 // Inside the page, after FilterBar and before the main content div:
 {mounted && account && (
@@ -1019,7 +1019,7 @@ import { DealContextPanel } from '@/components/cpq/DealContextPanel'
 
 Wait — DealContextPanel needs to go inside the `FadeWrapper`. Insert it at the top of the main content `<div className="p-6 flex flex-col gap-5">`.
 
-**VALIDATE:** A compact context strip appears at the top of the CPQ page showing account, last quoted price, payment terms, contract tier, CoGS estimate, and segment position badge.
+**VALIDATE:** A compact context strip appears at the top of the Deal Pricing page showing account, last quoted price, payment terms, contract tier, CoGS estimate, and segment position badge.
 
 ---
 
@@ -1043,7 +1043,7 @@ This is a demo tool with no unit test suite. All validation is manual.
 - [ ] Baker Klaas has a leader line connecting dot to label
 - [ ] Floor/Target labels on right edge are clearly readable
 
-### CPQ Page Checklist
+### Deal Pricing Page Checklist
 
 - [ ] Deal Context Panel visible at top: account, last quoted, CoGS, segment position
 - [ ] Tier chip shows "Tier 2 — auto-applied at −5%" (not kg/mo)
@@ -1090,7 +1090,7 @@ npm run build
 - [ ] Shaded band between floor/target visible
 - [ ] Dot coloring recomputed from live floor/target (no stale amber dots below floor)
 - [ ] Segment Health Panel present with distribution bar
-- [ ] CPQ price band has net price label + escalation zone labels
+- [ ] Deal Pricing price band has net price label + escalation zone labels
 - [ ] Slider shows gradient, floating value, center notch, headroom label
 - [ ] Combined effective discount readout visible
 - [ ] Margin bridge shows 6 bars with visible heights; CoGS bar present
@@ -1098,7 +1098,7 @@ npm run build
 - [ ] Scenario cards are independently adjustable with Apply buttons
 - [ ] Recommended card visually prominent
 - [ ] Win Prob + EoR above scenarios, large numbers
-- [ ] Deal Context Panel present at top of CPQ
+- [ ] Deal Context Panel present at top of Deal Pricing
 - [ ] `npx tsc --noEmit` passes with zero errors
 - [ ] `npm run build` succeeds
 
@@ -1112,7 +1112,7 @@ npm run build
 
 2. **Zone recompute in CustomDot**: The `zone` field in `segmentation.json` is pre-baked and can be stale. Always recompute from the live `floorPrice`/`targetPrice` passed as props. This is critical for the dot coloring fix.
 
-3. **MarginBridge formula**: `MarginBridge.tsx` has its own internal `afterDeal` calculation on line 10 that uses the OLD sign convention `(1 - dealDiscountPct / 100)`. This MUST be fixed to `(1 + dealDiscountPct / 100)` in Task 10, independent of the fix already applied in `cpq/page.tsx`.
+3. **MarginBridge formula**: `MarginBridge.tsx` has its own internal `afterDeal` calculation on line 10 that uses the OLD sign convention `(1 - dealDiscountPct / 100)`. This MUST be fixed to `(1 + dealDiscountPct / 100)` in Task 10, independent of the fix already applied in `deal-pricing/page.tsx`.
 
 4. **Per-card scenario state**: The `ScenarioComparison` component gains internal state for per-card overrides. The parent still controls the main `dealDiscountPct` and the Apply button writes back to it via `onApply` callback.
 
@@ -1124,7 +1124,7 @@ npm run build
 
 - `segmentation.json` zone values are NOT reliable — always recompute from floor/target
 - `accounts.json` has `floor` and `target` per account — use these as the authoritative source
-- `quotes.json` has pre-baked scenarios — used for reference but CPQ page computes live prices from the slider
+- `quotes.json` has pre-baked scenarios — used for reference but Deal Pricing page computes live prices from the slider
 - Payment terms, strategic flag are not in the data — use plausible defaults in DealContextPanel (Net 30, Tier by discount level)
 
 ---
